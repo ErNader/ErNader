@@ -38,22 +38,20 @@ function setData(data) {
 if (document.getElementById('music-title')) {
     const data = getData();
     document.getElementById('music-title').textContent = data.music.title;
-    document.getElementById('music-link').href = data.music.link;
     document.getElementById('music-artist').textContent = data.music.artist;
-
     document.getElementById('book-title').textContent = data.book.title;
-    document.getElementById('book-link').href = data.book.link;
     document.getElementById('book-author').textContent = data.book.author;
-
     document.getElementById('movie-title').textContent = data.movie.title;
-    document.getElementById('movie-link').href = data.movie.link;
     document.getElementById('movie-year').textContent = data.movie.year;
-
     document.getElementById('podcast-title').textContent = data.podcast.title;
-    document.getElementById('podcast-link').href = data.podcast.link;
     document.getElementById('podcast-desc').textContent = data.podcast.desc;
-
     document.getElementById('mood-desc').textContent = data.mood.desc;
+
+    // لینک کردن کل باکس هر بخش
+    document.getElementById('music-section').href = data.music.link;
+    document.getElementById('book-section').href = data.book.link;
+    document.getElementById('movie-section').href = data.movie.link;
+    document.getElementById('podcast-section').href = data.podcast.link;
 }
 
 // صفحه ادمین
@@ -63,21 +61,16 @@ if (document.getElementById('admin-form')) {
     document.getElementById('music-title-input').value = data.music.title;
     document.getElementById('music-link-input').value = data.music.link;
     document.getElementById('music-artist-input').value = data.music.artist;
-
     document.getElementById('book-title-input').value = data.book.title;
     document.getElementById('book-link-input').value = data.book.link;
     document.getElementById('book-author-input').value = data.book.author;
-
     document.getElementById('movie-title-input').value = data.movie.title;
     document.getElementById('movie-link-input').value = data.movie.link;
     document.getElementById('movie-year-input').value = data.movie.year;
-
     document.getElementById('podcast-title-input').value = data.podcast.title;
     document.getElementById('podcast-link-input').value = data.podcast.link;
     document.getElementById('podcast-desc-input').value = data.podcast.desc;
-
     document.getElementById('mood-desc-input').value = data.mood.desc;
-
     document.getElementById('admin-form').onsubmit = function(e) {
         e.preventDefault();
         const newData = {
@@ -106,7 +99,9 @@ if (document.getElementById('admin-form')) {
             }
         };
         setData(newData);
-        alert('اطلاعات با موفقیت ذخیره شد!');
+        var msg = document.getElementById('success-message');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 2000);
     };
 }
 

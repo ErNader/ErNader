@@ -5,7 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پنل ادمین - لحظاتی برای حال خوب</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Shabnam.css" rel="stylesheet">
+    <style>
+        .admin-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+        .admin-form input[type="text"] {
+            width: 100%;
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid #f8b6b6;
+            margin-top: 3px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: #fff6f6;
+            transition: border 0.2s;
+        }
+        .admin-form input[type="text"]:focus {
+            border: 1.5px solid #ffb48a;
+            outline: none;
+        }
+        .admin-form button {
+            background: #f8b6b6;
+            color: #6d4c2c;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 32px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: bold;
+            margin-top: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #f8b6b650;
+            transition: background 0.2s;
+        }
+        .admin-form button:hover {
+            background: #ffb48a;
+        }
+        #login-box {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        #admin-pass {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #f8b6b6;
+            font-family: inherit;
+            font-size: 1rem;
+            background: #fff6f6;
+            margin-bottom: 8px;
+        }
+        #login-box button {
+            background: #f8b6b6;
+            color: #6d4c2c;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 28px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: bold;
+            margin-right: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #f8b6b650;
+            transition: background 0.2s;
+        }
+        #login-box button:hover {
+            background: #ffb48a;
+        }
+        #success-message {
+            color: #388e3c;
+            background: #e7fbe7;
+            border-radius: 8px;
+            padding: 8px 0;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,24 +93,24 @@
             <button onclick="checkLogin()">ورود</button>
             <p id="login-error" style="color:red; display:none;">رمز اشتباه است!</p>
         </div>
-        <form id="admin-form" style="display:none;">
+        <form id="admin-form" class="admin-form" style="display:none;">
             <h2>ویرایش اطلاعات</h2>
-            <label>عنوان موسیقی:<input type="text" id="music-title-input"></label><br>
-            <label>لینک موسیقی:<input type="text" id="music-link-input"></label><br>
-            <label>نام هنرمند:<input type="text" id="music-artist-input"></label><br><br>
-            <label>عنوان کتاب:<input type="text" id="book-title-input"></label><br>
-            <label>لینک کتاب:<input type="text" id="book-link-input"></label><br>
-            <label>نام نویسنده:<input type="text" id="book-author-input"></label><br><br>
-            <label>عنوان فیلم:<input type="text" id="movie-title-input"></label><br>
-            <label>لینک فیلم:<input type="text" id="movie-link-input"></label><br>
-            <label>سال:<input type="text" id="movie-year-input"></label><br><br>
-            <label>عنوان پادکست:<input type="text" id="podcast-title-input"></label><br>
-            <label>لینک پادکست:<input type="text" id="podcast-link-input"></label><br>
-            <label>توضیح پادکست:<input type="text" id="podcast-desc-input"></label><br><br>
-            <label>توضیح مودپلنر:<input type="text" id="mood-desc-input"></label><br><br>
+            <div id="success-message">اطلاعات با موفقیت ذخیره شد!</div>
+            <label>عنوان موسیقی:<input type="text" id="music-title-input"></label>
+            <label>لینک موسیقی:<input type="text" id="music-link-input"></label>
+            <label>نام هنرمند:<input type="text" id="music-artist-input"></label>
+            <label>عنوان کتاب:<input type="text" id="book-title-input"></label>
+            <label>لینک کتاب:<input type="text" id="book-link-input"></label>
+            <label>نام نویسنده:<input type="text" id="book-author-input"></label>
+            <label>عنوان فیلم:<input type="text" id="movie-title-input"></label>
+            <label>لینک فیلم:<input type="text" id="movie-link-input"></label>
+            <label>سال:<input type="text" id="movie-year-input"></label>
+            <label>عنوان پادکست:<input type="text" id="podcast-title-input"></label>
+            <label>لینک پادکست:<input type="text" id="podcast-link-input"></label>
+            <label>توضیح پادکست:<input type="text" id="podcast-desc-input"></label>
+            <label>توضیح مودپلنر:<input type="text" id="mood-desc-input"></label>
             <button type="submit">ذخیره</button>
         </form>
-        <a href="index.html" class="admin-link">بازگشت به سایت</a>
     </div>
     <script src="script.js"></script>
 </body>

@@ -1,33 +1,45 @@
 body {
-    font-family: 'Vazir', sans-serif;
-    background: #ffeaea;
+    font-family: 'Shabnam', 'Vazir', sans-serif;
+    background: linear-gradient(135deg, #ffeaea 0%, #fff6f6 100%);
     margin: 0;
     padding: 0;
     direction: rtl;
+    min-height: 100vh;
 }
 .container {
     max-width: 420px;
     margin: 32px auto;
-    background: #fff6f6;
-    border-radius: 24px;
-    box-shadow: 0 4px 24px #f8b6b6a0;
+    background: #fff6f6cc;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px #f8b6b6a0;
     padding: 32px 16px 16px 16px;
     position: relative;
+    animation: fadeIn 1.2s cubic-bezier(.39,.575,.56,1.000);
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: none; }
 }
 .sun {
-    width: 60px;
-    height: 60px;
-    background: #ffb48a;
+    width: 64px;
+    height: 64px;
+    background: radial-gradient(circle, #ffb48a 60%, #ffe0d1 100%);
     border-radius: 50%;
-    margin: 0 auto 16px auto;
-    box-shadow: 0 0 0 8px #ffe0d1, 0 0 0 16px #fff6f6;
+    margin: 0 auto 18px auto;
+    box-shadow: 0 0 0 12px #ffe0d1, 0 0 0 24px #fff6f6;
+    animation: sunPulse 2.5s infinite alternate;
+}
+@keyframes sunPulse {
+    from { box-shadow: 0 0 0 12px #ffe0d1, 0 0 0 24px #fff6f6; }
+    to { box-shadow: 0 0 0 20px #ffd6b3, 0 0 0 32px #fff6f6; }
 }
 h1 {
     text-align: center;
     color: #6d4c2c;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     margin-bottom: 0.5rem;
     font-weight: bold;
+    letter-spacing: -1px;
 }
 h2 {
     text-align: center;
@@ -36,31 +48,50 @@ h2 {
     margin-bottom: 2rem;
     font-weight: normal;
 }
-.section {
+.section, .mood-section {
     display: flex;
     align-items: center;
     background: #f8b6b6;
-    border-radius: 16px;
-    margin-bottom: 16px;
-    padding: 12px 16px;
-    box-shadow: 0 2px 8px #f8b6b650;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    padding: 16px 18px;
+    box-shadow: 0 2px 12px #f8b6b650;
+    transition: box-shadow 0.3s, transform 0.2s, background 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    color: #6d4c2c;
+    position: relative;
+    overflow: hidden;
 }
-.section .icon {
-    font-size: 2rem;
-    margin-left: 12px;
+.section:hover, .mood-section:hover {
+    box-shadow: 0 8px 32px #f8b6b6a0;
+    background: #ffb48a;
+    transform: translateY(-2px) scale(1.025);
 }
-.section .label {
+.section .icon, .mood-section .icon {
+    min-width: 40px;
+    min-height: 40px;
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.section .icon img, .mood-section .icon img {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 2px 6px #fff6f6cc);
+    transition: filter 0.2s;
+}
+.section:hover .icon img, .mood-section:hover .icon img {
+    filter: drop-shadow(0 4px 12px #fff6f6cc) brightness(1.1);
+}
+.section .label, .mood-section .label {
     font-weight: bold;
     color: #6d4c2c;
-    margin-left: 6px;
+    margin-left: 8px;
+    font-size: 1.08rem;
 }
-.section a {
-    color: #6d4c2c;
-    text-decoration: underline dotted;
-    font-weight: bold;
-    margin: 0 4px;
-}
-.section span {
+.section span, .mood-section span {
     display: inline-block;
     margin: 0 2px;
 }
@@ -68,24 +99,14 @@ h2 {
     text-align: center;
     color: #a97c50;
     font-size: 1rem;
-    margin-top: 24px;
+    margin-top: 28px;
     margin-bottom: 8px;
+    opacity: 0.95;
 }
-.admin-link {
-    display: block;
-    text-align: center;
-    margin: 0 auto;
-    margin-top: 12px;
-    color: #fff;
-    background: #f8b6b6;
-    border-radius: 12px;
-    padding: 8px 0;
-    width: 120px;
-    font-weight: bold;
-    text-decoration: none;
-    box-shadow: 0 2px 8px #f8b6b650;
-    transition: background 0.2s;
+.card-link {
+    text-decoration: none !important;
+    color: inherit !important;
 }
-.admin-link:hover {
-    background: #ffb48a;
+.card-link:visited {
+    color: inherit;
 }
