@@ -1,6 +1,10 @@
 // داده‌های نمونه برای ذخیره در localStorage
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+let groups = JSON.parse(localStorage.getItem('groups')) || [];
+let students = JSON.parse(localStorage.getItem('students')) || [];
+let programs = JSON.parse(localStorage.getItem('programs')) || [];
+let attendance = JSON.parse(localStorage.getItem('attendance')) || [];
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
 // آمار مرکز
@@ -52,20 +56,20 @@ async function initializeApp() {
                 {
                     id: 1,
                     nationalId: '1234567890',
-                    fullName: 'مدیر سیستم',
-                    email: 'admin@center.edu',
+                    fullName: 'مدیر مرکز',
+                    email: 'admin@example.com',
                     phone: '09123456789',
-                    password: 'admin123',
+                    password: '123456',
                     type: 'admin'
                 },
                 {
                     id: 2,
                     nationalId: '1111111111',
-                    fullName: 'علی احمدی',
-                    email: 'ali@example.com',
+                    fullName: 'احمد رضایی',
+                    email: 'ahmad@example.com',
                     phone: '09111111111',
                     password: '123456',
-                    type: 'student'
+                    type: 'coordinator'
                 },
                 {
                     id: 3,
@@ -74,10 +78,172 @@ async function initializeApp() {
                     email: 'fateme@example.com',
                     phone: '09222222222',
                     password: '123456',
-                    type: 'teacher'
+                    type: 'coordinator'
+                },
+                {
+                    id: 4,
+                    nationalId: '3333333333',
+                    fullName: 'علی احمدی',
+                    email: 'ali@example.com',
+                    phone: '09333333333',
+                    password: '123456',
+                    type: 'student'
+                },
+                {
+                    id: 5,
+                    nationalId: '4444444444',
+                    fullName: 'مریم کریمی',
+                    email: 'maryam@example.com',
+                    phone: '09444444444',
+                    password: '123456',
+                    type: 'student'
+                },
+                {
+                    id: 6,
+                    nationalId: '5555555555',
+                    fullName: 'حسین نوری',
+                    email: 'hossein@example.com',
+                    phone: '09555555555',
+                    password: '123456',
+                    type: 'student'
                 }
             ];
             localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // ایجاد گروه‌های نمونه
+        if (groups.length === 0) {
+            groups = [
+                {
+                    id: 1,
+                    name: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    maxStudents: 30,
+                    currentStudents: 15,
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'گروه علوم تجربی',
+                    coordinatorId: 3,
+                    coordinatorName: 'فاطمه محمدی',
+                    maxStudents: 25,
+                    currentStudents: 12,
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem('groups', JSON.stringify(groups));
+        }
+
+        // ایجاد دانش‌آموزان نمونه
+        if (students.length === 0) {
+            students = [
+                {
+                    id: 1,
+                    nationalId: '3333333333',
+                    fullName: 'علی احمدی',
+                    groupId: 1,
+                    groupName: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    isActive: true,
+                    joinedAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    nationalId: '4444444444',
+                    fullName: 'مریم کریمی',
+                    groupId: 1,
+                    groupName: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    isActive: true,
+                    joinedAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    nationalId: '5555555555',
+                    fullName: 'حسین نوری',
+                    groupId: 2,
+                    groupName: 'گروه علوم تجربی',
+                    coordinatorId: 3,
+                    coordinatorName: 'فاطمه محمدی',
+                    isActive: true,
+                    joinedAt: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // ایجاد برنامه‌های نمونه
+        if (programs.length === 0) {
+            programs = [
+                {
+                    id: 1,
+                    name: 'برنامه ریاضی پیشرفته',
+                    groupId: 1,
+                    groupName: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    isActive: true,
+                    totalSessions: 20,
+                    completedSessions: 15,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'برنامه علوم تجربی',
+                    groupId: 2,
+                    groupName: 'گروه علوم تجربی',
+                    coordinatorId: 3,
+                    coordinatorName: 'فاطمه محمدی',
+                    isActive: true,
+                    totalSessions: 18,
+                    completedSessions: 12,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem('programs', JSON.stringify(programs));
+        }
+
+        // ایجاد حضور و غیاب نمونه
+        if (attendance.length === 0) {
+            attendance = [
+                {
+                    id: 1,
+                    programId: 1,
+                    programName: 'برنامه ریاضی پیشرفته',
+                    groupId: 1,
+                    groupName: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    sessionNumber: 1,
+                    date: '2024-01-15',
+                    presentStudents: 14,
+                    absentStudents: 1,
+                    totalStudents: 15,
+                    attendanceRate: 93.3
+                },
+                {
+                    id: 2,
+                    programId: 2,
+                    programName: 'برنامه علوم تجربی',
+                    groupId: 2,
+                    groupName: 'گروه علوم تجربی',
+                    coordinatorId: 3,
+                    coordinatorName: 'فاطمه محمدی',
+                    sessionNumber: 1,
+                    date: '2024-01-15',
+                    presentStudents: 11,
+                    absentStudents: 1,
+                    totalStudents: 12,
+                    attendanceRate: 91.7
+                }
+            ];
+            localStorage.setItem('attendance', JSON.stringify(attendance));
         }
         
         // ایجاد نظرسنجی نمونه
@@ -482,17 +648,11 @@ function createDashboard() {
         case 'student':
             dashboardContent += createStudentDashboard();
             break;
-        case 'teacher':
-            dashboardContent += createTeacherDashboard();
-            break;
         case 'coordinator':
             dashboardContent += createCoordinatorDashboard();
             break;
         case 'admin':
             dashboardContent += createAdminDashboard();
-            break;
-        case 'supervisor':
-            dashboardContent += createSupervisorDashboard();
             break;
         default:
             dashboardContent += createDefaultDashboard();
@@ -505,10 +665,8 @@ function createDashboard() {
 function getUserTypeTitle(type) {
     const titles = {
         'student': 'دانش‌آموز',
-        'teacher': 'استاد',
         'coordinator': 'رابط',
-        'admin': 'مدیر مرکز',
-        'supervisor': 'مسئول سطوح'
+        'admin': 'مدیر مرکز'
     };
     return titles[type] || 'کاربر';
 }
@@ -518,24 +676,35 @@ function createAdminDashboard() {
     return `
         <div class="dashboard-stats">
             <div class="dashboard-stat">
-                <div class="number">${registrations.length}</div>
-                <div class="label">کل ثبت‌نام‌ها</div>
+                <div class="number">${groups.length}</div>
+                <div class="label">کل گروه‌ها</div>
             </div>
             <div class="dashboard-stat">
-                <div class="number">${centerStats.teachers}</div>
-                <div class="label">استاد</div>
+                <div class="number">${users.filter(u => u.type === 'coordinator').length}</div>
+                <div class="label">رابط</div>
             </div>
             <div class="dashboard-stat">
-                <div class="number">${centerStats.programs}</div>
+                <div class="number">${programs.filter(p => p.isActive).length}</div>
                 <div class="label">برنامه فعال</div>
             </div>
             <div class="dashboard-stat">
-                <div class="number">${getTotalStudents()}</div>
+                <div class="number">${students.filter(s => s.isActive).length}</div>
                 <div class="label">دانش‌آموز</div>
             </div>
         </div>
         
         <div class="admin-sections">
+            <!-- مدیریت گروه‌ها و رابط‌ها -->
+            <div class="admin-section">
+                <h3><i class="fas fa-users-cog"></i> مدیریت گروه‌ها و رابط‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="showGroupManagement()" class="btn btn-primary">مدیریت گروه‌ها</button>
+                    <button onclick="createNewGroup()" class="btn btn-success">ایجاد گروه جدید</button>
+                    <button onclick="assignCoordinatorToGroup()" class="btn btn-info">تخصیص رابط به گروه</button>
+                    <button onclick="exportGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
             <!-- مدیریت کاربران -->
             <div class="admin-section">
                 <h3><i class="fas fa-users"></i> مدیریت کاربران</h3>
@@ -627,127 +796,7 @@ function createAdminDashboard() {
     `;
 }
 
-// تابع بهبود یافته برای ایجاد داشبورد مسئول سطوح
-function createSupervisorDashboard() {
-    return `
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">داشبورد مسئول سطوح</h1>
-            <div class="user-info">
-                <span>خوش آمدید، ${currentUser.fullName}</span>
-                <button onclick="logout()" class="btn btn-danger">خروج</button>
-            </div>
-        </div>
-        
-        <div class="dashboard-stats">
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorCentersCount()}</div>
-                <div class="label">مرکز تحت نظارت</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorStudentsCount()}</div>
-                <div class="label">کل دانش‌آموز</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorPerformance()}</div>
-                <div class="label">عملکرد کلی</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorProgramsCount()}</div>
-                <div class="label">برنامه فعال</div>
-            </div>
-        </div>
-        
-        <div class="supervisor-sections">
-            <!-- نظارت بر مراکز -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-building"></i> نظارت بر مراکز</h3>
-                <div class="section-actions">
-                    <button onclick="showCentersOverview()" class="btn btn-primary">نمای کلی مراکز</button>
-                    <button onclick="showCenterDetails()" class="btn btn-success">جزئیات مراکز</button>
-                    <button onclick="compareCenters()" class="btn btn-info">مقایسه مراکز</button>
-                    <button onclick="exportCentersToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- مدیریت استانداردها -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-ruler"></i> مدیریت استانداردها</h3>
-                <div class="section-actions">
-                    <button onclick="showEducationalStandards()" class="btn btn-primary">استانداردهای آموزشی</button>
-                    <button onclick="setNewStandards()" class="btn btn-success">تعیین استاندارد جدید</button>
-                    <button onclick="showStandardsCompliance()" class="btn btn-info">بررسی انطباق</button>
-                    <button onclick="exportStandardsToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- تحلیل عملکرد -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-chart-line"></i> تحلیل عملکرد</h3>
-                <div class="section-actions">
-                    <button onclick="showPerformanceAnalysis()" class="btn btn-primary">تحلیل عملکرد</button>
-                    <button onclick="showTrendAnalysis()" class="btn btn-success">تحلیل روند</button>
-                    <button onclick="showPerformanceComparison()" class="btn btn-info">مقایسه عملکرد</button>
-                    <button onclick="exportPerformanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- گزارش‌های نظارتی -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-clipboard-list"></i> گزارش‌های نظارتی</h3>
-                <div class="section-actions">
-                    <button onclick="showSupervisoryReports()" class="btn btn-primary">گزارش‌های نظارتی</button>
-                    <button onclick="generateComplianceReport()" class="btn btn-success">گزارش انطباق</button>
-                    <button onclick="showQualityReports()" class="btn btn-info">گزارش‌های کیفیت</button>
-                    <button onclick="exportSupervisoryReports()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- مدیریت کاربران مراکز -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-users-cog"></i> مدیریت کاربران مراکز</h3>
-                <div class="section-actions">
-                    <button onclick="showAllUsers()" class="btn btn-primary">مشاهده تمام کاربران</button>
-                    <button onclick="manageUserPermissions()" class="btn btn-success">مدیریت دسترسی‌ها</button>
-                    <button onclick="showUserActivity()" class="btn btn-info">فعالیت کاربران</button>
-                    <button onclick="exportUsersToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- مدیریت برنامه‌های مراکز -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-calendar-plus"></i> مدیریت برنامه‌های مراکز</h3>
-                <div class="section-actions">
-                    <button onclick="showAllPrograms()" class="btn btn-primary">مشاهده تمام برنامه‌ها</button>
-                    <button onclick="createCenterProgram()" class="btn btn-success">ایجاد برنامه مرکزی</button>
-                    <button onclick="showProgramEffectiveness()" class="btn btn-info">اثربخشی برنامه‌ها</button>
-                    <button onclick="exportProgramsToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- نظارت بر نمرات -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-graduation-cap"></i> نظارت بر نمرات</h3>
-                <div class="section-actions">
-                    <button onclick="showAllGrades()" class="btn btn-primary">مشاهده تمام نمرات</button>
-                    <button onclick="editAnyGrades()" class="btn btn-success">ویرایش نمرات</button>
-                    <button onclick="showGradeAnalytics()" class="btn btn-info">تحلیل نمرات</button>
-                    <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- نظارت بر حضور و غیاب -->
-            <div class="supervisor-section">
-                <h3><i class="fas fa-clipboard-check"></i> نظارت بر حضور و غیاب</h3>
-                <div class="section-actions">
-                    <button onclick="showAllAttendance()" class="btn btn-primary">مشاهده حضور و غیاب</button>
-                    <button onclick="editAnyAttendance()" class="btn btn-success">ویرایش حضور و غیاب</button>
-                    <button onclick="showAttendanceAnalytics()" class="btn btn-info">تحلیل حضور و غیاب</button>
-                    <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-        </div>
-    `;
-}
+
 
 // تابع بهبود یافته برای ایجاد داشبورد رابط
 function createCoordinatorDashboard() {
@@ -983,87 +1032,7 @@ function createStudentDashboard() {
     `;
 }
 
-// تابع بهبود یافته برای ایجاد داشبورد استاد
-function createTeacherDashboard() {
-    return `
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">داشبورد استاد</h1>
-            <div class="user-info">
-                <span>خوش آمدید، ${currentUser.fullName}</span>
-                <button onclick="logout()" class="btn btn-danger">خروج</button>
-            </div>
-        </div>
-        
-        <div class="dashboard-stats">
-            <div class="dashboard-stat">
-                <div class="number">${getTeacherStudentsCount()}</div>
-                <div class="label">دانش‌آموز</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getTeacherClassesCount()}</div>
-                <div class="label">کلاس</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getTeacherProgramsCount()}</div>
-                <div class="label">برنامه</div>
-            </div>
-        </div>
-        
-        <div class="teacher-sections">
-            <!-- ثبت حضور و غیاب -->
-            <div class="teacher-section">
-                <h3><i class="fas fa-clipboard-check"></i> ثبت حضور و غیاب</h3>
-                <div class="section-actions">
-                    <button onclick="recordAttendance()" class="btn btn-primary">ثبت حضور و غیاب</button>
-                    <button onclick="viewAttendanceHistory()" class="btn btn-info">تاریخچه حضور</button>
-                    <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- ثبت نمرات -->
-            <div class="teacher-section">
-                <h3><i class="fas fa-chart-line"></i> ثبت نمرات</h3>
-                <div class="section-actions">
-                    <button onclick="recordGrades()" class="btn btn-primary">ثبت نمرات</button>
-                    <button onclick="viewGradesHistory()" class="btn btn-info">تاریخچه نمرات</button>
-                    <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- ثبت فعالیت گروهی -->
-            <div class="teacher-section">
-                <h3><i class="fas fa-users"></i> ثبت فعالیت گروهی</h3>
-                <div class="section-actions">
-                    <button onclick="recordGroupActivity()" class="btn btn-primary">ثبت فعالیت جدید</button>
-                    <button onclick="viewGroupActivityHistory()" class="btn btn-info">تاریخچه فعالیت</button>
-                    <button onclick="exportActivitiesToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- گزارش‌گیری -->
-            <div class="teacher-section">
-                <h3><i class="fas fa-chart-bar"></i> گزارش‌گیری</h3>
-                <div class="section-actions">
-                    <button onclick="viewReports()" class="btn btn-primary">گزارش‌های من</button>
-                    <button onclick="showGradeReports()" class="btn btn-success">گزارش نمرات</button>
-                    <button onclick="showActivityReports()" class="btn btn-info">گزارش فعالیت‌ها</button>
-                    <button onclick="exportMyReports()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- پروفایل و تنظیمات -->
-            <div class="teacher-section">
-                <h3><i class="fas fa-user-cog"></i> پروفایل و تنظیمات</h3>
-                <div class="section-actions">
-                    <button onclick="editMyProfile()" class="btn btn-primary">ویرایش پروفایل</button>
-                    <button onclick="changePassword()" class="btn btn-success">تغییر رمز عبور</button>
-                    <button onclick="viewMyActivity()" class="btn btn-info">فعالیت‌های من</button>
-                    <button onclick="exportMyData()" class="btn btn-warning">خروجی اطلاعات</button>
-                </div>
-            </div>
-        </div>
-    `;
-}
+
 
 // تابع کمکی برای آمار
 function getStudentProgramsCount() {
@@ -1078,22 +1047,12 @@ function getStudentGrades() {
     return (Math.random() * 5 + 15).toFixed(1); // 15-20
 }
 
-function getTeacherStudentsCount() {
-    return Math.floor(Math.random() * 30) + 10; // 10-40
-}
 
-function getTeacherClassesCount() {
-    return Math.floor(Math.random() * 5) + 2; // 2-7
-}
-
-function getTeacherProgramsCount() {
-    return Math.floor(Math.random() * 3) + 1; // 1-4
-}
 
 function getCoordinatorStudentsCount() {
     // نمایش تعداد دانش‌آموزان تحت نظر رابط فعلی
     if (currentUser && currentUser.type === 'coordinator') {
-        return 45; // تعداد ثابت برای نمایش
+        return students.filter(s => s.coordinatorId === currentUser.id && s.isActive).length;
     }
     return 0;
 }
@@ -1101,7 +1060,7 @@ function getCoordinatorStudentsCount() {
 function getCoordinatorGroupsCount() {
     // نمایش تعداد گروه‌های تحت نظر رابط فعلی
     if (currentUser && currentUser.type === 'coordinator') {
-        return 3; // تعداد ثابت برای نمایش
+        return groups.filter(g => g.coordinatorId === currentUser.id && g.isActive).length;
     }
     return 0;
 }
@@ -1109,22 +1068,16 @@ function getCoordinatorGroupsCount() {
 function getCoordinatorAttendance() {
     // نمایش درصد حضور کلی دانش‌آموزان تحت نظر رابط فعلی
     if (currentUser && currentUser.type === 'coordinator') {
-        return 92; // درصد ثابت برای نمایش
+        const coordinatorAttendance = attendance.filter(a => a.coordinatorId === currentUser.id);
+        if (coordinatorAttendance.length === 0) return 0;
+        
+        const totalRate = coordinatorAttendance.reduce((sum, a) => sum + a.attendanceRate, 0);
+        return Math.round(totalRate / coordinatorAttendance.length);
     }
     return 0;
 }
 
-function getSupervisorCentersCount() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
-}
 
-function getSupervisorStudentsCount() {
-    return Math.floor(Math.random() * 500) + 200; // 200-700
-}
-
-function getSupervisorPerformance() {
-    return Math.floor(Math.random() * 10) + 90; // 90-100%
-}
 
 function getTotalStudents() {
     return users.filter(u => u.type === 'student').length;
@@ -1149,7 +1102,7 @@ function getTeacherProgramsHistory() {
 function getCoordinatorProgramsCount() {
     // نمایش تعداد برنامه‌های فعال تحت نظر رابط فعلی
     if (currentUser && currentUser.type === 'coordinator') {
-        return 8; // تعداد ثابت برای نمایش
+        return programs.filter(p => p.coordinatorId === currentUser.id && p.isActive).length;
     }
     return 0;
 }
@@ -3589,6 +3542,203 @@ function createNewSubGroup() {
 
 function exportSubGroupsToExcel() {
     showAlert('خروجی اکسل بچه‌گروهی‌ها در حال توسعه...', 'info');
+}
+
+// توابع جدید برای مدیریت گروه‌ها
+async function showGroupManagement() {
+    const content = `
+        <div class="management-header">
+            <h3>مدیریت گروه‌ها</h3>
+            <div class="search-box">
+                <input type="text" placeholder="جستجو در گروه‌ها..." onkeyup="filterGroups(this.value)">
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام گروه</th>
+                        <th>رابط</th>
+                        <th>تعداد دانش‌آموز</th>
+                        <th>حداکثر ظرفیت</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${groups.map(group => `
+                        <tr>
+                            <td>${group.name}</td>
+                            <td>${group.coordinatorName}</td>
+                            <td>${group.currentStudents}</td>
+                            <td>${group.maxStudents}</td>
+                            <td>
+                                <span class="badge ${group.isActive ? 'badge-success' : 'badge-danger'}">
+                                    ${group.isActive ? 'فعال' : 'غیرفعال'}
+                                </span>
+                            </td>
+                            <td>
+                                <button onclick="viewGroupDetails(${group.id})" class="btn btn-sm btn-primary">مشاهده</button>
+                                <button onclick="editGroup(${group.id})" class="btn btn-sm btn-info">ویرایش</button>
+                                <button onclick="toggleGroupStatus(${group.id})" class="btn btn-sm ${group.isActive ? 'btn-warning' : 'btn-success'}">
+                                    ${group.isActive ? 'غیرفعال' : 'فعال'}
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="management-footer">
+            <button onclick="createNewGroup()" class="btn btn-success">ایجاد گروه جدید</button>
+            <button onclick="exportGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+        </div>
+    `;
+    
+    createModal('مدیریت گروه‌ها', content);
+}
+
+async function createNewGroup() {
+    const coordinators = users.filter(u => u.type === 'coordinator');
+    
+    const content = `
+        <form id="newGroupForm">
+            <div class="form-group">
+                <label for="groupName">نام گروه:</label>
+                <input type="text" id="groupName" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="coordinatorId">رابط:</label>
+                <select id="coordinatorId" class="form-control" required>
+                    <option value="">انتخاب رابط</option>
+                    ${coordinators.map(c => `
+                        <option value="${c.id}">${c.fullName}</option>
+                    `).join('')}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="maxStudents">حداکثر ظرفیت دانش‌آموز:</label>
+                <input type="number" id="maxStudents" class="form-control" min="1" max="50" value="30" required>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">ایجاد گروه</button>
+                <button type="button" onclick="closeModal()" class="btn btn-secondary">انصراف</button>
+            </div>
+        </form>
+    `;
+    
+    createModal('ایجاد گروه جدید', content);
+    
+    document.getElementById('newGroupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const groupName = document.getElementById('groupName').value;
+        const coordinatorId = parseInt(document.getElementById('coordinatorId').value);
+        const maxStudents = parseInt(document.getElementById('maxStudents').value);
+        
+        const coordinator = users.find(u => u.id === coordinatorId);
+        
+        const newGroup = {
+            id: groups.length + 1,
+            name: groupName,
+            coordinatorId: coordinatorId,
+            coordinatorName: coordinator.fullName,
+            maxStudents: maxStudents,
+            currentStudents: 0,
+            isActive: true,
+            createdAt: new Date().toISOString()
+        };
+        
+        groups.push(newGroup);
+        localStorage.setItem('groups', JSON.stringify(groups));
+        
+        showAlert('گروه جدید با موفقیت ایجاد شد', 'success');
+        closeModal();
+        showGroupManagement();
+    });
+}
+
+async function assignCoordinatorToGroup() {
+    const coordinators = users.filter(u => u.type === 'coordinator');
+    const groupsWithoutCoordinator = groups.filter(g => !g.coordinatorId);
+    
+    if (groupsWithoutCoordinator.length === 0) {
+        showAlert('تمام گروه‌ها دارای رابط هستند', 'info');
+        return;
+    }
+    
+    const content = `
+        <form id="assignCoordinatorForm">
+            <div class="form-group">
+                <label for="groupId">گروه:</label>
+                <select id="groupId" class="form-control" required>
+                    <option value="">انتخاب گروه</option>
+                    ${groupsWithoutCoordinator.map(g => `
+                        <option value="${g.id}">${g.name}</option>
+                    `).join('')}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="coordinatorId">رابط:</label>
+                <select id="coordinatorId" class="form-control" required>
+                    <option value="">انتخاب رابط</option>
+                    ${coordinators.map(c => `
+                        <option value="${c.id}">${c.fullName}</option>
+                    `).join('')}
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">تخصیص رابط</button>
+                <button type="button" onclick="closeModal()" class="btn btn-secondary">انصراف</button>
+            </div>
+        </form>
+    `;
+    
+    createModal('تخصیص رابط به گروه', content);
+    
+    document.getElementById('assignCoordinatorForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const groupId = parseInt(document.getElementById('groupId').value);
+        const coordinatorId = parseInt(document.getElementById('coordinatorId').value);
+        
+        const group = groups.find(g => g.id === groupId);
+        const coordinator = users.find(u => u.id === coordinatorId);
+        
+        if (group && coordinator) {
+            group.coordinatorId = coordinatorId;
+            group.coordinatorName = coordinator.fullName;
+            
+            localStorage.setItem('groups', JSON.stringify(groups));
+            
+            showAlert('رابط با موفقیت به گروه تخصیص داده شد', 'success');
+            closeModal();
+        }
+    });
+}
+
+function toggleGroupStatus(groupId) {
+    const group = groups.find(g => g.id === groupId);
+    if (group) {
+        group.isActive = !group.isActive;
+        localStorage.setItem('groups', JSON.stringify(groups));
+        showAlert(`وضعیت گروه ${group.name} تغییر یافت`, 'success');
+        showGroupManagement();
+    }
+}
+
+function closeModal() {
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        modal.remove();
+    }
 }
 
 function createDefaultDashboard() {

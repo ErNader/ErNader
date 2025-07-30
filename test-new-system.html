@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست سیستم جدید - مدیریت مرکز آموزشی</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <div class="navbar-content">
+                <div class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>مرکز آموزشی</span>
+                </div>
+                <nav class="navbar-nav">
+                    <a href="#" class="nav-link active">داشبورد</a>
+                    <a href="#" class="nav-link">گروه‌ها</a>
+                    <a href="#" class="nav-link">رابط‌ها</a>
+                    <a href="#" class="nav-link">دانش‌آموزان</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">داشبورد مدیر مرکز</h1>
+                    <div class="user-info">
+                        <span>خوش آمدید، مدیر مرکز</span>
+                        <button class="btn btn-danger">خروج</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="dashboard-stat">
+                        <div class="number">2</div>
+                        <div class="label">کل گروه‌ها</div>
+                    </div>
+                    <div class="dashboard-stat">
+                        <div class="number">2</div>
+                        <div class="label">رابط</div>
+                    </div>
+                    <div class="dashboard-stat">
+                        <div class="number">2</div>
+                        <div class="label">برنامه فعال</div>
+                    </div>
+                    <div class="dashboard-stat">
+                        <div class="number">3</div>
+                        <div class="label">دانش‌آموز</div>
+                    </div>
+                </div>
+
+                <div class="admin-sections">
+                    <!-- مدیریت گروه‌ها و رابط‌ها -->
+                    <div class="admin-section">
+                        <h3><i class="fas fa-users-cog"></i> مدیریت گروه‌ها و رابط‌ها</h3>
+                        <div class="section-actions">
+                            <button onclick="showGroupManagement()" class="btn btn-primary">مدیریت گروه‌ها</button>
+                            <button onclick="createNewGroup()" class="btn btn-success">ایجاد گروه جدید</button>
+                            <button onclick="assignCoordinatorToGroup()" class="btn btn-info">تخصیص رابط به گروه</button>
+                            <button onclick="exportGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                        </div>
+                    </div>
+
+                    <!-- مدیریت کاربران -->
+                    <div class="admin-section">
+                        <h3><i class="fas fa-users"></i> مدیریت کاربران</h3>
+                        <div class="section-actions">
+                            <button class="btn btn-primary">مدیریت کاربران</button>
+                            <button class="btn btn-success">افزودن کاربر جدید</button>
+                            <button class="btn btn-info">جستجوی کاربران</button>
+                            <button class="btn btn-warning">خروجی اکسل</button>
+                        </div>
+                    </div>
+
+                    <!-- مدیریت برنامه‌ها -->
+                    <div class="admin-section">
+                        <h3><i class="fas fa-calendar-alt"></i> مدیریت برنامه‌ها</h3>
+                        <div class="section-actions">
+                            <button class="btn btn-primary">مدیریت برنامه‌ها</button>
+                            <button class="btn btn-success">افزودن برنامه جدید</button>
+                            <button class="btn btn-info">تحلیل برنامه‌ها</button>
+                            <button class="btn btn-warning">خروجی اکسل</button>
+                        </div>
+                    </div>
+
+                    <!-- گزارش‌های کلی -->
+                    <div class="admin-section">
+                        <h3><i class="fas fa-chart-bar"></i> گزارش‌های کلی</h3>
+                        <div class="section-actions">
+                            <button class="btn btn-primary">گزارش‌های کلی</button>
+                            <button class="btn btn-success">گزارش‌های مالی</button>
+                            <button class="btn btn-info">گزارش‌های عملکرد</button>
+                            <button class="btn btn-warning">خروجی اکسل</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // تست توابع جدید
+        function showGroupManagement() {
+            const content = `
+                <div class="management-header">
+                    <h3>مدیریت گروه‌ها</h3>
+                    <div class="search-box">
+                        <input type="text" placeholder="جستجو در گروه‌ها..." onkeyup="filterGroups(this.value)">
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>نام گروه</th>
+                                <th>رابط</th>
+                                <th>تعداد دانش‌آموز</th>
+                                <th>حداکثر ظرفیت</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>گروه ریاضی پیشرفته</td>
+                                <td>احمد رضایی</td>
+                                <td>15</td>
+                                <td>30</td>
+                                <td>
+                                    <span class="badge badge-success">فعال</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">مشاهده</button>
+                                    <button class="btn btn-sm btn-info">ویرایش</button>
+                                    <button class="btn btn-sm btn-warning">غیرفعال</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>گروه علوم تجربی</td>
+                                <td>فاطمه محمدی</td>
+                                <td>12</td>
+                                <td>25</td>
+                                <td>
+                                    <span class="badge badge-success">فعال</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">مشاهده</button>
+                                    <button class="btn btn-sm btn-info">ویرایش</button>
+                                    <button class="btn btn-sm btn-warning">غیرفعال</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="management-footer">
+                    <button class="btn btn-success">ایجاد گروه جدید</button>
+                    <button class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            `;
+            
+            createModal('مدیریت گروه‌ها', content);
+        }
+
+        function createNewGroup() {
+            const content = `
+                <form id="newGroupForm">
+                    <div class="form-group">
+                        <label for="groupName">نام گروه:</label>
+                        <input type="text" id="groupName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coordinatorId">رابط:</label>
+                        <select id="coordinatorId" class="form-control" required>
+                            <option value="">انتخاب رابط</option>
+                            <option value="2">احمد رضایی</option>
+                            <option value="3">فاطمه محمدی</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maxStudents">حداکثر ظرفیت دانش‌آموز:</label>
+                        <input type="number" id="maxStudents" class="form-control" min="1" max="50" value="30" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">ایجاد گروه</button>
+                        <button type="button" onclick="closeModal()" class="btn btn-secondary">انصراف</button>
+                    </div>
+                </form>
+            `;
+            
+            createModal('ایجاد گروه جدید', content);
+        }
+
+        function assignCoordinatorToGroup() {
+            const content = `
+                <form id="assignCoordinatorForm">
+                    <div class="form-group">
+                        <label for="groupId">گروه:</label>
+                        <select id="groupId" class="form-control" required>
+                            <option value="">انتخاب گروه</option>
+                            <option value="1">گروه ریاضی پیشرفته</option>
+                            <option value="2">گروه علوم تجربی</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coordinatorId">رابط:</label>
+                        <select id="coordinatorId" class="form-control" required>
+                            <option value="">انتخاب رابط</option>
+                            <option value="2">احمد رضایی</option>
+                            <option value="3">فاطمه محمدی</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">تخصیص رابط</button>
+                        <button type="button" onclick="closeModal()" class="btn btn-secondary">انصراف</button>
+                    </div>
+                </form>
+            `;
+            
+            createModal('تخصیص رابط به گروه', content);
+        }
+
+        function exportGroupsToExcel() {
+            showAlert('خروجی اکسل گروه‌ها در حال آماده‌سازی...', 'info');
+        }
+
+        function filterGroups(searchTerm) {
+            console.log('جستجو در گروه‌ها:', searchTerm);
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // نمایش پیام تست
+        setTimeout(() => {
+            showAlert('سیستم جدید با موفقیت بارگذاری شد!', 'success');
+        }, 1000);
+    </script>
+</body>
+</html>
