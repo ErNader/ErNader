@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست دیتابیس</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>تست اتصال دیتابیس</h1>
+    
+    <button onclick="testConnection()">تست اتصال</button>
+    <button onclick="checkUsers()">بررسی کاربران</button>
+    <button onclick="addTestUser()">افزودن کاربر تست</button>
+    
+    <div id="results"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        function showResult(message, isSuccess = true) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${isSuccess ? 'success' : 'error'}`;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+
+        async function testConnection() {
+            try {
+                showResult('در حال تست اتصال...', true);
+                const { data, error } = await supabaseClient.from('users').select('count').limit(1);
+                if (error) throw error;
+                showResult('اتصال به دیتابیس موفق است!', true);
+            } catch (error) {
+                showResult(`خطا در اتصال: ${error.message}`, false);
+            }
+        }
+
+        async function checkUsers() {
+            try {
+                showResult('در حال بررسی کاربران...', true);
+                const { data, error } = await supabaseClient.from('users').select('*');
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    showResult(`تعداد کاربران در دیتابیس: ${data.length}`, true);
+                    data.forEach(user => {
+                        showResult(`- ${user.full_name} (${user.national_id}) - ${user.role}`, true);
+                    });
+                } else {
+                    showResult('هیچ کاربری در دیتابیس یافت نشد.', false);
+                }
+            } catch (error) {
+                showResult(`خطا در بررسی کاربران: ${error.message}`, false);
+            }
+        }
+
+        async function addTestUser() {
+            try {
+                showResult('در حال افزودن کاربر تست...', true);
+                const testUser = {
+                    national_id: '9999999999',
+                    full_name: 'کاربر تست',
+                    email: 'test@example.com',
+                    phone: '09999999999',
+                    password: 'test123',
+                    role: 'student'
+                };
+                
+                const { data, error } = await supabaseClient.from('users').insert([testUser]).select();
+                if (error) throw error;
+                
+                showResult('کاربر تست با موفقیت اضافه شد!', true);
+            } catch (error) {
+                showResult(`خطا در افزودن کاربر: ${error.message}`, false);
+            }
+        }
+    </script>
+</body>
+</html>
