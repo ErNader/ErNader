@@ -242,7 +242,7 @@ async function handleRegistration(event) {
 async function handleLogin(event) {
     event.preventDefault();
 
-    const nationalId = document.getElementById('national-id').value;
+    const nationalId = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     if (isSupabaseConnected) {
