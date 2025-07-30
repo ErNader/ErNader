@@ -1902,8 +1902,22 @@ async function managePrograms() {
     
     const modal = createModal('مدیریت برنامه‌ها', `
         <div class="programs-management">
-            <button onclick="addNewProgram()" class="btn btn-primary mb-3">افزودن برنامه جدید</button>
-            <div class="programs-table">
+            <div class="management-header">
+                <div class="search-box">
+                    <input type="text" id="program-search" class="form-control" placeholder="جستجو در برنامه‌ها...">
+                </div>
+                <div class="filter-box">
+                    <select id="category-filter" class="form-control">
+                        <option value="">همه دسته‌بندی‌ها</option>
+                        <option value="academic">آموزشی</option>
+                        <option value="recreational">تفریحی</option>
+                        <option value="sports">ورزشی</option>
+                        <option value="cultural">فرهنگی</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
@@ -1911,6 +1925,7 @@ async function managePrograms() {
                             <th>دسته‌بندی</th>
                             <th>مدت</th>
                             <th>قیمت</th>
+                            <th>حداکثر شرکت‌کننده</th>
                             <th>وضعیت</th>
                             <th>عملیات</th>
                         </tr>
@@ -1919,18 +1934,37 @@ async function managePrograms() {
                         ${programs.map(program => `
                             <tr>
                                 <td>${program.name}</td>
-                                <td>${program.category}</td>
+                                <td><span class="category-badge category-${program.category}">${program.category}</span></td>
                                 <td>${program.duration}</td>
                                 <td>${program.price ? program.price.toLocaleString() + ' تومان' : 'رایگان'}</td>
+                                <td>${program.max_participants || 'نامحدود'}</td>
                                 <td><span class="status-${program.is_active ? 'active' : 'inactive'}">${program.is_active ? 'فعال' : 'غیرفعال'}</span></td>
                                 <td>
-                                    <button onclick="editProgram('${program.id}')" class="btn btn-sm btn-secondary">ویرایش</button>
-                                    <button onclick="deleteProgram('${program.id}')" class="btn btn-sm btn-danger">حذف</button>
+                                    <div class="action-buttons">
+                                        <button onclick="editProgram('${program.id}')" class="btn btn-sm btn-secondary" title="ویرایش">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="toggleProgramStatus('${program.id}')" class="btn btn-sm ${program.is_active ? 'btn-warning' : 'btn-success'}" title="${program.is_active ? 'غیرفعال کردن' : 'فعال کردن'}">
+                                            <i class="fas fa-${program.is_active ? 'ban' : 'check'}"></i>
+                                        </button>
+                                        <button onclick="deleteProgram('${program.id}')" class="btn btn-sm btn-danger" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
+            </div>
+            
+            <div class="management-footer">
+                <button onclick="addNewProgramModal()" class="btn btn-success">
+                    <i class="fas fa-plus"></i> افزودن برنامه جدید
+                </button>
+                <button onclick="exportProgramsToExcel()" class="btn btn-warning">
+                    <i class="fas fa-file-excel"></i> خروجی اکسل
+                </button>
             </div>
         </div>
     `);
@@ -2249,321 +2283,7 @@ function generateAllReportsToExcel() {
     showAlert('گزارش‌های کلی در حال تولید است...', 'info');
 }
 
-function addNewUser() {
-    showAlert('قابلیت افزودن کاربر جدید در حال توسعه است', 'info');
-}
-
-function editUser(userId) {
-    showAlert('قابلیت ویرایش کاربر در حال توسعه است', 'info');
-}
-
-function deleteUser(userId) {
-    if (confirm('آیا از حذف این کاربر اطمینان دارید؟')) {
-        showAlert('کاربر با موفقیت حذف شد!', 'success');
-    }
-}
-
-function addNewProgram() {
-    showAlert('قابلیت افزودن برنامه جدید در حال توسعه است', 'info');
-}
-
-function editProgram(programId) {
-    showAlert('قابلیت ویرایش برنامه در حال توسعه است', 'info');
-}
-
-function deleteProgram(programId) {
-    if (confirm('آیا از حذف این برنامه اطمینان دارید؟')) {
-        showAlert('برنامه با موفقیت حذف شد!', 'success');
-    }
-}
-
-function viewCenterDetails(centerId) {
-    showAlert('جزئیات مرکز در حال بارگذاری است...', 'info');
-}
-
-function compareCenters() {
-    showAlert('مقایسه مراکز در حال توسعه است...', 'info');
-}
-
-function showCentersOverview() {
-    showAlert('نمای کلی مراکز در حال توسعه است...', 'info');
-}
-
-function setNewStandards() {
-    showAlert('تعیین استاندارد جدید در حال توسعه است...', 'info');
-}
-
-function showEducationalStandards() {
-    showAlert('استانداردهای آموزشی در حال بارگذاری است...', 'info');
-}
-
-function showStandardsCompliance() {
-    showAlert('بررسی انطباق در حال توسعه است...', 'info');
-}
-
-function showPerformanceComparison() {
-    showAlert('مقایسه عملکرد در حال توسعه است...', 'info');
-}
-
-function showTrendAnalysis() {
-    showAlert('تحلیل روند در حال توسعه است...', 'info');
-}
-
-function showPerformanceAnalysis() {
-    showAlert('تحلیل عملکرد در حال توسعه است...', 'info');
-}
-
-function showAllUsers() {
-    showAlert('مشاهده تمام کاربران در حال توسعه است...', 'info');
-}
-
-function manageUserPermissions() {
-    showAlert('مدیریت دسترسی‌ها در حال توسعه است...', 'info');
-}
-
-function showUserActivity() {
-    showAlert('فعالیت کاربران در حال توسعه است...', 'info');
-}
-
-function exportUsersToExcel() {
-    showAlert('خروجی اکسل کاربران در حال توسعه است...', 'info');
-}
-
-function showAllPrograms() {
-    showAlert('مشاهده تمام برنامه‌ها در حال توسعه است...', 'info');
-}
-
-function createCenterProgram() {
-    showAlert('ایجاد برنامه مرکزی در حال توسعه است...', 'info');
-}
-
-function showProgramEffectiveness() {
-    showAlert('اثربخشی برنامه‌ها در حال توسعه است...', 'info');
-}
-
-function exportProgramsToExcel() {
-    showAlert('خروجی اکسل برنامه‌ها در حال توسعه است...', 'info');
-}
-
-function showAllGrades() {
-    showAlert('مشاهده تمام نمرات در حال توسعه است...', 'info');
-}
-
-function editAnyGrades() {
-    showAlert('ویرایش نمرات در حال توسعه است...', 'info');
-}
-
-function showGradeAnalytics() {
-    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
-}
-
-function exportGradesToExcel() {
-    showAlert('خروجی اکسل نمرات در حال توسعه است...', 'info');
-}
-
-function showAllAttendance() {
-    showAlert('مشاهده تمام حضور و غیاب در حال توسعه است...', 'info');
-}
-
-function editAnyAttendance() {
-    showAlert('ویرایش حضور و غیاب در حال توسعه است...', 'info');
-}
-
-function showAttendanceAnalytics() {
-    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
-}
-
-function exportAttendanceToExcel() {
-    showAlert('خروجی اکسل حضور و غیاب در حال توسعه است...', 'info');
-}
-
-function showGroupActivities() {
-    showAlert('مشاهده فعالیت‌های گروهی در حال توسعه است...', 'info');
-}
-
-function recordGroupActivity() {
-    showAlert('ثبت فعالیت گروهی در حال توسعه است...', 'info');
-}
-
-function editGroupActivity() {
-    showAlert('ویرایش فعالیت گروهی در حال توسعه است...', 'info');
-}
-
-function exportActivitiesToExcel() {
-    showAlert('خروجی اکسل فعالیت‌های گروهی در حال توسعه است...', 'info');
-}
-
-function showAttendanceReports() {
-    showAlert('گزارش حضور و غیاب در حال توسعه است...', 'info');
-}
-
-function showGradeReports() {
-    showAlert('گزارش نمرات در حال توسعه است...', 'info');
-}
-
-function showActivityReports() {
-    showAlert('گزارش فعالیت‌ها در حال توسعه است...', 'info');
-}
-
-function showComprehensiveReport() {
-    showAlert('گزارش جامع در حال توسعه است...', 'info');
-}
-
-function showSurveyResults() {
-    showAlert('مشاهده نتایج نظرسنجی در حال توسعه است...', 'info');
-}
-
-function createGroupSurvey() {
-    showAlert('ایجاد نظرسنجی گروهی در حال توسعه است...', 'info');
-}
-
-function showSurveyAnalytics() {
-    showAlert('تحلیل نظرسنجی در حال توسعه است...', 'info');
-}
-
-function exportSurveyResults() {
-    showAlert('خروجی اکسل نتایج نظرسنجی در حال توسعه است...', 'info');
-}
-
-function showMyStudents() {
-    showAlert('دانش‌آموزان من در حال توسعه است...', 'info');
-}
-
-function showStudentProgress() {
-    showAlert('پیشرفت دانش‌آموزان در حال توسعه است...', 'info');
-}
-
-function showStudentAnalytics() {
-    showAlert('تحلیل دانش‌آموزان در حال توسعه است...', 'info');
-}
-
-function exportStudentsToExcel() {
-    showAlert('خروجی اکسل دانش‌آموزان در حال توسعه است...', 'info');
-}
-
-function showMyGroups() {
-    showAlert('گروه‌های من در حال توسعه است...', 'info');
-}
-
-function createNewGroup() {
-    showAlert('ایجاد گروه جدید در حال توسعه است...', 'info');
-}
-
-function showGroupAnalytics() {
-    showAlert('تحلیل گروه‌ها در حال توسعه است...', 'info');
-}
-
-function exportGroupsToExcel() {
-    showAlert('خروجی اکسل گروه‌ها در حال توسعه است...', 'info');
-}
-
-function showMyCalendar() {
-    showAlert('تقویم من در حال توسعه است...', 'info');
-}
-
-function scheduleActivity() {
-    showAlert('برنامه‌ریزی فعالیت در حال توسعه است...', 'info');
-}
-
-function showProgramSchedule() {
-    showAlert('برنامه‌های گروه در حال توسعه است...', 'info');
-}
-
-function exportScheduleToExcel() {
-    showAlert('خروجی اکسل برنامه‌های گروه در حال توسعه است...', 'info');
-}
-
-function editMyProfile() {
-    showAlert('ویرایش پروفایل در حال توسعه است...', 'info');
-}
-
-function changePassword() {
-    showAlert('تغییر رمز عبور در حال توسعه است...', 'info');
-}
-
-function viewMyActivity() {
-    showAlert('فعالیت‌های من در حال توسعه است...', 'info');
-}
-
-function exportMyData() {
-    showAlert('خروجی اطلاعات در حال توسعه است...', 'info');
-}
-
-function viewMyRegistrations() {
-    showAlert('ثبت‌نام‌های من در حال توسعه است...', 'info');
-}
-
-function registerForNewProgram() {
-    showAlert('ثبت‌نام در برنامه جدید در حال توسعه است...', 'info');
-}
-
-function viewRegistrationHistory() {
-    showAlert('تاریخچه ثبت‌نام در حال توسعه است...', 'info');
-}
-
-function exportMyRegistrations() {
-    showAlert('خروجی اکسل ثبت‌نام‌های من در حال توسعه است...', 'info');
-}
-
-function viewMyDocuments() {
-    showAlert('مشاهده اسناد من در حال توسعه است...', 'info');
-}
-
-function downloadReportCard() {
-    showAlert('دانلود کارنامه در حال توسعه است...', 'info');
-}
-
-function viewGradesHistory() {
-    showAlert('تاریخچه نمرات در حال توسعه است...', 'info');
-}
-
-function viewAttendanceHistory() {
-    showAlert('تاریخچه حضور در حال توسعه است...', 'info');
-}
-
-function viewGroupActivityHistory() {
-    showAlert('تاریخچه فعالیت‌های گروهی در حال توسعه است...', 'info');
-}
-
-function viewSessionHistory() {
-    showAlert('تاریخچه جلسات در حال توسعه است...', 'info');
-}
-
-function viewMySurveyResponses() {
-    showAlert('پاسخ‌های من در حال توسعه است...', 'info');
-}
-
-function viewAvailableSurveys() {
-    showAlert('نظرسنجی‌های موجود در حال توسعه است...', 'info');
-}
-
-function joinGroupSession() {
-    showAlert('پیوستن به جلسه در حال توسعه است...', 'info');
-}
-
-function participateInSurvey() {
-    showAlert('نظرسنجی جلسه در حال توسعه است...', 'info');
-}
-
-function viewMySchedule() {
-    showAlert('برنامه زمانی من در حال توسعه است...', 'info');
-}
-
-function viewProgramProgress() {
-    showAlert('پیشرفت برنامه‌ها در حال توسعه است...', 'info');
-}
-
-function exportMySchedule() {
-    showAlert('خروجی اکسل برنامه زمانی من در حال توسعه است...', 'info');
-}
-
-function viewAttendanceAnalytics() {
-    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
-}
-
-function viewGradeAnalytics() {
-    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
-}
+// توابع تکراری حذف شدند - این توابع در بخش‌های بعدی تعریف شده‌اند
 
 function viewAttendanceHistory() {
     showAlert('تاریخچه حضور در حال توسعه است...', 'info');
@@ -3403,4 +3123,283 @@ function deleteSurvey(surveyId) {
     if (confirm('آیا از حذف این نظرسنجی اطمینان دارید؟ این عمل قابل بازگشت نیست!')) {
         showAlert('نظرسنجی با موفقیت حذف شد!', 'success');
     }
+}
+
+// حذف توابع تکراری و اضافه کردن توابع مفقود
+
+// تابع‌های مفقود برای داشبورد ادمین
+function showUserSearch() {
+    showAlert('جستجوی کاربران در حال توسعه است...', 'info');
+}
+
+function showProgramAnalytics() {
+    showAlert('تحلیل برنامه‌ها در حال توسعه است...', 'info');
+}
+
+function showGradeManagement() {
+    showAlert('مدیریت نمرات در حال توسعه است...', 'info');
+}
+
+function editGradesModal() {
+    showAlert('ویرایش نمرات در حال توسعه است...', 'info');
+}
+
+function showGradeAnalytics() {
+    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
+}
+
+function showAttendanceManagement() {
+    showAlert('مدیریت حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function editAttendanceModal() {
+    showAlert('ویرایش حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showAttendanceAnalytics() {
+    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showRequestManagement() {
+    showAlert('مدیریت درخواست‌ها در حال توسعه است...', 'info');
+}
+
+function createReportCardRequest() {
+    showAlert('درخواست کارنامه در حال توسعه است...', 'info');
+}
+
+function showRequestAnalytics() {
+    showAlert('تحلیل درخواست‌ها در حال توسعه است...', 'info');
+}
+
+function exportRequestsToExcel() {
+    showAlert('خروجی اکسل درخواست‌ها در حال توسعه است...', 'info');
+}
+
+function showGeneralReports() {
+    showAlert('گزارش‌های کلی در حال توسعه است...', 'info');
+}
+
+function showFinancialReports() {
+    showAlert('گزارش‌های مالی در حال توسعه است...', 'info');
+}
+
+function showPerformanceReports() {
+    showAlert('گزارش‌های عملکرد در حال توسعه است...', 'info');
+}
+
+function exportAllReportsToExcel() {
+    showAlert('خروجی اکسل تمام گزارش‌ها در حال توسعه است...', 'info');
+}
+
+function showSystemSettings() {
+    showAlert('تنظیمات سیستم در حال توسعه است...', 'info');
+}
+
+function showSecuritySettings() {
+    showAlert('تنظیمات امنیتی در حال توسعه است...', 'info');
+}
+
+function showBackupSettings() {
+    showAlert('پشتیبان‌گیری در حال توسعه است...', 'info');
+}
+
+function showUserPermissions() {
+    showAlert('دسترسی‌ها در حال توسعه است...', 'info');
+}
+
+// تابع‌های مفقود برای داشبورد مسئول سطوح
+function exportCentersToExcel() {
+    showAlert('خروجی اکسل مراکز در حال توسعه است...', 'info');
+}
+
+function exportStandardsToExcel() {
+    showAlert('خروجی اکسل استانداردها در حال توسعه است...', 'info');
+}
+
+function exportPerformanceToExcel() {
+    showAlert('خروجی اکسل عملکرد در حال توسعه است...', 'info');
+}
+
+function exportSupervisoryReports() {
+    showAlert('خروجی اکسل گزارش‌های نظارتی در حال توسعه است...', 'info');
+}
+
+// تابع‌های مفقود برای داشبورد رابط
+function showAttendanceOverview() {
+    showAlert('نمای کلی حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function editAttendance() {
+    showAlert('ویرایش حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showGradesOverview() {
+    showAlert('نمای کلی نمرات در حال توسعه است...', 'info');
+}
+
+function editGrades() {
+    showAlert('ویرایش نمرات در حال توسعه است...', 'info');
+}
+
+function editGroupActivity() {
+    showAlert('ویرایش فعالیت گروهی در حال توسعه است...', 'info');
+}
+
+function createGroupSurvey() {
+    showAlert('ایجاد نظرسنجی گروهی در حال توسعه است...', 'info');
+}
+
+function showSurveyAnalytics() {
+    showAlert('تحلیل نظرسنجی در حال توسعه است...', 'info');
+}
+
+function showStudentProgress() {
+    showAlert('پیشرفت دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function showStudentAnalytics() {
+    showAlert('تحلیل دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function exportStudentsToExcel() {
+    showAlert('خروجی اکسل دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function createNewGroup() {
+    showAlert('ایجاد گروه جدید در حال توسعه است...', 'info');
+}
+
+function showGroupAnalytics() {
+    showAlert('تحلیل گروه‌ها در حال توسعه است...', 'info');
+}
+
+function exportGroupsToExcel() {
+    showAlert('خروجی اکسل گروه‌ها در حال توسعه است...', 'info');
+}
+
+function showMyCalendar() {
+    showAlert('تقویم من در حال توسعه است...', 'info');
+}
+
+function scheduleActivity() {
+    showAlert('برنامه‌ریزی فعالیت در حال توسعه است...', 'info');
+}
+
+function showProgramSchedule() {
+    showAlert('برنامه‌های گروه در حال توسعه است...', 'info');
+}
+
+function exportScheduleToExcel() {
+    showAlert('خروجی اکسل برنامه‌های گروه در حال توسعه است...', 'info');
+}
+
+// تابع‌های مفقود برای داشبورد دانش‌آموز
+function viewGradeAnalytics() {
+    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
+}
+
+function viewGradeHistory() {
+    showAlert('تاریخچه نمرات در حال توسعه است...', 'info');
+}
+
+function exportMyGrades() {
+    showAlert('خروجی اکسل نمرات من در حال توسعه است...', 'info');
+}
+
+function registerForNewProgram() {
+    showAlert('ثبت‌نام در برنامه جدید در حال توسعه است...', 'info');
+}
+
+function viewRegistrationHistory() {
+    showAlert('تاریخچه ثبت‌نام در حال توسعه است...', 'info');
+}
+
+function exportMyRegistrations() {
+    showAlert('خروجی اکسل ثبت‌نام‌های من در حال توسعه است...', 'info');
+}
+
+function viewMyDocuments() {
+    showAlert('مشاهده اسناد من در حال توسعه است...', 'info');
+}
+
+function downloadReportCard() {
+    showAlert('دانلود کارنامه در حال توسعه است...', 'info');
+}
+
+function viewMySurveyResponses() {
+    showAlert('پاسخ‌های من در حال توسعه است...', 'info');
+}
+
+function viewAvailableSurveys() {
+    showAlert('نظرسنجی‌های موجود در حال توسعه است...', 'info');
+}
+
+function joinGroupSession() {
+    showAlert('پیوستن به جلسه در حال توسعه است...', 'info');
+}
+
+function viewSessionHistory() {
+    showAlert('تاریخچه جلسات در حال توسعه است...', 'info');
+}
+
+function participateInSurvey() {
+    showAlert('نظرسنجی جلسه در حال توسعه است...', 'info');
+}
+
+function viewMySchedule() {
+    showAlert('برنامه زمانی من در حال توسعه است...', 'info');
+}
+
+function viewProgramProgress() {
+    showAlert('پیشرفت برنامه‌ها در حال توسعه است...', 'info');
+}
+
+function exportMySchedule() {
+    showAlert('خروجی اکسل برنامه زمانی من در حال توسعه است...', 'info');
+}
+
+function viewAttendanceAnalytics() {
+    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function viewAttendanceHistory() {
+    showAlert('تاریخچه حضور در حال توسعه است...', 'info');
+}
+
+function viewGroupSessions() {
+    showAlert('جلسات گروهی در حال توسعه است...', 'info');
+}
+
+function exportMyAttendance() {
+    showAlert('خروجی اکسل حضور و غیاب من در حال توسعه است...', 'info');
+}
+
+function exportMyData() {
+    showAlert('خروجی اطلاعات در حال توسعه است...', 'info');
+}
+
+// تابع‌های مفقود برای داشبورد استاد
+function viewGradesHistory() {
+    showAlert('تاریخچه نمرات در حال توسعه است...', 'info');
+}
+
+function viewAttendanceHistory() {
+    showAlert('تاریخچه حضور در حال توسعه است...', 'info');
+}
+
+function viewGroupActivityHistory() {
+    showAlert('تاریخچه فعالیت‌های گروهی در حال توسعه است...', 'info');
+}
+
+function showGradeReports() {
+    showAlert('گزارش نمرات در حال توسعه است...', 'info');
+}
+
+function showActivityReports() {
+    showAlert('گزارش فعالیت‌ها در حال توسعه است...', 'info');
+}
+
+function exportMyReports() {
+    showAlert('خروجی اکسل گزارش‌های من در حال توسعه است...', 'info');
 }
