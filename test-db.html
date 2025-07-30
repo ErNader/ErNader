@@ -9,62 +9,201 @@
         .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
         .success { background-color: #d4edda; border-color: #c3e6cb; }
         .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; }
         button { padding: 10px 20px; margin: 5px; }
+        .config-info { background-color: #e2e3e5; padding: 10px; margin: 10px 0; }
     </style>
 </head>
 <body>
     <h1>تست اتصال دیتابیس</h1>
     
-    <button onclick="testConnection()">تست اتصال</button>
+    <div class="config-info">
+        <h3>اطلاعات پیکربندی:</h3>
+        <p><strong>URL:</strong> <span id="supabase-url"></span></p>
+        <p><strong>API Key:</strong> <span id="api-key-preview"></span></p>
+    </div>
+    
+    <button onclick="testConnection()">تست اتصال پایه</button>
+    <button onclick="testTables()">بررسی جداول</button>
+    <button onclick="createTables()">ایجاد جداول</button>
     <button onclick="checkUsers()">بررسی کاربران</button>
     <button onclick="addTestUser()">افزودن کاربر تست</button>
+    <button onclick="clearResults()">پاک کردن نتایج</button>
     
     <div id="results"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script>
-        function showResult(message, isSuccess = true) {
+        // نمایش اطلاعات پیکربندی
+        document.getElementById('supabase-url').textContent = SUPABASE_URL;
+        document.getElementById('api-key-preview').textContent = SUPABASE_ANON_KEY.substring(0, 20) + '...';
+
+        function showResult(message, type = 'success') {
             const results = document.getElementById('results');
             const div = document.createElement('div');
-            div.className = `result ${isSuccess ? 'success' : 'error'}`;
+            div.className = `result ${type}`;
             div.textContent = message;
             results.appendChild(div);
         }
 
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
         async function testConnection() {
             try {
-                showResult('در حال تست اتصال...', true);
-                const { data, error } = await supabaseClient.from('users').select('count').limit(1);
-                if (error) throw error;
-                showResult('اتصال به دیتابیس موفق است!', true);
+                showResult('در حال تست اتصال پایه...', 'warning');
+                
+                // تست اتصال ساده
+                const { data, error } = await supabaseClient.from('users').select('*').limit(1);
+                
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        showResult('اتصال موفق است، اما جدول users خالی است یا وجود ندارد.', 'warning');
+                    } else {
+                        showResult(`خطا در اتصال: ${error.message} (کد: ${error.code})`, 'error');
+                    }
+                } else {
+                    showResult('اتصال به دیتابیس موفق است!', 'success');
+                }
             } catch (error) {
-                showResult(`خطا در اتصال: ${error.message}`, false);
+                showResult(`خطای غیرمنتظره: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTables() {
+            try {
+                showResult('در حال بررسی جداول...', 'warning');
+                
+                // تست جداول مختلف
+                const tables = ['users', 'registrations', 'programs', 'attendance', 'grades'];
+                const results = {};
+                
+                for (const table of tables) {
+                    try {
+                        const { data, error } = await supabaseClient.from(table).select('count').limit(1);
+                        if (error) {
+                            results[table] = { exists: false, error: error.message };
+                        } else {
+                            results[table] = { exists: true, count: data.length };
+                        }
+                    } catch (err) {
+                        results[table] = { exists: false, error: err.message };
+                    }
+                }
+                
+                // نمایش نتایج
+                showResult('نتایج بررسی جداول:', 'warning');
+                for (const [table, result] of Object.entries(results)) {
+                    if (result.exists) {
+                        showResult(`✅ ${table}: موجود`, 'success');
+                    } else {
+                        showResult(`❌ ${table}: موجود نیست - ${result.error}`, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                showResult(`خطا در بررسی جداول: ${error.message}`, 'error');
+            }
+        }
+
+        async function createTables() {
+            try {
+                showResult('در حال ایجاد جداول...', 'warning');
+                
+                // ایجاد جدول users
+                const createUsersTable = `
+                    CREATE TABLE IF NOT EXISTS users (
+                        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                        national_id VARCHAR(10) UNIQUE NOT NULL,
+                        full_name VARCHAR(255) NOT NULL,
+                        email VARCHAR(255) UNIQUE NOT NULL,
+                        phone VARCHAR(15) NOT NULL,
+                        password VARCHAR(255) NOT NULL,
+                        role VARCHAR(50) NOT NULL DEFAULT 'student',
+                        birth_date DATE,
+                        education_level VARCHAR(50),
+                        parent_name VARCHAR(255),
+                        parent_phone VARCHAR(15),
+                        address TEXT,
+                        emergency_contact VARCHAR(15),
+                        medical_info TEXT,
+                        is_active BOOLEAN DEFAULT true,
+                        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                    );
+                `;
+                
+                // ایجاد جدول registrations
+                const createRegistrationsTable = `
+                    CREATE TABLE IF NOT EXISTS registrations (
+                        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                        user_id UUID REFERENCES users(id),
+                        program_type VARCHAR(50) NOT NULL,
+                        program_name VARCHAR(255),
+                        registration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                        status VARCHAR(50) DEFAULT 'pending',
+                        payment_status VARCHAR(50) DEFAULT 'pending',
+                        amount DECIMAL(10,2),
+                        notes TEXT,
+                        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                    );
+                `;
+                
+                // ایجاد جدول programs
+                const createProgramsTable = `
+                    CREATE TABLE IF NOT EXISTS programs (
+                        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        description TEXT,
+                        category VARCHAR(50) NOT NULL,
+                        duration VARCHAR(100),
+                        max_participants INTEGER,
+                        price DECIMAL(10,2),
+                        is_active BOOLEAN DEFAULT true,
+                        start_date DATE,
+                        end_date DATE,
+                        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                    );
+                `;
+                
+                showResult('توجه: ایجاد جداول از طریق SQL Editor در داشبورد Supabase انجام می‌شود.', 'warning');
+                showResult('لطفاً فایل supabase-schema.sql را در SQL Editor اجرا کنید.', 'warning');
+                
+            } catch (error) {
+                showResult(`خطا در ایجاد جداول: ${error.message}`, 'error');
             }
         }
 
         async function checkUsers() {
             try {
-                showResult('در حال بررسی کاربران...', true);
+                showResult('در حال بررسی کاربران...', 'warning');
                 const { data, error } = await supabaseClient.from('users').select('*');
-                if (error) throw error;
+                
+                if (error) {
+                    showResult(`خطا در بررسی کاربران: ${error.message}`, 'error');
+                    return;
+                }
                 
                 if (data && data.length > 0) {
-                    showResult(`تعداد کاربران در دیتابیس: ${data.length}`, true);
+                    showResult(`تعداد کاربران در دیتابیس: ${data.length}`, 'success');
                     data.forEach(user => {
-                        showResult(`- ${user.full_name} (${user.national_id}) - ${user.role}`, true);
+                        showResult(`- ${user.full_name} (${user.national_id}) - ${user.role}`, 'success');
                     });
                 } else {
-                    showResult('هیچ کاربری در دیتابیس یافت نشد.', false);
+                    showResult('هیچ کاربری در دیتابیس یافت نشد.', 'warning');
                 }
             } catch (error) {
-                showResult(`خطا در بررسی کاربران: ${error.message}`, false);
+                showResult(`خطا در بررسی کاربران: ${error.message}`, 'error');
             }
         }
 
         async function addTestUser() {
             try {
-                showResult('در حال افزودن کاربر تست...', true);
+                showResult('در حال افزودن کاربر تست...', 'warning');
                 const testUser = {
                     national_id: '9999999999',
                     full_name: 'کاربر تست',
@@ -75,11 +214,14 @@
                 };
                 
                 const { data, error } = await supabaseClient.from('users').insert([testUser]).select();
-                if (error) throw error;
                 
-                showResult('کاربر تست با موفقیت اضافه شد!', true);
+                if (error) {
+                    showResult(`خطا در افزودن کاربر: ${error.message}`, 'error');
+                } else {
+                    showResult('کاربر تست با موفقیت اضافه شد!', 'success');
+                }
             } catch (error) {
-                showResult(`خطا در افزودن کاربر: ${error.message}`, false);
+                showResult(`خطا در افزودن کاربر: ${error.message}`, 'error');
             }
         }
     </script>
