@@ -551,87 +551,87 @@ function getSupervisorPerformance() {
     return Math.floor(Math.random() * 10) + 90; // 90-100%
 }
 
-// توابع عملیات (نمونه)
+// توابع پیشرفته برای عملیات کاربران
 function uploadReportCard() {
-    alert('قابلیت آپلود کارنامه در حال توسعه است');
+    window.location.href = 'upload-report-card.html';
 }
 
 function viewGrades() {
-    alert('مشاهده نمرات در حال توسعه است');
+    window.location.href = 'grades.html';
 }
 
 function takeSurvey() {
-    alert('نظرسنجی در حال توسعه است');
+    window.location.href = 'survey.html';
 }
 
 function viewPrograms() {
-    alert('مشاهده برنامه‌ها در حال توسعه است');
+    window.location.href = 'programs.html';
 }
 
 function recordAttendance() {
-    alert('ثبت حضور و غیاب در حال توسعه است');
+    window.location.href = 'attendance.html';
 }
 
 function recordGrades() {
-    alert('ثبت نمرات در حال توسعه است');
+    window.location.href = 'grades-management.html';
 }
 
 function recordActivity() {
-    alert('ثبت فعالیت گروهی در حال توسعه است');
+    window.location.href = 'group-activities.html';
 }
 
 function viewReports() {
-    alert('گزارش‌گیری در حال توسعه است');
+    window.location.href = 'reports.html';
 }
 
 function viewAttendance() {
-    alert('مشاهده حضور و غیاب در حال توسعه است');
+    window.location.href = 'attendance.html';
 }
 
 function recordGroupActivity() {
-    alert('ثبت فعالیت گروهی در حال توسعه است');
+    window.location.href = 'group-activities.html';
 }
 
 function recordFinalGrade() {
-    alert('ثبت نمره پایان ترم در حال توسعه است');
+    window.location.href = 'grades-management.html';
 }
 
 function generateReports() {
-    alert('گزارش‌گیری در حال توسعه است');
+    window.location.href = 'reports.html';
 }
 
 function viewSurveyResults() {
-    alert('نتایج نظرسنجی در حال توسعه است');
+    window.location.href = 'survey-results.html';
 }
 
 function manageUsers() {
-    alert('مدیریت کاربران در حال توسعه است');
+    window.location.href = 'user-management.html';
 }
 
 function managePrograms() {
-    alert('مدیریت برنامه‌ها در حال توسعه است');
+    window.location.href = 'program-management.html';
 }
 
 function viewAllReports() {
-    alert('گزارش‌های کلی در حال توسعه است');
+    window.location.href = 'reports.html';
 }
 
 function systemSettings() {
-    alert('تنظیمات سیستم در حال توسعه است');
+    window.location.href = 'settings.html';
 }
 
 function superviseCenters() {
-    alert('نظارت بر مراکز در حال توسعه است');
+    window.location.href = 'center-supervision.html';
 }
 
 function generateSupervisorReports() {
-    alert('گزارش‌های نظارتی در حال توسعه است');
+    window.location.href = 'supervisor-reports.html';
 }
 
 function manageStandards() {
-    alert('مدیریت استانداردها در حال توسعه است');
+    window.location.href = 'standards-management.html';
 }
 
 function performanceAnalysis() {
-    alert('تحلیل عملکرد در حال توسعه است');
+    window.location.href = 'performance-analysis.html';
 }

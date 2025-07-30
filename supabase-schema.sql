@@ -125,6 +125,10 @@ CREATE TABLE documents (
     file_type VARCHAR(50),
     file_size INTEGER,
     document_type VARCHAR(50), -- report_card, certificate, other
+    title VARCHAR(255),
+    semester VARCHAR(50),
+    academic_year INTEGER,
+    notes TEXT,
     uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

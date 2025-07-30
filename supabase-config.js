@@ -245,6 +245,234 @@ const supabaseHelper = {
             console.error('خطا در ثبت نظرسنجی:', error);
             return { success: false, error: error.message };
         }
+    },
+
+    // دریافت فایل‌های کاربر
+    async getUserDocuments(userId, documentType = null) {
+        try {
+            let query = supabaseClient
+                .from('documents')
+                .select('*')
+                .eq('user_id', userId)
+                .order('uploaded_at', { ascending: false });
+
+            if (documentType) {
+                query = query.eq('document_type', documentType);
+            }
+
+            const { data, error } = await query;
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت فایل‌ها:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // ایجاد فایل جدید
+    async createDocument(documentData) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('documents')
+                .insert([documentData])
+                .select();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در ایجاد فایل:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // حذف فایل
+    async deleteDocument(documentId) {
+        try {
+            const { error } = await supabaseClient
+                .from('documents')
+                .delete()
+                .eq('id', documentId);
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (error) {
+            console.error('خطا در حذف فایل:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت نظرسنجی‌های فعال
+    async getActiveSurveys() {
+        try {
+            const { data, error } = await supabaseClient
+                .from('surveys')
+                .select('*')
+                .eq('is_active', true)
+                .gte('end_date', new Date().toISOString().split('T')[0])
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت نظرسنجی‌های فعال:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت نظرسنجی بر اساس ID
+    async getSurveyById(surveyId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('surveys')
+                .select('*')
+                .eq('id', surveyId)
+                .single();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت نظرسنجی:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت پاسخ‌های نظرسنجی کاربر
+    async getUserSurveyResponses(userId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('survey_responses')
+                .select(`
+                    *,
+                    surveys (
+                        title
+                    )
+                `)
+                .eq('user_id', userId)
+                .order('submitted_at', { ascending: false });
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت پاسخ‌های نظرسنجی:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت پاسخ نظرسنجی بر اساس ID
+    async getSurveyResponseById(responseId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('survey_responses')
+                .select(`
+                    *,
+                    surveys (
+                        title
+                    )
+                `)
+                .eq('id', responseId)
+                .single();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت پاسخ نظرسنجی:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت حضور و غیاب
+    async getAttendance(filters = {}) {
+        try {
+            let query = supabaseClient
+                .from('attendance')
+                .select(`
+                    *,
+                    users (
+                        full_name,
+                        national_id
+                    ),
+                    programs (
+                        name
+                    )
+                `)
+                .order('date', { ascending: false });
+
+            if (filters.programId) {
+                query = query.eq('program_id', filters.programId);
+            }
+            if (filters.date) {
+                query = query.eq('date', filters.date);
+            }
+            if (filters.userId) {
+                query = query.eq('user_id', filters.userId);
+            }
+
+            const { data, error } = await query;
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت حضور و غیاب:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // به‌روزرسانی حضور و غیاب
+    async updateAttendance(attendanceId, updateData) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('attendance')
+                .update(updateData)
+                .eq('id', attendanceId)
+                .select();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در به‌روزرسانی حضور و غیاب:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت دانش‌آموزان برنامه
+    async getProgramStudents(programId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('registrations')
+                .select(`
+                    *,
+                    users (
+                        id,
+                        full_name,
+                        national_id
+                    )
+                `)
+                .eq('program_id', programId)
+                .eq('status', 'approved');
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت دانش‌آموزان برنامه:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // ثبت حضور و غیاب گروهی
+    async recordBulkAttendance(attendanceData) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('attendance')
+                .insert(attendanceData)
+                .select();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در ثبت حضور و غیاب گروهی:', error);
+            return { success: false, error: error.message };
+        }
     }
 };
 

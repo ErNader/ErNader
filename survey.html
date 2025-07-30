@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظرسنجی - مرکز آموزشی</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="dashboard.html" class="nav-link">داشبورد</a></li>
+                    <li><a href="survey.html" class="nav-link active">نظرسنجی</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">نظرسنجی‌ها</h1>
+                    <a href="dashboard.html" class="btn btn-secondary">بازگشت به داشبورد</a>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <!-- لیست نظرسنجی‌های فعال -->
+                <div class="surveys-section">
+                    <h3>نظرسنجی‌های فعال</h3>
+                    <div id="active-surveys" class="surveys-grid">
+                        <!-- نظرسنجی‌ها توسط JavaScript نمایش داده می‌شوند -->
+                    </div>
+                </div>
+
+                <!-- نظرسنجی‌های تکمیل شده -->
+                <div class="completed-surveys-section">
+                    <h3>نظرسنجی‌های تکمیل شده</h3>
+                    <div id="completed-surveys" class="surveys-grid">
+                        <!-- نظرسنجی‌های تکمیل شده -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal برای نمایش نظرسنجی -->
+    <div id="survey-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="survey-title">عنوان نظرسنجی</h3>
+                <button class="modal-close" onclick="closeSurveyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="survey-description">توضیحات نظرسنجی</p>
+                <form id="survey-form">
+                    <div id="survey-questions">
+                        <!-- سوالات توسط JavaScript اضافه می‌شوند -->
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        ارسال نظرسنجی
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+                <div class="footer-section">
+                    <h3>لینک‌های مفید</h3>
+                    <ul>
+                        <li><a href="dashboard.html">داشبورد</a></li>
+                        <li><a href="survey.html">نظرسنجی</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="survey.js"></script>
+</body>
+</html>

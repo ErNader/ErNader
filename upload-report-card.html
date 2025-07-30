@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آپلود کارنامه - مرکز آموزشی</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="dashboard.html" class="nav-link">داشبورد</a></li>
+                    <li><a href="upload-report-card.html" class="nav-link active">آپلود کارنامه</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">آپلود کارنامه</h1>
+                    <a href="dashboard.html" class="btn btn-secondary">بازگشت به داشبورد</a>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <!-- فرم آپلود کارنامه -->
+                <div class="upload-section">
+                    <h3>آپلود کارنامه جدید</h3>
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="report-title">عنوان کارنامه:</label>
+                            <input type="text" id="report-title" class="form-control" required placeholder="مثال: کارنامه نیمسال اول ۱۴۰۲">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="report-file">فایل کارنامه:</label>
+                            <input type="file" id="report-file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <small class="form-text">فرمت‌های مجاز: PDF, JPG, JPEG, PNG (حداکثر 5MB)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="report-semester">نیمسال:</label>
+                            <select id="report-semester" class="form-control" required>
+                                <option value="">انتخاب کنید</option>
+                                <option value="first">نیمسال اول</option>
+                                <option value="second">نیمسال دوم</option>
+                                <option value="summer">تابستان</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="report-year">سال تحصیلی:</label>
+                            <input type="number" id="report-year" class="form-control" min="1400" max="1410" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="report-notes">توضیحات (اختیاری):</label>
+                            <textarea id="report-notes" class="form-control" rows="3" placeholder="توضیحات اضافی درباره کارنامه..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i>
+                            آپلود کارنامه
+                        </button>
+                    </form>
+                </div>
+
+                <!-- لیست کارنامه‌های آپلود شده -->
+                <div class="reports-section">
+                    <h3>کارنامه‌های آپلود شده</h3>
+                    <div id="reports-list" class="reports-grid">
+                        <!-- کارنامه‌ها توسط JavaScript نمایش داده می‌شوند -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+                <div class="footer-section">
+                    <h3>لینک‌های مفید</h3>
+                    <ul>
+                        <li><a href="dashboard.html">داشبورد</a></li>
+                        <li><a href="upload-report-card.html">آپلود کارنامه</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="upload-report-card.js"></script>
+</body>
+</html>

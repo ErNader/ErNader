@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حضور و غیاب - مرکز آموزشی</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="dashboard.html" class="nav-link">داشبورد</a></li>
+                    <li><a href="attendance.html" class="nav-link active">حضور و غیاب</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">مدیریت حضور و غیاب</h1>
+                    <a href="dashboard.html" class="btn btn-secondary">بازگشت به داشبورد</a>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <!-- فیلترها -->
+                <div class="filters-section">
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="program-filter">برنامه:</label>
+                            <select id="program-filter" class="form-control">
+                                <option value="">همه برنامه‌ها</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-filter">تاریخ:</label>
+                            <input type="date" id="date-filter" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button onclick="attendanceManager.loadAttendance()" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                                جستجو
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ثبت حضور و غیاب جدید -->
+                <div class="new-attendance-section">
+                    <h3>ثبت حضور و غیاب جدید</h3>
+                    <form id="attendance-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="attendance-program">برنامه:</label>
+                                <select id="attendance-program" class="form-control" required>
+                                    <option value="">انتخاب برنامه</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-date">تاریخ:</label>
+                                <input type="date" id="attendance-date" class="form-control" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i>
+                            ثبت حضور و غیاب
+                        </button>
+                    </form>
+                </div>
+
+                <!-- جدول حضور و غیاب -->
+                <div class="attendance-table-section">
+                    <h3>حضور و غیاب دانش‌آموزان</h3>
+                    <div class="table-container">
+                        <table class="table" id="attendance-table">
+                            <thead>
+                                <tr>
+                                    <th>نام دانش‌آموز</th>
+                                    <th>برنامه</th>
+                                    <th>تاریخ</th>
+                                    <th>وضعیت</th>
+                                    <th>توضیحات</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-tbody">
+                                <!-- داده‌ها توسط JavaScript اضافه می‌شوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- آمار حضور و غیاب -->
+                <div class="attendance-stats">
+                    <h3>آمار حضور و غیاب</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-number" id="total-students">0</div>
+                            <div class="stat-label">کل دانش‌آموز</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-number" id="present-count">0</div>
+                            <div class="stat-label">حاضر</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="stat-number" id="absent-count">0</div>
+                            <div class="stat-label">غایب</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-number" id="late-count">0</div>
+                            <div class="stat-label">تأخیر</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal برای ویرایش حضور و غیاب -->
+    <div id="edit-attendance-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>ویرایش حضور و غیاب</h3>
+                <button class="modal-close" onclick="attendanceManager.closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-attendance-form">
+                    <input type="hidden" id="edit-attendance-id">
+                    <div class="form-group">
+                        <label for="edit-attendance-status">وضعیت:</label>
+                        <select id="edit-attendance-status" class="form-control" required>
+                            <option value="present">حاضر</option>
+                            <option value="absent">غایب</option>
+                            <option value="late">تأخیر</option>
+                            <option value="excused">عذر موجه</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-attendance-notes">توضیحات:</label>
+                        <textarea id="edit-attendance-notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+                <div class="footer-section">
+                    <h3>لینک‌های مفید</h3>
+                    <ul>
+                        <li><a href="dashboard.html">داشبورد</a></li>
+                        <li><a href="attendance.html">حضور و غیاب</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="attendance.js"></script>
+</body>
+</html>
