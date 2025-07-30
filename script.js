@@ -5,6 +5,7 @@ let groups = JSON.parse(localStorage.getItem('groups')) || [];
 let students = JSON.parse(localStorage.getItem('students')) || [];
 let programs = JSON.parse(localStorage.getItem('programs')) || [];
 let attendance = JSON.parse(localStorage.getItem('attendance')) || [];
+let grades = JSON.parse(localStorage.getItem('grades')) || [];
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
 // آمار مرکز
@@ -200,31 +201,93 @@ async function initializeApp() {
             localStorage.setItem('students', JSON.stringify(students));
         }
 
+        // ایجاد نمرات نمونه
+        if (grades.length === 0) {
+            grades = [
+                {
+                    id: 1,
+                    studentId: '3333333333',
+                    programId: 1,
+                    grade: 18.5,
+                    gradeType: 'midterm',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    studentId: '4444444444',
+                    programId: 1,
+                    grade: 16.0,
+                    gradeType: 'midterm',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    studentId: '5555555555',
+                    programId: 2,
+                    grade: 19.0,
+                    gradeType: 'final',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 4,
+                    studentId: '6666666666',
+                    programId: 1,
+                    grade: 14.5,
+                    gradeType: 'assignment',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 5,
+                    studentId: '7777777777',
+                    programId: 2,
+                    grade: 17.0,
+                    gradeType: 'quiz',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem('grades', JSON.stringify(grades));
+        }
+
         // ایجاد برنامه‌های نمونه
         if (programs.length === 0) {
             programs = [
                 {
                     id: 1,
-                    name: 'برنامه ریاضی پیشرفته',
-                    groupId: 1,
-                    groupName: 'گروه ریاضی پیشرفته',
-                    coordinatorId: 2,
-                    coordinatorName: 'احمد رضایی',
+                    name: 'کلاس‌های تقویتی ریاضی',
+                    description: 'کلاس‌های تقویتی در دروس مختلف برای دانش‌آموزان',
+                    category: 'academic',
+                    duration: '۳ ماه',
+                    maxParticipants: 15,
+                    price: 2500000,
                     isActive: true,
-                    totalSessions: 20,
-                    completedSessions: 15,
+                    startDate: '2024-01-01',
+                    endDate: '2024-03-31',
                     createdAt: new Date().toISOString()
                 },
                 {
                     id: 2,
-                    name: 'برنامه علوم تجربی',
-                    groupId: 2,
-                    groupName: 'گروه علوم تجربی',
-                    coordinatorId: 3,
-                    coordinatorName: 'فاطمه محمدی',
+                    name: 'برنامه‌نویسی',
+                    description: 'آموزش برنامه‌نویسی و مهارت‌های دیجیتال',
+                    category: 'academic',
+                    duration: '۶ ماه',
+                    maxParticipants: 12,
+                    price: 4000000,
                     isActive: true,
-                    totalSessions: 18,
-                    completedSessions: 12,
+                    startDate: '2024-01-01',
+                    endDate: '2024-06-30',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    name: 'اردوهای تفریحی',
+                    description: 'اردوهای متنوع و جذاب در طبیعت',
+                    category: 'recreational',
+                    duration: '۳ روز',
+                    maxParticipants: 30,
+                    price: 1500000,
+                    isActive: true,
+                    startDate: '2024-02-01',
+                    endDate: '2024-02-03',
                     createdAt: new Date().toISOString()
                 }
             ];
@@ -236,63 +299,48 @@ async function initializeApp() {
             attendance = [
                 {
                     id: 1,
+                    studentId: '3333333333',
                     programId: 1,
-                    programName: 'برنامه ریاضی پیشرفته',
-                    groupId: 1,
-                    groupName: 'گروه ریاضی پیشرفته',
-                    coordinatorId: 2,
-                    coordinatorName: 'احمد رضایی',
-                    sessionNumber: 1,
                     date: '2024-01-15',
-                    presentStudents: 3,
-                    absentStudents: 0,
-                    totalStudents: 3,
-                    attendanceRate: 100.0
+                    status: 'present',
+                    recordedBy: 2,
+                    createdAt: new Date().toISOString()
                 },
                 {
                     id: 2,
-                    programId: 2,
-                    programName: 'برنامه علوم تجربی',
-                    groupId: 2,
-                    groupName: 'گروه علوم تجربی',
-                    coordinatorId: 3,
-                    coordinatorName: 'فاطمه محمدی',
-                    sessionNumber: 1,
+                    studentId: '4444444444',
+                    programId: 1,
                     date: '2024-01-15',
-                    presentStudents: 2,
-                    absentStudents: 0,
-                    totalStudents: 2,
-                    attendanceRate: 100.0
+                    status: 'present',
+                    recordedBy: 2,
+                    createdAt: new Date().toISOString()
                 },
                 {
                     id: 3,
-                    programId: 1,
-                    programName: 'برنامه ریاضی پیشرفته',
-                    groupId: 1,
-                    groupName: 'گروه ریاضی پیشرفته',
-                    coordinatorId: 2,
-                    coordinatorName: 'احمد رضایی',
-                    sessionNumber: 2,
+                    studentId: '5555555555',
+                    programId: 2,
                     date: '2024-01-16',
-                    presentStudents: 2,
-                    absentStudents: 1,
-                    totalStudents: 3,
-                    attendanceRate: 66.7
+                    status: 'late',
+                    recordedBy: 3,
+                    createdAt: new Date().toISOString()
                 },
                 {
                     id: 4,
+                    studentId: '6666666666',
+                    programId: 1,
+                    date: '2024-01-17',
+                    status: 'absent',
+                    recordedBy: 2,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 5,
+                    studentId: '7777777777',
                     programId: 2,
-                    programName: 'برنامه علوم تجربی',
-                    groupId: 2,
-                    groupName: 'گروه علوم تجربی',
-                    coordinatorId: 3,
-                    coordinatorName: 'فاطمه محمدی',
-                    sessionNumber: 2,
-                    date: '2024-01-16',
-                    presentStudents: 1,
-                    absentStudents: 1,
-                    totalStudents: 2,
-                    attendanceRate: 50.0
+                    date: '2024-01-17',
+                    status: 'present',
+                    recordedBy: 3,
+                    createdAt: new Date().toISOString()
                 }
             ];
             localStorage.setItem('attendance', JSON.stringify(attendance));
@@ -1537,94 +1585,124 @@ async function viewPrograms() {
 
 // ثبت حضور و غیاب
 async function recordAttendance() {
-    let students = [];
-    
-    if (isSupabaseConnected) {
-        const { data, error } = await supabaseClient
-            .from('users')
-            .select('id, full_name, national_id')
-            .eq('role', 'student');
-        
-        if (!error && data) {
-            students = data;
-        }
-    } else {
-        students = registrations.map(r => ({
-            id: r.id,
-            full_name: r.fullName,
-            national_id: r.nationalId
-        }));
-    }
-    
-    if (students.length === 0) {
-        showAlert('هیچ دانش‌آموزی یافت نشد!', 'info');
+    if (!currentUser || (currentUser.type !== 'admin' && currentUser.type !== 'coordinator')) {
+        showAlert('فقط مدیران و رابط‌ها می‌توانند حضور و غیاب ثبت کنند', 'error');
         return;
     }
-    
-    const modal = createModal('ثبت حضور و غیاب', `
-        <form id="attendance-form">
-            <div class="form-group">
-                <label>تاریخ:</label>
-                <input type="date" id="attendance-date" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
-            </div>
-            <div class="students-attendance">
-                ${students.map(student => `
-                    <div class="student-attendance">
-                        <span>${student.full_name} (${student.national_id})</span>
-                        <select name="attendance_${student.id}" class="form-control" required>
-                            <option value="present">حاضر</option>
-                            <option value="absent">غایب</option>
-                            <option value="late">تأخیر</option>
-                            <option value="excused">عذر موجه</option>
-                        </select>
-                    </div>
-                `).join('')}
-            </div>
-            <button type="submit" class="btn btn-primary">ثبت حضور و غیاب</button>
-        </form>
-    `);
-    
-    document.body.appendChild(modal);
-    
-    // مدیریت ثبت حضور و غیاب
+
+    // Get coordinator's students
+    let coordinatorStudents = [];
+    if (currentUser.type === 'coordinator') {
+        coordinatorStudents = students.filter(s => s.coordinatorId === currentUser.id);
+    } else {
+        coordinatorStudents = students;
+    }
+
+    if (coordinatorStudents.length === 0) {
+        showAlert('هیچ دانش‌آموزی برای ثبت حضور و غیاب یافت نشد', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="record-attendance-modal">
+            <h3>ثبت حضور و غیاب</h3>
+            
+            <form id="attendance-form">
+                <div class="form-group">
+                    <label>انتخاب برنامه:</label>
+                    <select id="attendance-program" class="form-control" required>
+                        <option value="">انتخاب کنید</option>
+                        ${programs.map(program => `
+                            <option value="${program.id}">${program.name}</option>
+                        `).join('')}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>تاریخ:</label>
+                    <input type="date" id="attendance-date" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
+                </div>
+                
+                <div class="students-attendance">
+                    <h4>حضور و غیاب دانش‌آموزان</h4>
+                    ${coordinatorStudents.map(student => `
+                        <div class="student-attendance">
+                            <label>${student.fullName}:</label>
+                            <select name="attendance_${student.id}" class="form-control" required>
+                                <option value="">انتخاب کنید</option>
+                                <option value="present">حاضر</option>
+                                <option value="absent">غایب</option>
+                                <option value="late">تأخیر</option>
+                                <option value="excused">عذر موجه</option>
+                            </select>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">ثبت حضور و غیاب</button>
+                    <button type="button" onclick="closeModal()" class="btn btn-secondary">انصراف</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    createModal('ثبت حضور و غیاب', content);
+
+    // Handle form submission
     document.getElementById('attendance-form').onsubmit = async (e) => {
         e.preventDefault();
+        
         const formData = new FormData(e.target);
+        const programId = document.getElementById('attendance-program').value;
         const date = document.getElementById('attendance-date').value;
         
-        const attendanceRecords = students.map(student => ({
-            user_id: student.id,
+        if (!programId) {
+            showAlert('لطفاً برنامه را انتخاب کنید', 'error');
+            return;
+        }
+        
+        const attendanceRecords = coordinatorStudents.map(student => ({
+            id: Date.now() + Math.random(),
+            studentId: student.id,
+            programId: programId,
             date: date,
             status: formData.get(`attendance_${student.id}`),
-            recorded_by: currentUser.id
+            recordedBy: currentUser.id,
+            createdAt: new Date().toISOString()
         }));
         
-        if (isSupabaseConnected) {
-            const { data, error } = await supabaseClient
-                .from('attendance')
-                .insert(attendanceRecords);
-            
-            if (!error) {
-                showAlert('حضور و غیاب با موفقیت ثبت شد!', 'success');
-                modal.remove();
-            } else {
-                showAlert('خطا در ثبت حضور و غیاب: ' + error.message, 'danger');
+        try {
+            // Save to database if connected
+            if (isSupabaseConnected && typeof supabaseClient !== 'undefined') {
+                const { error } = await supabaseClient
+                    .from('attendance')
+                    .insert(attendanceRecords);
+                
+                if (error) {
+                    console.error('Error saving attendance:', error);
+                    showAlert('خطا در ذخیره‌سازی در دیتابیس', 'error');
+                    return;
+                }
             }
-        } else {
-            const attendance = JSON.parse(localStorage.getItem('attendance')) || [];
+            
+            // Save to localStorage
             attendanceRecords.forEach(record => {
-                attendance.push({
-                    id: Date.now() + Math.random(),
-                    userId: record.user_id,
-                    date: record.date,
-                    status: record.status,
-                    recordedBy: record.recorded_by,
-                    createdAt: new Date().toISOString()
-                });
+                attendance.push(record);
             });
             localStorage.setItem('attendance', JSON.stringify(attendance));
-            showAlert('حضور و غیاب با موفقیت ثبت شد!', 'success');
-            modal.remove();
+            
+            showAlert('حضور و غیاب با موفقیت ثبت شد', 'success');
+            closeModal();
+            
+            // Refresh dashboard if on dashboard page
+            if (window.location.pathname.includes('dashboard.html')) {
+                createDashboard();
+            }
+            
+        } catch (error) {
+            console.error('Error recording attendance:', error);
+            showAlert('خطا در ثبت حضور و غیاب', 'error');
         }
     };
 }
@@ -3338,90 +3416,1638 @@ function showGradeAnalytics() {
 }
 
 function showAttendanceManagement() {
-    showAlert('مدیریت حضور و غیاب در حال توسعه است...', 'info');
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="attendance-management">
+            <h3>مدیریت حضور و غیاب</h3>
+            
+            <div class="management-tabs">
+                <button class="tab-btn active" onclick="showAttendanceTab('overview')">نمای کلی</button>
+                <button class="tab-btn" onclick="showAttendanceTab('by-program')">بر اساس برنامه</button>
+                <button class="tab-btn" onclick="showAttendanceTab('by-group')">بر اساس گروه</button>
+                <button class="tab-btn" onclick="showAttendanceTab('reports')">گزارش‌ها</button>
+            </div>
+            
+            <div id="attendance-content">
+                <div id="attendance-overview" class="tab-content active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>کل دانش‌آموزان</h4>
+                            <div class="number">${students.length}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>میانگین حضور</h4>
+                            <div class="number">${calculateOverallAttendance()}%</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>جلسات امروز</h4>
+                            <div class="number">${getTodaySessionsCount()}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>غیبت‌های امروز</h4>
+                            <div class="number">${getTodayAbsencesCount()}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-attendance">
+                        <h4>حضور و غیاب اخیر</h4>
+                        <div class="attendance-list">
+                            ${getRecentAttendanceList()}
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="attendance-by-program" class="tab-content">
+                    <div class="program-selector">
+                        <label>انتخاب برنامه:</label>
+                        <select id="program-select" onchange="loadProgramAttendance()">
+                            <option value="">همه برنامه‌ها</option>
+                            ${programs.map(program => `
+                                <option value="${program.id}">${program.name}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div id="program-attendance-data"></div>
+                </div>
+                
+                <div id="attendance-by-group" class="tab-content">
+                    <div class="group-selector">
+                        <label>انتخاب گروه:</label>
+                        <select id="group-select" onchange="loadGroupAttendance()">
+                            <option value="">همه گروه‌ها</option>
+                            ${groups.map(group => `
+                                <option value="${group.id}">${group.name}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div id="group-attendance-data"></div>
+                </div>
+                
+                <div id="attendance-reports" class="tab-content">
+                    <div class="report-options">
+                        <button onclick="generateAttendanceReport('daily')" class="btn btn-primary">گزارش روزانه</button>
+                        <button onclick="generateAttendanceReport('weekly')" class="btn btn-success">گزارش هفتگی</button>
+                        <button onclick="generateAttendanceReport('monthly')" class="btn btn-info">گزارش ماهانه</button>
+                        <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                    </div>
+                    <div id="report-results"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    createModal('مدیریت حضور و غیاب', content);
+    loadAttendanceData();
+}
+
+function showAttendanceTab(tabName) {
+    // Remove active class from all tabs and contents
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    // Add active class to selected tab and content
+    document.querySelector(`[onclick="showAttendanceTab('${tabName}')"]`).classList.add('active');
+    document.getElementById(`attendance-${tabName}`).classList.add('active');
+    
+    // Load specific data for the tab
+    switch(tabName) {
+        case 'by-program':
+            loadProgramAttendance();
+            break;
+        case 'by-group':
+            loadGroupAttendance();
+            break;
+        case 'reports':
+            // Reports tab is already loaded
+            break;
+    }
+}
+
+function loadAttendanceData() {
+    // This function will load the initial attendance data
+    calculateOverallAttendance();
+    getTodaySessionsCount();
+    getTodayAbsencesCount();
+}
+
+function calculateOverallAttendance() {
+    if (attendance.length === 0) return 0;
+    
+    const totalRecords = attendance.length;
+    const presentRecords = attendance.filter(a => a.status === 'present').length;
+    return Math.round((presentRecords / totalRecords) * 100);
+}
+
+function getTodaySessionsCount() {
+    const today = new Date().toISOString().split('T')[0];
+    const todayAttendance = attendance.filter(a => 
+        (a.date || a.attendanceDate) === today
+    );
+    return todayAttendance.length;
+}
+
+function getTodayAbsencesCount() {
+    const today = new Date().toISOString().split('T')[0];
+    const todayAbsences = attendance.filter(a => 
+        (a.date || a.attendanceDate) === today && a.status === 'absent'
+    );
+    return todayAbsences.length;
+}
+
+function getRecentAttendanceList() {
+    const recentAttendance = attendance
+        .sort((a, b) => new Date(b.date || b.attendanceDate) - new Date(a.date || a.attendanceDate))
+        .slice(0, 10);
+    
+    if (recentAttendance.length === 0) {
+        return '<p>هیچ رکورد حضور و غیابی یافت نشد</p>';
+    }
+    
+    return recentAttendance.map(record => {
+        const student = students.find(s => s.id === record.studentId || s.nationalId === record.studentId);
+        const statusClass = record.status === 'present' ? 'success' : 
+                           record.status === 'absent' ? 'error' : 
+                           record.status === 'late' ? 'warning' : 'info';
+        
+        return `
+            <div class="attendance-item ${statusClass}">
+                <div class="student-name">${student ? student.fullName : 'نامشخص'}</div>
+                <div class="attendance-date">${new Date(record.date || record.attendanceDate).toLocaleDateString('fa-IR')}</div>
+                <div class="attendance-status">${getStatusText(record.status)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function getStatusText(status) {
+    const statusMap = {
+        'present': 'حاضر',
+        'absent': 'غایب',
+        'late': 'تأخیر',
+        'excused': 'عذر موجه'
+    };
+    return statusMap[status] || status;
+}
+
+function loadProgramAttendance() {
+    const programId = document.getElementById('program-select').value;
+    const contentDiv = document.getElementById('program-attendance-data');
+    
+    if (!programId) {
+        contentDiv.innerHTML = '<p>لطفاً یک برنامه انتخاب کنید</p>';
+        return;
+    }
+    
+    const program = programs.find(p => p.id === programId);
+    const programAttendance = attendance.filter(a => a.programId === programId);
+    
+    if (programAttendance.length === 0) {
+        contentDiv.innerHTML = '<p>هیچ رکورد حضور و غیابی برای این برنامه یافت نشد</p>';
+        return;
+    }
+    
+    const attendanceStats = calculateProgramAttendanceStats(programAttendance);
+    
+    contentDiv.innerHTML = `
+        <div class="program-attendance-stats">
+            <h4>آمار حضور و غیاب - ${program.name}</h4>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h5>کل جلسات</h5>
+                    <div class="number">${attendanceStats.totalSessions}</div>
+                </div>
+                <div class="stat-card">
+                    <h5>میانگین حضور</h5>
+                    <div class="number">${attendanceStats.averageAttendance}%</div>
+                </div>
+                <div class="stat-card">
+                    <h5>تعداد دانش‌آموزان</h5>
+                    <div class="number">${attendanceStats.studentCount}</div>
+                </div>
+            </div>
+            
+            <div class="attendance-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>دانش‌آموز</th>
+                            <th>تاریخ</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${programAttendance.map(record => {
+                            const student = students.find(s => s.id === record.studentId || s.nationalId === record.studentId);
+                            return `
+                                <tr>
+                                    <td>${student ? student.fullName : 'نامشخص'}</td>
+                                    <td>${new Date(record.date || record.attendanceDate).toLocaleDateString('fa-IR')}</td>
+                                    <td><span class="status-badge ${record.status}">${getStatusText(record.status)}</span></td>
+                                    <td>
+                                        <button onclick="editAttendanceRecord('${record.id}')" class="btn btn-sm btn-primary">ویرایش</button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function loadGroupAttendance() {
+    const groupId = document.getElementById('group-select').value;
+    const contentDiv = document.getElementById('group-attendance-data');
+    
+    if (!groupId) {
+        contentDiv.innerHTML = '<p>لطفاً یک گروه انتخاب کنید</p>';
+        return;
+    }
+    
+    const group = groups.find(g => g.id === groupId);
+    const groupStudents = students.filter(s => s.groupId === groupId);
+    const groupAttendance = attendance.filter(a => 
+        groupStudents.some(student => student.id === a.studentId || student.nationalId === a.studentId)
+    );
+    
+    if (groupAttendance.length === 0) {
+        contentDiv.innerHTML = '<p>هیچ رکورد حضور و غیابی برای این گروه یافت نشد</p>';
+        return;
+    }
+    
+    const attendanceStats = calculateGroupAttendanceStats(groupAttendance, groupStudents);
+    
+    contentDiv.innerHTML = `
+        <div class="group-attendance-stats">
+            <h4>آمار حضور و غیاب - ${group.name}</h4>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h5>تعداد دانش‌آموزان</h5>
+                    <div class="number">${groupStudents.length}</div>
+                </div>
+                <div class="stat-card">
+                    <h5>میانگین حضور گروه</h5>
+                    <div class="number">${attendanceStats.averageAttendance}%</div>
+                </div>
+                <div class="stat-card">
+                    <h5>کل جلسات</h5>
+                    <div class="number">${attendanceStats.totalSessions}</div>
+                </div>
+            </div>
+            
+            <div class="student-attendance-list">
+                <h5>حضور و غیاب دانش‌آموزان</h5>
+                ${groupStudents.map(student => {
+                    const studentAttendance = groupAttendance.filter(a => 
+                        a.studentId === student.id || a.studentId === student.nationalId
+                    );
+                    const attendanceRate = studentAttendance.length > 0 ? 
+                        Math.round((studentAttendance.filter(a => a.status === 'present').length / studentAttendance.length) * 100) : 0;
+                    
+                    return `
+                        <div class="student-attendance-item">
+                            <div class="student-info">
+                                <strong>${student.fullName}</strong>
+                                <span class="attendance-rate">${attendanceRate}% حضور</span>
+                            </div>
+                            <div class="attendance-details">
+                                <span>حاضر: ${studentAttendance.filter(a => a.status === 'present').length}</span>
+                                <span>غایب: ${studentAttendance.filter(a => a.status === 'absent').length}</span>
+                                <span>تأخیر: ${studentAttendance.filter(a => a.status === 'late').length}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function calculateProgramAttendanceStats(programAttendance) {
+    const uniqueStudents = [...new Set(programAttendance.map(a => a.studentId))];
+    const totalSessions = programAttendance.length;
+    const presentCount = programAttendance.filter(a => a.status === 'present').length;
+    const averageAttendance = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : 0;
+    
+    return {
+        totalSessions,
+        averageAttendance,
+        studentCount: uniqueStudents.length
+    };
+}
+
+function calculateGroupAttendanceStats(groupAttendance, groupStudents) {
+    const totalSessions = groupAttendance.length;
+    const presentCount = groupAttendance.filter(a => a.status === 'present').length;
+    const averageAttendance = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : 0;
+    
+    return {
+        totalSessions,
+        averageAttendance
+    };
+}
+
+function generateAttendanceReport(type) {
+    const reportDiv = document.getElementById('report-results');
+    reportDiv.innerHTML = '<div class="loading">در حال تولید گزارش...</div>';
+    
+    setTimeout(() => {
+        let reportData = [];
+        const today = new Date();
+        
+        switch(type) {
+            case 'daily':
+                reportData = generateDailyReport(today);
+                break;
+            case 'weekly':
+                reportData = generateWeeklyReport(today);
+                break;
+            case 'monthly':
+                reportData = generateMonthlyReport(today);
+                break;
+        }
+        
+        reportDiv.innerHTML = `
+            <div class="report-content">
+                <h4>گزارش ${type === 'daily' ? 'روزانه' : type === 'weekly' ? 'هفتگی' : 'ماهانه'} حضور و غیاب</h4>
+                <div class="report-summary">
+                    <div class="summary-item">
+                        <strong>تاریخ گزارش:</strong> ${today.toLocaleDateString('fa-IR')}
+                    </div>
+                    <div class="summary-item">
+                        <strong>کل رکوردها:</strong> ${reportData.length}
+                    </div>
+                    <div class="summary-item">
+                        <strong>میانگین حضور:</strong> ${calculateReportAttendance(reportData)}%
+                    </div>
+                </div>
+                
+                <div class="report-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>دانش‌آموز</th>
+                                <th>برنامه</th>
+                                <th>تاریخ</th>
+                                <th>وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${reportData.map(record => {
+                                const student = students.find(s => s.id === record.studentId || s.nationalId === record.studentId);
+                                const program = programs.find(p => p.id === record.programId);
+                                return `
+                                    <tr>
+                                        <td>${student ? student.fullName : 'نامشخص'}</td>
+                                        <td>${program ? program.name : 'نامشخص'}</td>
+                                        <td>${new Date(record.date || record.attendanceDate).toLocaleDateString('fa-IR')}</td>
+                                        <td><span class="status-badge ${record.status}">${getStatusText(record.status)}</span></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+function generateDailyReport(date) {
+    const dateStr = date.toISOString().split('T')[0];
+    return attendance.filter(a => (a.date || a.attendanceDate) === dateStr);
+}
+
+function generateWeeklyReport(date) {
+    const weekStart = new Date(date);
+    weekStart.setDate(date.getDate() - date.getDay());
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    
+    return attendance.filter(a => {
+        const recordDate = new Date(a.date || a.attendanceDate);
+        return recordDate >= weekStart && recordDate <= weekEnd;
+    });
+}
+
+function generateMonthlyReport(date) {
+    const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+    const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    
+    return attendance.filter(a => {
+        const recordDate = new Date(a.date || a.attendanceDate);
+        return recordDate >= monthStart && recordDate <= monthEnd;
+    });
+}
+
+function calculateReportAttendance(reportData) {
+    if (reportData.length === 0) return 0;
+    const presentCount = reportData.filter(a => a.status === 'present').length;
+    return Math.round((presentCount / reportData.length) * 100);
 }
 
 function editAttendanceModal() {
-    showAlert('ویرایش حضور و غیاب در حال توسعه است...', 'info');
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="edit-attendance-modal">
+            <h3>ویرایش حضور و غیاب</h3>
+            
+            <div class="search-section">
+                <label>جستجو بر اساس:</label>
+                <select id="search-type" onchange="toggleSearchFields()">
+                    <option value="date">تاریخ</option>
+                    <option value="student">دانش‌آموز</option>
+                    <option value="program">برنامه</option>
+                </select>
+                
+                <div id="date-search" class="search-field">
+                    <input type="date" id="search-date" class="form-control">
+                    <button onclick="searchAttendanceByDate()" class="btn btn-primary">جستجو</button>
+                </div>
+                
+                <div id="student-search" class="search-field" style="display: none;">
+                    <select id="search-student" class="form-control">
+                        <option value="">انتخاب دانش‌آموز</option>
+                        ${students.map(student => `
+                            <option value="${student.id}">${student.fullName}</option>
+                        `).join('')}
+                    </select>
+                    <button onclick="searchAttendanceByStudent()" class="btn btn-primary">جستجو</button>
+                </div>
+                
+                <div id="program-search" class="search-field" style="display: none;">
+                    <select id="search-program" class="form-control">
+                        <option value="">انتخاب برنامه</option>
+                        ${programs.map(program => `
+                            <option value="${program.id}">${program.name}</option>
+                        `).join('')}
+                    </select>
+                    <button onclick="searchAttendanceByProgram()" class="btn btn-primary">جستجو</button>
+                </div>
+            </div>
+            
+            <div id="attendance-edit-results"></div>
+        </div>
+    `;
+
+    createModal('ویرایش حضور و غیاب', content);
+}
+
+function toggleSearchFields() {
+    const searchType = document.getElementById('search-type').value;
+    
+    // Hide all search fields
+    document.querySelectorAll('.search-field').forEach(field => field.style.display = 'none');
+    
+    // Show selected search field
+    document.getElementById(`${searchType}-search`).style.display = 'block';
+}
+
+function searchAttendanceByDate() {
+    const date = document.getElementById('search-date').value;
+    if (!date) {
+        showAlert('لطفاً تاریخ را انتخاب کنید', 'error');
+        return;
+    }
+    
+    const filteredAttendance = attendance.filter(a => (a.date || a.attendanceDate) === date);
+    displayAttendanceForEdit(filteredAttendance);
+}
+
+function searchAttendanceByStudent() {
+    const studentId = document.getElementById('search-student').value;
+    if (!studentId) {
+        showAlert('لطفاً دانش‌آموز را انتخاب کنید', 'error');
+        return;
+    }
+    
+    const filteredAttendance = attendance.filter(a => 
+        a.studentId === studentId || a.studentId === students.find(s => s.id === studentId)?.nationalId
+    );
+    displayAttendanceForEdit(filteredAttendance);
+}
+
+function searchAttendanceByProgram() {
+    const programId = document.getElementById('search-program').value;
+    if (!programId) {
+        showAlert('لطفاً برنامه را انتخاب کنید', 'error');
+        return;
+    }
+    
+    const filteredAttendance = attendance.filter(a => a.programId === programId);
+    displayAttendanceForEdit(filteredAttendance);
+}
+
+function displayAttendanceForEdit(attendanceRecords) {
+    const resultsDiv = document.getElementById('attendance-edit-results');
+    
+    if (attendanceRecords.length === 0) {
+        resultsDiv.innerHTML = '<p>هیچ رکوردی یافت نشد</p>';
+        return;
+    }
+    
+    resultsDiv.innerHTML = `
+        <div class="attendance-edit-list">
+            <h4>نتایج جستجو (${attendanceRecords.length} رکورد)</h4>
+            ${attendanceRecords.map(record => {
+                const student = students.find(s => s.id === record.studentId || s.nationalId === record.studentId);
+                const program = programs.find(p => p.id === record.programId);
+                
+                return `
+                    <div class="attendance-edit-item">
+                        <div class="record-info">
+                            <strong>${student ? student.fullName : 'نامشخص'}</strong>
+                            <span>${program ? program.name : 'نامشخص'}</span>
+                            <span>${new Date(record.date || record.attendanceDate).toLocaleDateString('fa-IR')}</span>
+                        </div>
+                        <div class="edit-controls">
+                            <select id="status-${record.id}" class="form-control">
+                                <option value="present" ${record.status === 'present' ? 'selected' : ''}>حاضر</option>
+                                <option value="absent" ${record.status === 'absent' ? 'selected' : ''}>غایب</option>
+                                <option value="late" ${record.status === 'late' ? 'selected' : ''}>تأخیر</option>
+                                <option value="excused" ${record.status === 'excused' ? 'selected' : ''}>عذر موجه</option>
+                            </select>
+                            <button onclick="updateAttendanceRecord('${record.id}')" class="btn btn-sm btn-success">ذخیره</button>
+                            <button onclick="deleteAttendanceRecord('${record.id}')" class="btn btn-sm btn-danger">حذف</button>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function updateAttendanceRecord(recordId) {
+    const newStatus = document.getElementById(`status-${recordId}`).value;
+    const recordIndex = attendance.findIndex(a => a.id === recordId);
+    
+    if (recordIndex !== -1) {
+        attendance[recordIndex].status = newStatus;
+        attendance[recordIndex].updatedAt = new Date().toISOString();
+        
+        // Update in localStorage
+        localStorage.setItem('attendance', JSON.stringify(attendance));
+        
+        // Update in database if connected
+        if (isSupabaseConnected && typeof supabaseClient !== 'undefined') {
+            supabaseClient
+                .from('attendance')
+                .update({ status: newStatus, updated_at: new Date().toISOString() })
+                .eq('id', recordId)
+                .then(({ error }) => {
+                    if (error) {
+                        console.error('Error updating attendance:', error);
+                    }
+                });
+        }
+        
+        showAlert('رکورد حضور و غیاب با موفقیت به‌روزرسانی شد', 'success');
+    }
+}
+
+function deleteAttendanceRecord(recordId) {
+    if (confirm('آیا از حذف این رکورد اطمینان دارید؟')) {
+        const recordIndex = attendance.findIndex(a => a.id === recordId);
+        
+        if (recordIndex !== -1) {
+            attendance.splice(recordIndex, 1);
+            
+            // Update in localStorage
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+            
+            // Delete from database if connected
+            if (isSupabaseConnected && typeof supabaseClient !== 'undefined') {
+                supabaseClient
+                    .from('attendance')
+                    .delete()
+                    .eq('id', recordId)
+                    .then(({ error }) => {
+                        if (error) {
+                            console.error('Error deleting attendance:', error);
+                        }
+                    });
+            }
+            
+            showAlert('رکورد حضور و غیاب با موفقیت حذف شد', 'success');
+            
+            // Refresh the display
+            const searchType = document.getElementById('search-type').value;
+            switch(searchType) {
+                case 'date':
+                    searchAttendanceByDate();
+                    break;
+                case 'student':
+                    searchAttendanceByStudent();
+                    break;
+                case 'program':
+                    searchAttendanceByProgram();
+                    break;
+            }
+        }
+    }
 }
 
 function showAttendanceAnalytics() {
-    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="attendance-analytics">
+            <h3>تحلیل حضور و غیاب</h3>
+            
+            <div class="analytics-filters">
+                <label>بازه زمانی:</label>
+                <select id="time-range" onchange="updateAnalytics()">
+                    <option value="7">هفته گذشته</option>
+                    <option value="30" selected>ماه گذشته</option>
+                    <option value="90">سه ماه گذشته</option>
+                    <option value="365">سال گذشته</option>
+                </select>
+                
+                <label>برنامه:</label>
+                <select id="analytics-program" onchange="updateAnalytics()">
+                    <option value="">همه برنامه‌ها</option>
+                    ${programs.map(program => `
+                        <option value="${program.id}">${program.name}</option>
+                    `).join('')}
+                </select>
+            </div>
+            
+            <div class="analytics-charts">
+                <div class="chart-container">
+                    <h4>نرخ حضور در طول زمان</h4>
+                    <div id="attendance-trend-chart" class="chart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>مقایسه برنامه‌ها</h4>
+                    <div id="program-comparison-chart" class="chart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>توزیع وضعیت‌های حضور</h4>
+                    <div id="status-distribution-chart" class="chart"></div>
+                </div>
+            </div>
+            
+            <div class="analytics-summary">
+                <div class="summary-card">
+                    <h5>آمار کلی</h5>
+                    <div id="overall-stats"></div>
+                </div>
+                
+                <div class="summary-card">
+                    <h5>برترین دانش‌آموزان</h5>
+                    <div id="top-students"></div>
+                </div>
+                
+                <div class="summary-card">
+                    <h5>نیازمند توجه</h5>
+                    <div id="needs-attention"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    createModal('تحلیل حضور و غیاب', content);
+    updateAnalytics();
 }
 
-function showRequestManagement() {
-    showAlert('مدیریت درخواست‌ها در حال توسعه است...', 'info');
+function updateAnalytics() {
+    const timeRange = parseInt(document.getElementById('time-range').value);
+    const programId = document.getElementById('analytics-program').value;
+    
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - timeRange);
+    
+    let filteredAttendance = attendance.filter(a => {
+        const recordDate = new Date(a.date || a.attendanceDate);
+        return recordDate >= startDate && recordDate <= endDate;
+    });
+    
+    if (programId) {
+        filteredAttendance = filteredAttendance.filter(a => a.programId === programId);
+    }
+    
+    updateAttendanceTrendChart(filteredAttendance, startDate, endDate);
+    updateProgramComparisonChart(filteredAttendance);
+    updateStatusDistributionChart(filteredAttendance);
+    updateOverallStats(filteredAttendance);
+    updateTopStudents(filteredAttendance);
+    updateNeedsAttention(filteredAttendance);
 }
 
-function createReportCardRequest() {
-    showAlert('درخواست کارنامه در حال توسعه است...', 'info');
+function updateAttendanceTrendChart(attendanceData, startDate, endDate) {
+    const chartDiv = document.getElementById('attendance-trend-chart');
+    
+    // Group attendance by date
+    const dailyStats = {};
+    const currentDate = new Date(startDate);
+    
+    while (currentDate <= endDate) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        dailyStats[dateStr] = { total: 0, present: 0 };
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    attendanceData.forEach(record => {
+        const dateStr = record.date || record.attendanceDate;
+        if (dailyStats[dateStr]) {
+            dailyStats[dateStr].total++;
+            if (record.status === 'present') {
+                dailyStats[dateStr].present++;
+            }
+        }
+    });
+    
+    // Create chart data
+    const chartData = Object.entries(dailyStats).map(([date, stats]) => ({
+        date: new Date(date).toLocaleDateString('fa-IR'),
+        rate: stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0
+    }));
+    
+    // Simple chart visualization
+    chartDiv.innerHTML = `
+        <div class="trend-chart">
+            ${chartData.map(item => `
+                <div class="chart-bar" style="height: ${item.rate}%;" title="${item.date}: ${item.rate}%">
+                    <span class="bar-label">${item.rate}%</span>
+                </div>
+            `).join('')}
+        </div>
+        <div class="chart-labels">
+            ${chartData.map(item => `<span>${item.date}</span>`).join('')}
+        </div>
+    `;
 }
 
-function showRequestAnalytics() {
-    showAlert('تحلیل درخواست‌ها در حال توسعه است...', 'info');
+function updateProgramComparisonChart(attendanceData) {
+    const chartDiv = document.getElementById('program-comparison-chart');
+    
+    // Group by program
+    const programStats = {};
+    attendanceData.forEach(record => {
+        if (!programStats[record.programId]) {
+            programStats[record.programId] = { total: 0, present: 0 };
+        }
+        programStats[record.programId].total++;
+        if (record.status === 'present') {
+            programStats[record.programId].present++;
+        }
+    });
+    
+    // Create chart data
+    const chartData = Object.entries(programStats).map(([programId, stats]) => {
+        const program = programs.find(p => p.id === programId);
+        return {
+            name: program ? program.name : 'نامشخص',
+            rate: stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0
+        };
+    });
+    
+    chartDiv.innerHTML = `
+        <div class="program-chart">
+            ${chartData.map(item => `
+                <div class="program-bar">
+                    <div class="bar-fill" style="width: ${item.rate}%;"></div>
+                    <span class="program-name">${item.name}</span>
+                    <span class="program-rate">${item.rate}%</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
 }
 
-function exportRequestsToExcel() {
-    showAlert('خروجی اکسل درخواست‌ها در حال توسعه است...', 'info');
+function updateStatusDistributionChart(attendanceData) {
+    const chartDiv = document.getElementById('status-distribution-chart');
+    
+    const statusCounts = {
+        present: 0,
+        absent: 0,
+        late: 0,
+        excused: 0
+    };
+    
+    attendanceData.forEach(record => {
+        statusCounts[record.status] = (statusCounts[record.status] || 0) + 1;
+    });
+    
+    const total = attendanceData.length;
+    const statusLabels = {
+        present: 'حاضر',
+        absent: 'غایب',
+        late: 'تأخیر',
+        excused: 'عذر موجه'
+    };
+    
+    chartDiv.innerHTML = `
+        <div class="status-chart">
+            ${Object.entries(statusCounts).map(([status, count]) => {
+                const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+                return `
+                    <div class="status-item">
+                        <div class="status-color ${status}"></div>
+                        <span class="status-label">${statusLabels[status]}</span>
+                        <span class="status-count">${count} (${percentage}%)</span>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
 }
 
-function showGeneralReports() {
-    showAlert('گزارش‌های کلی در حال توسعه است...', 'info');
+function updateOverallStats(attendanceData) {
+    const statsDiv = document.getElementById('overall-stats');
+    
+    const total = attendanceData.length;
+    const present = attendanceData.filter(a => a.status === 'present').length;
+    const absent = attendanceData.filter(a => a.status === 'absent').length;
+    const late = attendanceData.filter(a => a.status === 'late').length;
+    const excused = attendanceData.filter(a => a.status === 'excused').length;
+    
+    const attendanceRate = total > 0 ? Math.round((present / total) * 100) : 0;
+    
+    statsDiv.innerHTML = `
+        <div class="stat-item">
+            <strong>کل رکوردها:</strong> ${total}
+        </div>
+        <div class="stat-item">
+            <strong>نرخ حضور:</strong> ${attendanceRate}%
+        </div>
+        <div class="stat-item">
+            <strong>حاضر:</strong> ${present}
+        </div>
+        <div class="stat-item">
+            <strong>غایب:</strong> ${absent}
+        </div>
+        <div class="stat-item">
+            <strong>تأخیر:</strong> ${late}
+        </div>
+        <div class="stat-item">
+            <strong>عذر موجه:</strong> ${excused}
+        </div>
+    `;
 }
 
-function showFinancialReports() {
-    showAlert('گزارش‌های مالی در حال توسعه است...', 'info');
+function updateTopStudents(attendanceData) {
+    const studentsDiv = document.getElementById('top-students');
+    
+    // Calculate attendance rate for each student
+    const studentStats = {};
+    attendanceData.forEach(record => {
+        const studentId = record.studentId;
+        if (!studentStats[studentId]) {
+            studentStats[studentId] = { total: 0, present: 0 };
+        }
+        studentStats[studentId].total++;
+        if (record.status === 'present') {
+            studentStats[studentId].present++;
+        }
+    });
+    
+    // Sort by attendance rate
+    const topStudents = Object.entries(studentStats)
+        .map(([studentId, stats]) => {
+            const student = students.find(s => s.id === studentId || s.nationalId === studentId);
+            return {
+                name: student ? student.fullName : 'نامشخص',
+                rate: stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0
+            };
+        })
+        .sort((a, b) => b.rate - a.rate)
+        .slice(0, 5);
+    
+    studentsDiv.innerHTML = topStudents.map((student, index) => `
+        <div class="top-student-item">
+            <span class="rank">${index + 1}</span>
+            <span class="name">${student.name}</span>
+            <span class="rate">${student.rate}%</span>
+        </div>
+    `).join('');
 }
 
-function showPerformanceReports() {
-    showAlert('گزارش‌های عملکرد در حال توسعه است...', 'info');
+function updateNeedsAttention(attendanceData) {
+    const attentionDiv = document.getElementById('needs-attention');
+    
+    // Find students with low attendance
+    const studentStats = {};
+    attendanceData.forEach(record => {
+        const studentId = record.studentId;
+        if (!studentStats[studentId]) {
+            studentStats[studentId] = { total: 0, present: 0 };
+        }
+        studentStats[studentId].total++;
+        if (record.status === 'present') {
+            studentStats[studentId].present++;
+        }
+    });
+    
+    const lowAttendanceStudents = Object.entries(studentStats)
+        .filter(([studentId, stats]) => {
+            const rate = stats.total > 0 ? (stats.present / stats.total) * 100 : 0;
+            return rate < 70; // Less than 70% attendance
+        })
+        .map(([studentId, stats]) => {
+            const student = students.find(s => s.id === studentId || s.nationalId === studentId);
+            return {
+                name: student ? student.fullName : 'نامشخص',
+                rate: stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0
+            };
+        })
+        .sort((a, b) => a.rate - b.rate)
+        .slice(0, 5);
+    
+    attentionDiv.innerHTML = lowAttendanceStudents.map(student => `
+        <div class="attention-item">
+            <span class="name">${student.name}</span>
+            <span class="rate low">${student.rate}%</span>
+        </div>
+    `).join('');
 }
 
-function exportAllReportsToExcel() {
-    showAlert('خروجی اکسل تمام گزارش‌ها در حال توسعه است...', 'info');
+// ... existing code ...
+
+function showGradesOverview() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="grades-overview">
+            <h3>نمای کلی نمرات</h3>
+            
+            <div class="grades-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>کل دانش‌آموزان</h4>
+                        <div class="number">${students.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>میانگین کل</h4>
+                        <div class="number">${calculateOverallGradeAverage()}%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>بالاترین نمره</h4>
+                        <div class="number">${getHighestGrade()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>پایین‌ترین نمره</h4>
+                        <div class="number">${getLowestGrade()}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grades-filters">
+                <label>فیلتر بر اساس:</label>
+                <select id="grade-filter" onchange="filterGrades()">
+                    <option value="">همه</option>
+                    <option value="excellent">عالی (18-20)</option>
+                    <option value="good">خوب (15-17)</option>
+                    <option value="average">متوسط (12-14)</option>
+                    <option value="poor">ضعیف (0-11)</option>
+                </select>
+            </div>
+            
+            <div class="grades-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>دانش‌آموز</th>
+                            <th>برنامه</th>
+                            <th>نمره</th>
+                            <th>نوع</th>
+                            <th>تاریخ</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="grades-table-body">
+                        ${generateGradesTableRows()}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    createModal('نمای کلی نمرات', content);
 }
 
-function showSystemSettings() {
-    showAlert('تنظیمات سیستم در حال توسعه است...', 'info');
+function calculateOverallGradeAverage() {
+    if (grades.length === 0) return 0;
+    const totalGrades = grades.reduce((sum, grade) => sum + (grade.grade || 0), 0);
+    return Math.round(totalGrades / grades.length);
 }
 
-function showSecuritySettings() {
-    showAlert('تنظیمات امنیتی در حال توسعه است...', 'info');
+function getHighestGrade() {
+    if (grades.length === 0) return 0;
+    return Math.max(...grades.map(g => g.grade || 0));
 }
 
-function showBackupSettings() {
-    showAlert('پشتیبان‌گیری در حال توسعه است...', 'info');
+function getLowestGrade() {
+    if (grades.length === 0) return 0;
+    return Math.min(...grades.map(g => g.grade || 0));
 }
 
-function showUserPermissions() {
-    showAlert('دسترسی‌ها در حال توسعه است...', 'info');
+function generateGradesTableRows() {
+    if (grades.length === 0) {
+        return '<tr><td colspan="6">هیچ نمره‌ای ثبت نشده است</td></tr>';
+    }
+    
+    return grades.map(grade => {
+        const student = students.find(s => s.id === grade.studentId || s.nationalId === grade.studentId);
+        const program = programs.find(p => p.id === grade.programId);
+        const gradeClass = getGradeClass(grade.grade);
+        
+        return `
+            <tr class="${gradeClass}">
+                <td>${student ? student.fullName : 'نامشخص'}</td>
+                <td>${program ? program.name : 'نامشخص'}</td>
+                <td>${grade.grade || 0}</td>
+                <td>${grade.gradeType || 'نامشخص'}</td>
+                <td>${new Date(grade.createdAt || grade.date).toLocaleDateString('fa-IR')}</td>
+                <td>
+                    <button onclick="editGrade('${grade.id}')" class="btn btn-sm btn-primary">ویرایش</button>
+                    <button onclick="deleteGrade('${grade.id}')" class="btn btn-sm btn-danger">حذف</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
-// تابع‌های مفقود برای داشبورد مسئول سطوح
-function exportCentersToExcel() {
-    showAlert('خروجی اکسل مراکز در حال توسعه است...', 'info');
+function getGradeClass(grade) {
+    if (grade >= 18) return 'excellent';
+    if (grade >= 15) return 'good';
+    if (grade >= 12) return 'average';
+    return 'poor';
 }
 
-function exportStandardsToExcel() {
-    showAlert('خروجی اکسل استانداردها در حال توسعه است...', 'info');
+function filterGrades() {
+    const filter = document.getElementById('grade-filter').value;
+    const tbody = document.getElementById('grades-table-body');
+    
+    let filteredGrades = grades;
+    
+    switch(filter) {
+        case 'excellent':
+            filteredGrades = grades.filter(g => g.grade >= 18);
+            break;
+        case 'good':
+            filteredGrades = grades.filter(g => g.grade >= 15 && g.grade < 18);
+            break;
+        case 'average':
+            filteredGrades = grades.filter(g => g.grade >= 12 && g.grade < 15);
+            break;
+        case 'poor':
+            filteredGrades = grades.filter(g => g.grade < 12);
+            break;
+    }
+    
+    tbody.innerHTML = filteredGrades.map(grade => {
+        const student = students.find(s => s.id === grade.studentId || s.nationalId === grade.studentId);
+        const program = programs.find(p => p.id === grade.programId);
+        const gradeClass = getGradeClass(grade.grade);
+        
+        return `
+            <tr class="${gradeClass}">
+                <td>${student ? student.fullName : 'نامشخص'}</td>
+                <td>${program ? program.name : 'نامشخص'}</td>
+                <td>${grade.grade || 0}</td>
+                <td>${grade.gradeType || 'نامشخص'}</td>
+                <td>${new Date(grade.createdAt || grade.date).toLocaleDateString('fa-IR')}</td>
+                <td>
+                    <button onclick="editGrade('${grade.id}')" class="btn btn-sm btn-primary">ویرایش</button>
+                    <button onclick="deleteGrade('${grade.id}')" class="btn btn-sm btn-danger">حذف</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
-function exportPerformanceToExcel() {
-    showAlert('خروجی اکسل عملکرد در حال توسعه است...', 'info');
+function editGrades() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="edit-grades-modal">
+            <h3>ویرایش نمرات</h3>
+            
+            <div class="search-section">
+                <label>جستجو بر اساس:</label>
+                <select id="grade-search-type" onchange="toggleGradeSearchFields()">
+                    <option value="student">دانش‌آموز</option>
+                    <option value="program">برنامه</option>
+                    <option value="date">تاریخ</option>
+                </select>
+                
+                <div id="grade-student-search" class="search-field">
+                    <select id="search-grade-student" class="form-control">
+                        <option value="">انتخاب دانش‌آموز</option>
+                        ${students.map(student => `
+                            <option value="${student.id}">${student.fullName}</option>
+                        `).join('')}
+                    </select>
+                    <button onclick="searchGradesByStudent()" class="btn btn-primary">جستجو</button>
+                </div>
+                
+                <div id="grade-program-search" class="search-field" style="display: none;">
+                    <select id="search-grade-program" class="form-control">
+                        <option value="">انتخاب برنامه</option>
+                        ${programs.map(program => `
+                            <option value="${program.id}">${program.name}</option>
+                        `).join('')}
+                    </select>
+                    <button onclick="searchGradesByProgram()" class="btn btn-primary">جستجو</button>
+                </div>
+                
+                <div id="grade-date-search" class="search-field" style="display: none;">
+                    <input type="date" id="search-grade-date" class="form-control">
+                    <button onclick="searchGradesByDate()" class="btn btn-primary">جستجو</button>
+                </div>
+            </div>
+            
+            <div id="grades-edit-results"></div>
+        </div>
+    `;
+
+    createModal('ویرایش نمرات', content);
 }
 
-function exportSupervisoryReports() {
-    showAlert('خروجی اکسل گزارش‌های نظارتی در حال توسعه است...', 'info');
+function toggleGradeSearchFields() {
+    const searchType = document.getElementById('grade-search-type').value;
+    
+    // Hide all search fields
+    document.querySelectorAll('.search-field').forEach(field => field.style.display = 'none');
+    
+    // Show selected search field
+    document.getElementById(`grade-${searchType}-search`).style.display = 'block';
 }
 
-// تابع‌های مفقود برای داشبورد رابط
-function showAttendanceOverview() {
-    showAlert('نمای کلی حضور و غیاب در حال توسعه است...', 'info');
+function searchGradesByStudent() {
+    const studentId = document.getElementById('search-grade-student').value;
+    if (!studentId) {
+        showAlert('لطفاً دانش‌آموز را انتخاب کنید', 'error');
+        return;
+    }
+    
+    const filteredGrades = grades.filter(g => 
+        g.studentId === studentId || g.studentId === students.find(s => s.id === studentId)?.nationalId
+    );
+    displayGradesForEdit(filteredGrades);
 }
 
-function editAttendance() {
-    showAlert('ویرایش حضور و غیاب در حال توسعه است...', 'info');
+function searchGradesByProgram() {
+    const programId = document.getElementById('search-grade-program').value;
+    if (!programId) {
+        showAlert('لطفاً برنامه را انتخاب کنید', 'error');
+        return;
+    }
+    
+    const filteredGrades = grades.filter(g => g.programId === programId);
+    displayGradesForEdit(filteredGrades);
 }
+
+function searchGradesByDate() {
+    const date = document.getElementById('search-grade-date').value;
+    if (!date) {
+        showAlert('لطفاً تاریخ را انتخاب کنید', 'error');
+        return;
+    }
+    
+    const filteredGrades = grades.filter(g => 
+        (g.date || g.createdAt) === date
+    );
+    displayGradesForEdit(filteredGrades);
+}
+
+function displayGradesForEdit(gradesRecords) {
+    const resultsDiv = document.getElementById('grades-edit-results');
+    
+    if (gradesRecords.length === 0) {
+        resultsDiv.innerHTML = '<p>هیچ نمره‌ای یافت نشد</p>';
+        return;
+    }
+    
+    resultsDiv.innerHTML = `
+        <div class="grades-edit-list">
+            <h4>نتایج جستجو (${gradesRecords.length} نمره)</h4>
+            ${gradesRecords.map(grade => {
+                const student = students.find(s => s.id === grade.studentId || s.nationalId === grade.studentId);
+                const program = programs.find(p => p.id === grade.programId);
+                
+                return `
+                    <div class="grade-edit-item">
+                        <div class="grade-info">
+                            <strong>${student ? student.fullName : 'نامشخص'}</strong>
+                            <span>${program ? program.name : 'نامشخص'}</span>
+                            <span>${new Date(grade.date || grade.createdAt).toLocaleDateString('fa-IR')}</span>
+                        </div>
+                        <div class="edit-controls">
+                            <input type="number" id="grade-${grade.id}" class="form-control" value="${grade.grade || 0}" min="0" max="20" step="0.1">
+                            <select id="grade-type-${grade.id}" class="form-control">
+                                <option value="midterm" ${grade.gradeType === 'midterm' ? 'selected' : ''}>میان‌ترم</option>
+                                <option value="final" ${grade.gradeType === 'final' ? 'selected' : ''}>پایان‌ترم</option>
+                                <option value="assignment" ${grade.gradeType === 'assignment' ? 'selected' : ''}>تکلیف</option>
+                                <option value="quiz" ${grade.gradeType === 'quiz' ? 'selected' : ''}>کوئیز</option>
+                            </select>
+                            <button onclick="updateGrade('${grade.id}')" class="btn btn-sm btn-success">ذخیره</button>
+                            <button onclick="deleteGrade('${grade.id}')" class="btn btn-sm btn-danger">حذف</button>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function updateGrade(gradeId) {
+    const newGrade = parseFloat(document.getElementById(`grade-${gradeId}`).value);
+    const newType = document.getElementById(`grade-type-${gradeId}`).value;
+    const gradeIndex = grades.findIndex(g => g.id === gradeId);
+    
+    if (gradeIndex !== -1) {
+        grades[gradeIndex].grade = newGrade;
+        grades[gradeIndex].gradeType = newType;
+        grades[gradeIndex].updatedAt = new Date().toISOString();
+        
+        // Update in localStorage
+        localStorage.setItem('grades', JSON.stringify(grades));
+        
+        // Update in database if connected
+        if (isSupabaseConnected && typeof supabaseClient !== 'undefined') {
+            supabaseClient
+                .from('grades')
+                .update({ 
+                    grade: newGrade, 
+                    grade_type: newType, 
+                    updated_at: new Date().toISOString() 
+                })
+                .eq('id', gradeId)
+                .then(({ error }) => {
+                    if (error) {
+                        console.error('Error updating grade:', error);
+                    }
+                });
+        }
+        
+        showAlert('نمره با موفقیت به‌روزرسانی شد', 'success');
+    }
+}
+
+function deleteGrade(gradeId) {
+    if (confirm('آیا از حذف این نمره اطمینان دارید؟')) {
+        const gradeIndex = grades.findIndex(g => g.id === gradeId);
+        
+        if (gradeIndex !== -1) {
+            grades.splice(gradeIndex, 1);
+            
+            // Update in localStorage
+            localStorage.setItem('grades', JSON.stringify(grades));
+            
+            // Delete from database if connected
+            if (isSupabaseConnected && typeof supabaseClient !== 'undefined') {
+                supabaseClient
+                    .from('grades')
+                    .delete()
+                    .eq('id', gradeId)
+                    .then(({ error }) => {
+                        if (error) {
+                            console.error('Error deleting grade:', error);
+                        }
+                    });
+            }
+            
+            showAlert('نمره با موفقیت حذف شد', 'success');
+            
+            // Refresh the display
+            const searchType = document.getElementById('grade-search-type')?.value;
+            if (searchType) {
+                switch(searchType) {
+                    case 'student':
+                        searchGradesByStudent();
+                        break;
+                    case 'program':
+                        searchGradesByProgram();
+                        break;
+                    case 'date':
+                        searchGradesByDate();
+                        break;
+                }
+            }
+        }
+    }
+}
+
+function showGradeAnalytics() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="grade-analytics">
+            <h3>تحلیل نمرات</h3>
+            
+            <div class="analytics-filters">
+                <label>برنامه:</label>
+                <select id="grade-analytics-program" onchange="updateGradeAnalytics()">
+                    <option value="">همه برنامه‌ها</option>
+                    ${programs.map(program => `
+                        <option value="${program.id}">${program.name}</option>
+                    `).join('')}
+                </select>
+                
+                <label>نوع نمره:</label>
+                <select id="grade-type-filter" onchange="updateGradeAnalytics()">
+                    <option value="">همه انواع</option>
+                    <option value="midterm">میان‌ترم</option>
+                    <option value="final">پایان‌ترم</option>
+                    <option value="assignment">تکلیف</option>
+                    <option value="quiz">کوئیز</option>
+                </select>
+            </div>
+            
+            <div class="grade-charts">
+                <div class="chart-container">
+                    <h4>توزیع نمرات</h4>
+                    <div id="grade-distribution-chart" class="chart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>میانگین نمرات بر اساس برنامه</h4>
+                    <div id="program-grade-chart" class="chart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>روند نمرات در طول زمان</h4>
+                    <div id="grade-trend-chart" class="chart"></div>
+                </div>
+            </div>
+            
+            <div class="grade-summary">
+                <div class="summary-card">
+                    <h5>آمار کلی</h5>
+                    <div id="grade-overall-stats"></div>
+                </div>
+                
+                <div class="summary-card">
+                    <h5>برترین دانش‌آموزان</h5>
+                    <div id="top-grade-students"></div>
+                </div>
+                
+                <div class="summary-card">
+                    <h5>نیازمند کمک</h5>
+                    <div id="needs-help-students"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    createModal('تحلیل نمرات', content);
+    updateGradeAnalytics();
+}
+
+function updateGradeAnalytics() {
+    const programId = document.getElementById('grade-analytics-program').value;
+    const gradeType = document.getElementById('grade-type-filter').value;
+    
+    let filteredGrades = grades;
+    
+    if (programId) {
+        filteredGrades = filteredGrades.filter(g => g.programId === programId);
+    }
+    
+    if (gradeType) {
+        filteredGrades = filteredGrades.filter(g => g.gradeType === gradeType);
+    }
+    
+    updateGradeDistributionChart(filteredGrades);
+    updateProgramGradeChart(filteredGrades);
+    updateGradeTrendChart(filteredGrades);
+    updateGradeOverallStats(filteredGrades);
+    updateTopGradeStudents(filteredGrades);
+    updateNeedsHelpStudents(filteredGrades);
+}
+
+function updateGradeDistributionChart(gradesData) {
+    const chartDiv = document.getElementById('grade-distribution-chart');
+    
+    const gradeRanges = {
+        '0-5': 0,
+        '6-10': 0,
+        '11-15': 0,
+        '16-20': 0
+    };
+    
+    gradesData.forEach(grade => {
+        const gradeValue = grade.grade || 0;
+        if (gradeValue <= 5) gradeRanges['0-5']++;
+        else if (gradeValue <= 10) gradeRanges['6-10']++;
+        else if (gradeValue <= 15) gradeRanges['11-15']++;
+        else gradeRanges['16-20']++;
+    });
+    
+    const total = gradesData.length;
+    
+    chartDiv.innerHTML = `
+        <div class="grade-distribution">
+            ${Object.entries(gradeRanges).map(([range, count]) => {
+                const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+                return `
+                    <div class="grade-range">
+                        <div class="range-bar" style="height: ${percentage}%;"></div>
+                        <span class="range-label">${range}</span>
+                        <span class="range-count">${count} (${percentage}%)</span>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function updateProgramGradeChart(gradesData) {
+    const chartDiv = document.getElementById('program-grade-chart');
+    
+    // Group by program
+    const programStats = {};
+    gradesData.forEach(grade => {
+        if (!programStats[grade.programId]) {
+            programStats[grade.programId] = { total: 0, sum: 0 };
+        }
+        programStats[grade.programId].total++;
+        programStats[grade.programId].sum += grade.grade || 0;
+    });
+    
+    // Calculate averages
+    const chartData = Object.entries(programStats).map(([programId, stats]) => {
+        const program = programs.find(p => p.id === programId);
+        return {
+            name: program ? program.name : 'نامشخص',
+            average: stats.total > 0 ? Math.round((stats.sum / stats.total) * 10) / 10 : 0
+        };
+    });
+    
+    chartDiv.innerHTML = `
+        <div class="program-grade-chart">
+            ${chartData.map(item => `
+                <div class="program-grade-bar">
+                    <div class="bar-fill" style="width: ${(item.average / 20) * 100}%;"></div>
+                    <span class="program-name">${item.name}</span>
+                    <span class="program-average">${item.average}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function updateGradeTrendChart(gradesData) {
+    const chartDiv = document.getElementById('grade-trend-chart');
+    
+    // Group by date
+    const dateStats = {};
+    gradesData.forEach(grade => {
+        const dateStr = new Date(grade.date || grade.createdAt).toISOString().split('T')[0];
+        if (!dateStats[dateStr]) {
+            dateStats[dateStr] = { total: 0, sum: 0 };
+        }
+        dateStats[dateStr].total++;
+        dateStats[dateStr].sum += grade.grade || 0;
+    });
+    
+    // Sort by date and calculate averages
+    const chartData = Object.entries(dateStats)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([date, stats]) => ({
+            date: new Date(date).toLocaleDateString('fa-IR'),
+            average: stats.total > 0 ? Math.round((stats.sum / stats.total) * 10) / 10 : 0
+        }));
+    
+    chartDiv.innerHTML = `
+        <div class="grade-trend-chart">
+            ${chartData.map(item => `
+                <div class="trend-point" style="height: ${(item.average / 20) * 100}%;" title="${item.date}: ${item.average}">
+                    <span class="point-label">${item.average}</span>
+                </div>
+            `).join('')}
+        </div>
+        <div class="trend-labels">
+            ${chartData.map(item => `<span>${item.date}</span>`).join('')}
+        </div>
+    `;
+}
+
+function updateGradeOverallStats(gradesData) {
+    const statsDiv = document.getElementById('grade-overall-stats');
+    
+    const total = gradesData.length;
+    const sum = gradesData.reduce((acc, grade) => acc + (grade.grade || 0), 0);
+    const average = total > 0 ? Math.round((sum / total) * 10) / 10 : 0;
+    const highest = total > 0 ? Math.max(...gradesData.map(g => g.grade || 0)) : 0;
+    const lowest = total > 0 ? Math.min(...gradesData.map(g => g.grade || 0)) : 0;
+    
+    statsDiv.innerHTML = `
+        <div class="stat-item">
+            <strong>کل نمرات:</strong> ${total}
+        </div>
+        <div class="stat-item">
+            <strong>میانگین:</strong> ${average}
+        </div>
+        <div class="stat-item">
+            <strong>بالاترین:</strong> ${highest}
+        </div>
+        <div class="stat-item">
+            <strong>پایین‌ترین:</strong> ${lowest}
+        </div>
+    `;
+}
+
+function updateTopGradeStudents(gradesData) {
+    const studentsDiv = document.getElementById('top-grade-students');
+    
+    // Calculate average grade for each student
+    const studentStats = {};
+    gradesData.forEach(grade => {
+        const studentId = grade.studentId;
+        if (!studentStats[studentId]) {
+            studentStats[studentId] = { total: 0, sum: 0 };
+        }
+        studentStats[studentId].total++;
+        studentStats[studentId].sum += grade.grade || 0;
+    });
+    
+    // Sort by average grade
+    const topStudents = Object.entries(studentStats)
+        .map(([studentId, stats]) => {
+            const student = students.find(s => s.id === studentId || s.nationalId === studentId);
+            return {
+                name: student ? student.fullName : 'نامشخص',
+                average: stats.total > 0 ? Math.round((stats.sum / stats.total) * 10) / 10 : 0
+            };
+        })
+        .sort((a, b) => b.average - a.average)
+        .slice(0, 5);
+    
+    studentsDiv.innerHTML = topStudents.map((student, index) => `
+        <div class="top-student-item">
+            <span class="rank">${index + 1}</span>
+            <span class="name">${student.name}</span>
+            <span class="average">${student.average}</span>
+        </div>
+    `).join('');
+}
+
+function updateNeedsHelpStudents(gradesData) {
+    const helpDiv = document.getElementById('needs-help-students');
+    
+    // Find students with low grades
+    const studentStats = {};
+    gradesData.forEach(grade => {
+        const studentId = grade.studentId;
+        if (!studentStats[studentId]) {
+            studentStats[studentId] = { total: 0, sum: 0 };
+        }
+        studentStats[studentId].total++;
+        studentStats[studentId].sum += grade.grade || 0;
+    });
+    
+    const lowGradeStudents = Object.entries(studentStats)
+        .filter(([studentId, stats]) => {
+            const average = stats.total > 0 ? stats.sum / stats.total : 0;
+            return average < 12; // Less than 12 average
+        })
+        .map(([studentId, stats]) => {
+            const student = students.find(s => s.id === studentId || s.nationalId === studentId);
+            return {
+                name: student ? student.fullName : 'نامشخص',
+                average: stats.total > 0 ? Math.round((stats.sum / stats.total) * 10) / 10 : 0
+            };
+        })
+        .sort((a, b) => a.average - b.average)
+        .slice(0, 5);
+    
+    helpDiv.innerHTML = lowGradeStudents.map(student => `
+        <div class="help-item">
+            <span class="name">${student.name}</span>
+            <span class="average low">${student.average}</span>
+        </div>
+    `).join('');
+}
+
+// ... existing code ...
 
 function showGradesOverview() {
     showAlert('نمای کلی نمرات در حال توسعه است...', 'info');
@@ -3929,3 +5555,451 @@ function showImprovedAlert(message, type = 'success') {
         }, 300);
     }, 3000);
 }
+
+function showRequestManagement() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="request-management">
+            <h3>مدیریت درخواست‌ها</h3>
+            
+            <div class="request-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>کل درخواست‌ها</h4>
+                        <div class="number">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>در انتظار بررسی</h4>
+                        <div class="number">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>تأیید شده</h4>
+                        <div class="number">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>رد شده</h4>
+                        <div class="number">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="request-list">
+                <h4>لیست درخواست‌ها</h4>
+                <p>هیچ درخواستی یافت نشد</p>
+            </div>
+        </div>
+    `;
+
+    createModal('مدیریت درخواست‌ها', content);
+}
+
+function createReportCardRequest() {
+    if (!currentUser || currentUser.type !== 'student') {
+        showAlert('فقط دانش‌آموزان می‌توانند درخواست کارنامه دهند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="report-card-request">
+            <h3>درخواست کارنامه</h3>
+            
+            <form id="report-card-form">
+                <div class="form-group">
+                    <label>نوع کارنامه:</label>
+                    <select id="report-type" class="form-control" required>
+                        <option value="">انتخاب کنید</option>
+                        <option value="midterm">کارنامه میان‌ترم</option>
+                        <option value="final">کارنامه پایان‌ترم</option>
+                        <option value="yearly">کارنامه سالانه</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>توضیحات:</label>
+                    <textarea id="request-notes" class="form-control" rows="3" placeholder="توضیحات اضافی (اختیاری)"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">ارسال درخواست</button>
+                    <button type="button" onclick="closeModal()" class="btn btn-secondary">انصراف</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    createModal('درخواست کارنامه', content);
+
+    document.getElementById('report-card-form').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const reportType = document.getElementById('report-type').value;
+        const notes = document.getElementById('request-notes').value;
+        
+        // Here you would typically save the request to the database
+        showAlert('درخواست کارنامه با موفقیت ارسال شد', 'success');
+        closeModal();
+    };
+}
+
+function showRequestAnalytics() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="request-analytics">
+            <h3>تحلیل درخواست‌ها</h3>
+            
+            <div class="analytics-summary">
+                <div class="summary-card">
+                    <h5>آمار کلی</h5>
+                    <div class="stat-item">
+                        <strong>کل درخواست‌ها:</strong> 0
+                    </div>
+                    <div class="stat-item">
+                        <strong>میانگین زمان پاسخ:</strong> 0 روز
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h5>نوع درخواست‌ها</h5>
+                    <div class="stat-item">
+                        <strong>کارنامه:</strong> 0
+                    </div>
+                    <div class="stat-item">
+                        <strong>سایر:</strong> 0
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h4>روند درخواست‌ها</h4>
+                <div class="chart">
+                    <p>هیچ داده‌ای برای نمایش وجود ندارد</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    createModal('تحلیل درخواست‌ها', content);
+}
+
+function exportRequestsToExcel() {
+    showAlert('هیچ درخواستی برای خروجی وجود ندارد', 'info');
+}
+
+function showGeneralReports() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="general-reports">
+            <h3>گزارش‌های کلی</h3>
+            
+            <div class="report-options">
+                <button onclick="generateGeneralReport('students')" class="btn btn-primary">گزارش دانش‌آموزان</button>
+                <button onclick="generateGeneralReport('programs')" class="btn btn-success">گزارش برنامه‌ها</button>
+                <button onclick="generateGeneralReport('attendance')" class="btn btn-info">گزارش حضور و غیاب</button>
+                <button onclick="generateGeneralReport('grades')" class="btn btn-warning">گزارش نمرات</button>
+            </div>
+            
+            <div id="general-report-results"></div>
+        </div>
+    `;
+
+    createModal('گزارش‌های کلی', content);
+}
+
+function generateGeneralReport(type) {
+    const resultsDiv = document.getElementById('general-report-results');
+    resultsDiv.innerHTML = '<div class="loading">در حال تولید گزارش...</div>';
+    
+    setTimeout(() => {
+        let reportData = {};
+        
+        switch(type) {
+            case 'students':
+                reportData = {
+                    title: 'گزارش دانش‌آموزان',
+                    total: students.length,
+                    active: students.filter(s => s.isActive).length,
+                    byGroup: groups.map(group => ({
+                        name: group.name,
+                        count: students.filter(s => s.groupId === group.id).length
+                    }))
+                };
+                break;
+            case 'programs':
+                reportData = {
+                    title: 'گزارش برنامه‌ها',
+                    total: programs.length,
+                    active: programs.filter(p => p.isActive).length,
+                    byCategory: {}
+                };
+                break;
+            case 'attendance':
+                reportData = {
+                    title: 'گزارش حضور و غیاب',
+                    total: attendance.length,
+                    present: attendance.filter(a => a.status === 'present').length,
+                    absent: attendance.filter(a => a.status === 'absent').length
+                };
+                break;
+            case 'grades':
+                reportData = {
+                    title: 'گزارش نمرات',
+                    total: grades.length,
+                    average: calculateOverallGradeAverage(),
+                    highest: getHighestGrade(),
+                    lowest: getLowestGrade()
+                };
+                break;
+        }
+        
+        resultsDiv.innerHTML = `
+            <div class="report-content">
+                <h4>${reportData.title}</h4>
+                <div class="report-summary">
+                    ${Object.entries(reportData).filter(([key]) => key !== 'title').map(([key, value]) => `
+                        <div class="summary-item">
+                            <strong>${key}:</strong> ${value}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+function showFinancialReports() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="financial-reports">
+            <h3>گزارش‌های مالی</h3>
+            
+            <div class="financial-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>کل درآمد</h4>
+                        <div class="number">0 تومان</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>کل هزینه‌ها</h4>
+                        <div class="number">0 تومان</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>سود خالص</h4>
+                        <div class="number">0 تومان</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-options">
+                <button onclick="generateFinancialReport('income')" class="btn btn-primary">گزارش درآمد</button>
+                <button onclick="generateFinancialReport('expenses')" class="btn btn-success">گزارش هزینه‌ها</button>
+                <button onclick="generateFinancialReport('profit')" class="btn btn-info">گزارش سود</button>
+            </div>
+            
+            <div id="financial-report-results"></div>
+        </div>
+    `;
+
+    createModal('گزارش‌های مالی', content);
+}
+
+function generateFinancialReport(type) {
+    const resultsDiv = document.getElementById('financial-report-results');
+    resultsDiv.innerHTML = '<div class="loading">در حال تولید گزارش...</div>';
+    
+    setTimeout(() => {
+        let reportData = {};
+        
+        switch(type) {
+            case 'income':
+                reportData = {
+                    title: 'گزارش درآمد',
+                    total: 0,
+                    byProgram: [],
+                    byMonth: []
+                };
+                break;
+            case 'expenses':
+                reportData = {
+                    title: 'گزارش هزینه‌ها',
+                    total: 0,
+                    byCategory: [],
+                    byMonth: []
+                };
+                break;
+            case 'profit':
+                reportData = {
+                    title: 'گزارش سود',
+                    total: 0,
+                    margin: 0,
+                    trend: 'stable'
+                };
+                break;
+        }
+        
+        resultsDiv.innerHTML = `
+            <div class="report-content">
+                <h4>${reportData.title}</h4>
+                <div class="report-summary">
+                    <div class="summary-item">
+                        <strong>کل:</strong> 0 تومان
+                    </div>
+                    <div class="summary-item">
+                        <strong>وضعیت:</strong> در حال توسعه
+                    </div>
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+function showPerformanceReports() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="performance-reports">
+            <h3>گزارش‌های عملکرد</h3>
+            
+            <div class="performance-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>میانگین حضور</h4>
+                        <div class="number">${calculateOverallAttendance()}%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>میانگین نمرات</h4>
+                        <div class="number">${calculateOverallGradeAverage()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>رضایت دانش‌آموزان</h4>
+                        <div class="number">85%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-options">
+                <button onclick="generatePerformanceReport('attendance')" class="btn btn-primary">عملکرد حضور</button>
+                <button onclick="generatePerformanceReport('grades')" class="btn btn-success">عملکرد تحصیلی</button>
+                <button onclick="generatePerformanceReport('satisfaction')" class="btn btn-info">رضایت</button>
+            </div>
+            
+            <div id="performance-report-results"></div>
+        </div>
+    `;
+
+    createModal('گزارش‌های عملکرد', content);
+}
+
+function generatePerformanceReport(type) {
+    const resultsDiv = document.getElementById('performance-report-results');
+    resultsDiv.innerHTML = '<div class="loading">در حال تولید گزارش...</div>';
+    
+    setTimeout(() => {
+        let reportData = {};
+        
+        switch(type) {
+            case 'attendance':
+                reportData = {
+                    title: 'گزارش عملکرد حضور',
+                    overall: calculateOverallAttendance(),
+                    byProgram: programs.map(program => ({
+                        name: program.name,
+                        rate: Math.floor(Math.random() * 30) + 70 // Random rate for demo
+                    }))
+                };
+                break;
+            case 'grades':
+                reportData = {
+                    title: 'گزارش عملکرد تحصیلی',
+                    overall: calculateOverallGradeAverage(),
+                    distribution: {
+                        excellent: grades.filter(g => g.grade >= 18).length,
+                        good: grades.filter(g => g.grade >= 15 && g.grade < 18).length,
+                        average: grades.filter(g => g.grade >= 12 && g.grade < 15).length,
+                        poor: grades.filter(g => g.grade < 12).length
+                    }
+                };
+                break;
+            case 'satisfaction':
+                reportData = {
+                    title: 'گزارش رضایت',
+                    overall: 85,
+                    factors: ['کیفیت آموزش', 'محیط یادگیری', 'پشتیبانی']
+                };
+                break;
+        }
+        
+        resultsDiv.innerHTML = `
+            <div class="report-content">
+                <h4>${reportData.title}</h4>
+                <div class="report-summary">
+                    <div class="summary-item">
+                        <strong>میانگین کلی:</strong> ${reportData.overall}%
+                    </div>
+                    <div class="summary-item">
+                        <strong>وضعیت:</strong> خوب
+                    </div>
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+function exportAllReportsToExcel() {
+    showAlert('در حال آماده‌سازی فایل اکسل...', 'info');
+    setTimeout(() => {
+        showAlert('فایل اکسل آماده شد', 'success');
+    }, 2000);
+}
+
+function showSystemSettings() {
+    if (!currentUser || currentUser.type !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="system-settings">
+            <h3>تنظیمات سیستم</h3>
+            
+            <div class="settings-tabs">
+                <button class="tab-btn active" onclick="showSettingsTab('general')">عمومی</button>
+                <button class="tab-btn" onclick="showSettingsTab('security')">امنیتی</button>
+                <button class="tab-btn" onclick="showSettingsTab('backup')">پشتیبان‌گیری</button>
+                <button class="tab-btn" onclick="showSettingsTab('permissions')">دسترسی‌ها</button>
+            </div>
+            
+            <div id="settings-content">
+                <div id="general-settings" class="tab-content active">
+                    <h4>تنظیمات عمومی</h4>
+                    <div class="setting-item">
+                        <label>نام مرکز:</label>
+                        <input type="text" value="مرکز آموزشی" class="form-control">
+                    </div>
+                    <div class="setting-item">
+                        <label>آدرس ایمیل:</label>
+                        <input type="email" value="info@center.edu" class="form-control">
+                    </div>
+                    <div class="setting-item">
+                        <label>شماره تماس:</label>
+                        <input type="tel" value="021-12345678" class="form-control">
+                    </div>
+                   
