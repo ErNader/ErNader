@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست سیستم - مرکز آموزشی</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی - تست
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html" class="nav-link">صفحه اصلی</a></li>
+                    <li><a href="test.html" class="nav-link active">تست سیستم</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <div class="test-section">
+                <h1>تست سیستم مدیریت مرکز آموزشی</h1>
+                <p>این صفحه برای تست قابلیت‌های مختلف سیستم طراحی شده است.</p>
+                
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h3>تست اتصال دیتابیس</h3>
+                        <button onclick="testDatabaseConnection()" class="btn btn-primary">بررسی اتصال</button>
+                        <div id="db-status" class="status-display"></div>
+                    </div>
+                    
+                    <div class="test-card">
+                        <h3>تست مودال‌ها</h3>
+                        <button onclick="testModals()" class="btn btn-secondary">نمایش مودال</button>
+                    </div>
+                    
+                    <div class="test-card">
+                        <h3>تست پیام‌ها</h3>
+                        <button onclick="testAlerts()" class="btn btn-success">نمایش پیام‌ها</button>
+                    </div>
+                    
+                    <div class="test-card">
+                        <h3>تست فرم‌ها</h3>
+                        <button onclick="testForms()" class="btn btn-info">تست فرم</button>
+                    </div>
+                    
+                    <div class="test-card">
+                        <h3>تست جداول</h3>
+                        <button onclick="testTables()" class="btn btn-warning">نمایش جدول</button>
+                    </div>
+                    
+                    <div class="test-card">
+                        <h3>تست آپلود فایل</h3>
+                        <button onclick="testFileUpload()" class="btn btn-danger">آپلود فایل</button>
+                    </div>
+                </div>
+                
+                <div class="test-results">
+                    <h3>نتایج تست</h3>
+                    <div id="test-results" class="results-display"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // توابع تست
+        async function testDatabaseConnection() {
+            const statusDiv = document.getElementById('db-status');
+            statusDiv.innerHTML = '<p>در حال بررسی اتصال...</p>';
+            
+            try {
+                await checkDatabaseConnection();
+                if (isSupabaseConnected) {
+                    statusDiv.innerHTML = '<p class="success">✅ اتصال به Supabase برقرار است</p>';
+                } else {
+                    statusDiv.innerHTML = '<p class="info">ℹ️ استفاده از LocalStorage</p>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<p class="error">❌ خطا در اتصال: ' + error.message + '</p>';
+            }
+        }
+        
+        function testModals() {
+            const modal = createModal('تست مودال', `
+                <div class="test-modal-content">
+                    <h4>این یک مودال تست است</h4>
+                    <p>مودال‌ها به درستی کار می‌کنند!</p>
+                    <div class="test-buttons">
+                        <button onclick="showAlert('تست موفق!', 'success')" class="btn btn-success">تست پیام موفق</button>
+                        <button onclick="showAlert('تست خطا!', 'danger')" class="btn btn-danger">تست پیام خطا</button>
+                    </div>
+                </div>
+            `);
+            document.body.appendChild(modal);
+        }
+        
+        function testAlerts() {
+            showAlert('این یک پیام موفقیت است!', 'success');
+            setTimeout(() => showAlert('این یک پیام هشدار است!', 'warning'), 1000);
+            setTimeout(() => showAlert('این یک پیام خطا است!', 'danger'), 2000);
+            setTimeout(() => showAlert('این یک پیام اطلاعات است!', 'info'), 3000);
+        }
+        
+        function testForms() {
+            const modal = createModal('تست فرم', `
+                <form id="test-form">
+                    <div class="form-group">
+                        <label>نام:</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ایمیل:</label>
+                        <input type="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>انتخاب:</label>
+                        <select class="form-control" required>
+                            <option value="">انتخاب کنید</option>
+                            <option value="1">گزینه ۱</option>
+                            <option value="2">گزینه ۲</option>
+                            <option value="3">گزینه ۳</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ارسال</button>
+                </form>
+            `);
+            document.body.appendChild(modal);
+            
+            document.getElementById('test-form').onsubmit = (e) => {
+                e.preventDefault();
+                showAlert('فرم با موفقیت ارسال شد!', 'success');
+                modal.remove();
+            };
+        }
+        
+        function testTables() {
+            const modal = createModal('تست جدول', `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>کد ملی</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>علی احمدی</td>
+                                <td>۱۲۳۴۵۶۷۸۹۰</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">ویرایش</button>
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>فاطمه محمدی</td>
+                                <td>۱۱۱۱۱۱۱۱۱۱</td>
+                                <td><span class="status-inactive">غیرفعال</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">ویرایش</button>
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `);
+            document.body.appendChild(modal);
+        }
+        
+        function testFileUpload() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.pdf,.jpg,.jpeg,.png';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    showAlert(`فایل ${file.name} انتخاب شد!`, 'success');
+                }
+            };
+            input.click();
+        }
+        
+        // اضافه کردن استایل‌های تست
+        const style = document.createElement('style');
+        style.textContent = `
+            .test-section {
+                padding: 2rem 0;
+            }
+            
+            .test-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1.5rem;
+                margin: 2rem 0;
+            }
+            
+            .test-card {
+                background: white;
+                border-radius: 12px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+            
+            .test-card h3 {
+                margin-bottom: 1rem;
+                color: #333;
+            }
+            
+            .status-display {
+                margin-top: 1rem;
+                padding: 0.5rem;
+                border-radius: 6px;
+                font-weight: 500;
+            }
+            
+            .status-display .success {
+                color: #28a745;
+            }
+            
+            .status-display .error {
+                color: #dc3545;
+            }
+            
+            .status-display .info {
+                color: #17a2b8;
+            }
+            
+            .test-modal-content {
+                text-align: center;
+            }
+            
+            .test-buttons {
+                display: flex;
+                gap: 0.5rem;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            
+            .results-display {
+                background: #f8f9fa;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-top: 1rem;
+                min-height: 100px;
+            }
+            
+            @media (max-width: 768px) {
+                .test-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
