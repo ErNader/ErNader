@@ -245,6 +245,146 @@ const supabaseHelper = {
             console.error('خطا در ثبت نظرسنجی:', error);
             return { success: false, error: error.message };
         }
+    },
+
+    // دریافت آمار پیشرفته
+    async getAdvancedStats() {
+        try {
+            const [registrations, users, attendance, grades] = await Promise.all([
+                supabaseClient.from('registrations').select('*'),
+                supabaseClient.from('users').select('*'),
+                supabaseClient.from('attendance').select('*'),
+                supabaseClient.from('grades').select('*')
+            ]);
+
+            const stats = {
+                totalRegistrations: registrations.data?.length || 0,
+                totalUsers: users.data?.length || 0,
+                totalAttendance: attendance.data?.length || 0,
+                totalGrades: grades.data?.length || 0,
+                students: users.data?.filter(u => u.role === 'student').length || 0,
+                teachers: users.data?.filter(u => u.role === 'teacher').length || 0,
+                coordinators: users.data?.filter(u => u.role === 'coordinator').length || 0,
+                admins: users.data?.filter(u => u.role === 'admin').length || 0
+            };
+
+            return { success: true, stats };
+        } catch (error) {
+            console.error('خطا در دریافت آمار پیشرفته:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // جستجوی کاربران
+    async searchUsers(query) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('users')
+                .select('*')
+                .or(`full_name.ilike.%${query}%,national_id.ilike.%${query}%,email.ilike.%${query}%`)
+                .limit(20);
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در جستجوی کاربران:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // دریافت گزارش‌های پیشرفته
+    async getReports(reportType, filters = {}) {
+        try {
+            let query = supabaseClient.from('reports');
+            
+            if (reportType) {
+                query = query.eq('report_type', reportType);
+            }
+            
+            if (filters.dateFrom) {
+                query = query.gte('generated_at', filters.dateFrom);
+            }
+            
+            if (filters.dateTo) {
+                query = query.lte('generated_at', filters.dateTo);
+            }
+            
+            const { data, error } = await query
+                .select('*')
+                .order('generated_at', { ascending: false });
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در دریافت گزارش‌ها:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // به‌روزرسانی کاربر
+    async updateUser(userId, userData) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('users')
+                .update(userData)
+                .eq('id', userId)
+                .select();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در به‌روزرسانی کاربر:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // حذف کاربر
+    async deleteUser(userId) {
+        try {
+            const { error } = await supabaseClient
+                .from('users')
+                .delete()
+                .eq('id', userId);
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (error) {
+            console.error('خطا در حذف کاربر:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // به‌روزرسانی برنامه
+    async updateProgram(programId, programData) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('programs')
+                .update(programData)
+                .eq('id', programId)
+                .select();
+            
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('خطا در به‌روزرسانی برنامه:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    // حذف برنامه
+    async deleteProgram(programId) {
+        try {
+            const { error } = await supabaseClient
+                .from('programs')
+                .delete()
+                .eq('id', programId);
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (error) {
+            console.error('خطا در حذف برنامه:', error);
+            return { success: false, error: error.message };
+        }
     }
 };
 

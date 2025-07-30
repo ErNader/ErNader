@@ -11,6 +11,122 @@ const centerStats = {
     years: 8
 };
 
+// بررسی اتصال به Supabase
+let isSupabaseConnected = false;
+
+// تابع بررسی اتصال به دیتابیس
+async function checkDatabaseConnection() {
+    try {
+        if (typeof supabaseClient !== 'undefined') {
+            const { data, error } = await supabaseClient.from('users').select('count').limit(1);
+            if (!error) {
+                isSupabaseConnected = true;
+                console.log('اتصال به Supabase برقرار شد');
+                return true;
+            }
+        }
+    } catch (error) {
+        console.log('Supabase در دسترس نیست، استفاده از LocalStorage');
+    }
+    return false;
+}
+
+// تابع مقداردهی اولیه
+async function initializeApp() {
+    await checkDatabaseConnection();
+    
+    // بارگذاری داده‌های نمونه برای LocalStorage اگر خالی باشد
+    if (!isSupabaseConnected) {
+        if (users.length === 0) {
+            // ایجاد کاربران نمونه
+            users = [
+                {
+                    id: 1,
+                    nationalId: '1234567890',
+                    fullName: 'مدیر سیستم',
+                    email: 'admin@center.edu',
+                    phone: '09123456789',
+                    password: 'admin123',
+                    type: 'admin'
+                },
+                {
+                    id: 2,
+                    nationalId: '1111111111',
+                    fullName: 'علی احمدی',
+                    email: 'ali@example.com',
+                    phone: '09111111111',
+                    password: '123456',
+                    type: 'student'
+                },
+                {
+                    id: 3,
+                    nationalId: '2222222222',
+                    fullName: 'فاطمه محمدی',
+                    email: 'fateme@example.com',
+                    phone: '09222222222',
+                    password: '123456',
+                    type: 'teacher'
+                }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        // ایجاد نظرسنجی نمونه
+        const surveys = [
+            {
+                id: 1,
+                title: 'نظرسنجی رضایت از مرکز',
+                description: 'لطفاً نظرات خود را درباره خدمات مرکز آموزشی به ما بگویید',
+                questions: [
+                    {
+                        question: 'میزان رضایت شما از کیفیت آموزش چقدر است؟',
+                        type: 'select',
+                        options: ['خیلی کم', 'کم', 'متوسط', 'زیاد', 'خیلی زیاد']
+                    },
+                    {
+                        question: 'آیا محیط آموزشی مناسب است؟',
+                        type: 'select',
+                        options: ['بله', 'خیر', 'تا حدودی']
+                    },
+                    {
+                        question: 'پیشنهادات شما برای بهبود مرکز:',
+                        type: 'text'
+                    }
+                ],
+                isActive: true
+            }
+        ];
+        localStorage.setItem('surveys', JSON.stringify(surveys));
+        
+        // ایجاد برنامه‌های نمونه
+        const programs = [
+            {
+                id: 1,
+                name: 'کلاس‌های تقویتی',
+                description: 'کلاس‌های تقویتی در دروس مختلف',
+                category: 'academic',
+                duration: '۳ ماه',
+                max_participants: 15,
+                price: 2500000,
+                is_active: true
+            },
+            {
+                id: 2,
+                name: 'برنامه‌نویسی',
+                description: 'آموزش برنامه‌نویسی و مهارت‌های دیجیتال',
+                category: 'academic',
+                duration: '۶ ماه',
+                max_participants: 12,
+                price: 4000000,
+                is_active: true
+            }
+        ];
+        localStorage.setItem('programs', JSON.stringify(programs));
+    }
+    
+    console.log('برنامه با موفقیت مقداردهی شد');
+}
+
 // نمایش آمار در صفحه اصلی
 function displayStats() {
     const studentsCount = document.getElementById('students-count');
@@ -62,8 +178,8 @@ function showAlert(message, type = 'success') {
     }, 5000);
 }
 
-// فرم ثبت‌نام
-function handleRegistration(event) {
+// تابع بهبود یافته برای ثبت‌نام
+async function handleRegistration(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -85,68 +201,83 @@ function handleRegistration(event) {
     };
 
     // بررسی تکراری نبودن کد ملی
-    const existingRegistration = registrations.find(r => r.nationalId === registration.nationalId);
-    if (existingRegistration) {
-        showAlert('این کد ملی قبلاً ثبت‌نام شده است!', 'danger');
-        return;
+    if (isSupabaseConnected) {
+        const checkResult = await supabaseHelper.checkNationalIdExists(registration.nationalId);
+        if (checkResult.exists) {
+            showAlert('این کد ملی قبلاً ثبت‌نام شده است!', 'danger');
+            return;
+        }
+    } else {
+        const existingRegistration = registrations.find(r => r.nationalId === registration.nationalId);
+        if (existingRegistration) {
+            showAlert('این کد ملی قبلاً ثبت‌نام شده است!', 'danger');
+            return;
+        }
     }
 
-    registrations.push(registration);
-    localStorage.setItem('registrations', JSON.stringify(registrations));
-
-    showAlert('ثبت‌نام با موفقیت انجام شد!', 'success');
-    event.target.reset();
-
-    // انتقال به صفحه ورود بعد از 2 ثانیه
-    setTimeout(() => {
-        window.location.href = 'login.html';
-    }, 2000);
+    // ذخیره در دیتابیس
+    if (isSupabaseConnected) {
+        const result = await supabaseHelper.createRegistration(registration);
+        if (result.success) {
+            showAlert('ثبت‌نام با موفقیت انجام شد!', 'success');
+            event.target.reset();
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        } else {
+            showAlert('خطا در ثبت‌نام: ' + result.error, 'danger');
+        }
+    } else {
+        registrations.push(registration);
+        localStorage.setItem('registrations', JSON.stringify(registrations));
+        showAlert('ثبت‌نام با موفقیت انجام شد!', 'success');
+        event.target.reset();
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 2000);
+    }
 }
 
-// فرم ورود
-function handleLogin(event) {
+// تابع بهبود یافته برای ورود
+async function handleLogin(event) {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const userType = formData.get('user-type') || document.getElementById('user-type').value;
-    const username = formData.get('username') || document.getElementById('username').value;
-    const password = formData.get('password') || document.getElementById('password').value;
+    const nationalId = document.getElementById('national-id').value;
+    const password = document.getElementById('password').value;
 
-    // بررسی کاربر در ثبت‌نام‌ها
-    const user = registrations.find(r => r.nationalId === username);
-    
-    if (!user) {
-        showAlert('کاربری با این کد ملی یافت نشد!', 'danger');
-        return;
+    if (isSupabaseConnected) {
+        const result = await supabaseHelper.loginUser(nationalId, password);
+        if (result.success) {
+            currentUser = {
+                id: result.user.id,
+                nationalId: result.user.national_id,
+                fullName: result.user.full_name,
+                email: result.user.email,
+                type: result.user.role,
+                phone: result.user.phone
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showAlert('ورود موفقیت‌آمیز بود!', 'success');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        } else {
+            showAlert('خطا در ورود: ' + result.error, 'danger');
+        }
+    } else {
+        // حالت لوکال
+        const user = users.find(u => u.nationalId === nationalId && u.password === password);
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showAlert('ورود موفقیت‌آمیز بود!', 'success');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        } else {
+            showAlert('کد ملی یا رمز عبور اشتباه است!', 'danger');
+        }
     }
-
-    // در حالت واقعی، رمز عبور باید بررسی شود
-    // برای این مثال، هر رمزی پذیرفته می‌شود
-    if (password.length < 4) {
-        showAlert('رمز عبور باید حداقل 4 کاراکتر باشد!', 'danger');
-        return;
-    }
-
-    // ایجاد کاربر
-    const newUser = {
-        id: user.id,
-        type: userType,
-        fullName: user.fullName,
-        nationalId: user.nationalId,
-        email: user.email,
-        phone: user.phone,
-        loginTime: new Date().toISOString()
-    };
-
-    currentUser = newUser;
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-
-    showAlert('ورود موفقیت‌آمیز بود!', 'success');
-
-    // انتقال به داشبورد مناسب
-    setTimeout(() => {
-        window.location.href = `dashboard.html?type=${userType}`;
-    }, 1500);
 }
 
 // فیلتر برنامه‌ها
@@ -551,87 +682,992 @@ function getSupervisorPerformance() {
     return Math.floor(Math.random() * 10) + 90; // 90-100%
 }
 
-// توابع عملیات (نمونه)
-function uploadReportCard() {
-    alert('قابلیت آپلود کارنامه در حال توسعه است');
+// توابع عملیات پیشرفته با اتصال به دیتابیس
+
+// آپلود کارنامه
+async function uploadReportCard() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.jpg,.jpeg,.png';
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (isSupabaseConnected) {
+                const result = await supabaseHelper.uploadFile(file, 'documents');
+                if (result.success) {
+                    // ذخیره اطلاعات فایل در دیتابیس
+                    const documentData = {
+                        user_id: currentUser.id,
+                        file_name: file.name,
+                        file_url: result.url,
+                        file_type: file.type,
+                        file_size: file.size,
+                        document_type: 'report_card'
+                    };
+                    
+                    const { data, error } = await supabaseClient
+                        .from('documents')
+                        .insert([documentData]);
+                    
+                    if (!error) {
+                        showAlert('کارنامه با موفقیت آپلود شد!', 'success');
+                    } else {
+                        showAlert('خطا در ذخیره اطلاعات فایل', 'danger');
+                    }
+                } else {
+                    showAlert('خطا در آپلود فایل: ' + result.error, 'danger');
+                }
+            } else {
+                // حالت لوکال
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const documents = JSON.parse(localStorage.getItem('documents')) || [];
+                    documents.push({
+                        id: Date.now(),
+                        userId: currentUser.id,
+                        fileName: file.name,
+                        fileData: e.target.result,
+                        fileType: file.type,
+                        fileSize: file.size,
+                        documentType: 'report_card',
+                        uploadDate: new Date().toISOString()
+                    });
+                    localStorage.setItem('documents', JSON.stringify(documents));
+                    showAlert('کارنامه با موفقیت آپلود شد!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    };
+    input.click();
 }
 
-function viewGrades() {
-    alert('مشاهده نمرات در حال توسعه است');
+// مشاهده نمرات
+async function viewGrades() {
+    let grades = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('grades')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false });
+        
+        if (!error && data) {
+            grades = data;
+        }
+    } else {
+        grades = JSON.parse(localStorage.getItem('grades')) || [];
+        grades = grades.filter(g => g.userId === currentUser.id);
+    }
+    
+    if (grades.length === 0) {
+        showAlert('هیچ نمره‌ای یافت نشد!', 'info');
+        return;
+    }
+    
+    // نمایش نمرات در مودال
+    const modal = createModal('نمرات من', `
+        <div class="grades-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>درس</th>
+                        <th>نمره</th>
+                        <th>حداکثر</th>
+                        <th>نوع</th>
+                        <th>تاریخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${grades.map(grade => `
+                        <tr>
+                            <td>${grade.subject || 'نامشخص'}</td>
+                            <td>${grade.grade}</td>
+                            <td>${grade.max_grade || grade.maxGrade || 20}</td>
+                            <td>${grade.grade_type || grade.gradeType || 'عادی'}</td>
+                            <td>${new Date(grade.created_at || grade.createdAt).toLocaleDateString('fa-IR')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function takeSurvey() {
-    alert('نظرسنجی در حال توسعه است');
+// نظرسنجی
+async function takeSurvey() {
+    let surveys = [];
+    
+    if (isSupabaseConnected) {
+        const result = await supabaseHelper.getSurveys();
+        if (result.success) {
+            surveys = result.data.filter(s => s.is_active);
+        }
+    } else {
+        surveys = JSON.parse(localStorage.getItem('surveys')) || [];
+        surveys = surveys.filter(s => s.isActive);
+    }
+    
+    if (surveys.length === 0) {
+        showAlert('هیچ نظرسنجی فعالی یافت نشد!', 'info');
+        return;
+    }
+    
+    const survey = surveys[0]; // اولین نظرسنجی فعال
+    const questions = survey.questions || [];
+    
+    const modal = createModal('نظرسنجی', `
+        <form id="survey-form">
+            <h3>${survey.title}</h3>
+            <p>${survey.description}</p>
+            ${questions.map((q, index) => `
+                <div class="form-group">
+                    <label>${q.question}</label>
+                    ${q.type === 'text' ? 
+                        `<input type="text" name="q${index}" class="form-control" required>` :
+                        `<select name="q${index}" class="form-control" required>
+                            <option value="">انتخاب کنید</option>
+                            ${q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                        </select>`
+                    }
+                </div>
+            `).join('')}
+            <button type="submit" class="btn btn-primary">ارسال نظرسنجی</button>
+        </form>
+    `);
+    
+    document.body.appendChild(modal);
+    
+    // مدیریت ارسال نظرسنجی
+    document.getElementById('survey-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const answers = {};
+        
+        questions.forEach((q, index) => {
+            answers[`q${index}`] = formData.get(`q${index}`);
+        });
+        
+        const surveyData = {
+            survey_id: survey.id,
+            user_id: currentUser.id,
+            answers: answers
+        };
+        
+        if (isSupabaseConnected) {
+            const result = await supabaseHelper.submitSurvey(surveyData);
+            if (result.success) {
+                showAlert('نظرسنجی با موفقیت ارسال شد!', 'success');
+                modal.remove();
+            } else {
+                showAlert('خطا در ارسال نظرسنجی: ' + result.error, 'danger');
+            }
+        } else {
+            const responses = JSON.parse(localStorage.getItem('surveyResponses')) || [];
+            responses.push({
+                id: Date.now(),
+                surveyId: survey.id,
+                userId: currentUser.id,
+                answers: answers,
+                submittedAt: new Date().toISOString()
+            });
+            localStorage.setItem('surveyResponses', JSON.stringify(responses));
+            showAlert('نظرسنجی با موفقیت ارسال شد!', 'success');
+            modal.remove();
+        }
+    };
 }
 
-function viewPrograms() {
-    alert('مشاهده برنامه‌ها در حال توسعه است');
+// مشاهده برنامه‌ها
+async function viewPrograms() {
+    let userPrograms = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('registrations')
+            .select('*, programs(*)')
+            .eq('user_id', currentUser.id);
+        
+        if (!error && data) {
+            userPrograms = data;
+        }
+    } else {
+        const userRegistrations = registrations.filter(r => r.nationalId === currentUser.nationalId);
+        userPrograms = userRegistrations.map(r => ({
+            program_type: r.programType,
+            program_name: r.programType === 'admission' ? 'پذیرش جدید' : 
+                         r.programType === 'camp' ? 'اردو' : 'برنامه سالانه',
+            registration_date: r.registrationDate,
+            status: 'approved'
+        }));
+    }
+    
+    if (userPrograms.length === 0) {
+        showAlert('هیچ برنامه‌ای یافت نشد!', 'info');
+        return;
+    }
+    
+    const modal = createModal('برنامه‌های من', `
+        <div class="programs-list">
+            ${userPrograms.map(program => `
+                <div class="program-card">
+                    <h4>${program.program_name || program.program_type}</h4>
+                    <p><strong>نوع:</strong> ${program.program_type}</p>
+                    <p><strong>وضعیت:</strong> <span class="status-${program.status}">${program.status}</span></p>
+                    <p><strong>تاریخ ثبت‌نام:</strong> ${new Date(program.registration_date).toLocaleDateString('fa-IR')}</p>
+                </div>
+            `).join('')}
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function recordAttendance() {
-    alert('ثبت حضور و غیاب در حال توسعه است');
+// ثبت حضور و غیاب
+async function recordAttendance() {
+    let students = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('id, full_name, national_id')
+            .eq('role', 'student');
+        
+        if (!error && data) {
+            students = data;
+        }
+    } else {
+        students = registrations.map(r => ({
+            id: r.id,
+            full_name: r.fullName,
+            national_id: r.nationalId
+        }));
+    }
+    
+    if (students.length === 0) {
+        showAlert('هیچ دانش‌آموزی یافت نشد!', 'info');
+        return;
+    }
+    
+    const modal = createModal('ثبت حضور و غیاب', `
+        <form id="attendance-form">
+            <div class="form-group">
+                <label>تاریخ:</label>
+                <input type="date" id="attendance-date" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
+            </div>
+            <div class="students-attendance">
+                ${students.map(student => `
+                    <div class="student-attendance">
+                        <span>${student.full_name} (${student.national_id})</span>
+                        <select name="attendance_${student.id}" class="form-control" required>
+                            <option value="present">حاضر</option>
+                            <option value="absent">غایب</option>
+                            <option value="late">تأخیر</option>
+                            <option value="excused">عذر موجه</option>
+                        </select>
+                    </div>
+                `).join('')}
+            </div>
+            <button type="submit" class="btn btn-primary">ثبت حضور و غیاب</button>
+        </form>
+    `);
+    
+    document.body.appendChild(modal);
+    
+    // مدیریت ثبت حضور و غیاب
+    document.getElementById('attendance-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const date = document.getElementById('attendance-date').value;
+        
+        const attendanceRecords = students.map(student => ({
+            user_id: student.id,
+            date: date,
+            status: formData.get(`attendance_${student.id}`),
+            recorded_by: currentUser.id
+        }));
+        
+        if (isSupabaseConnected) {
+            const { data, error } = await supabaseClient
+                .from('attendance')
+                .insert(attendanceRecords);
+            
+            if (!error) {
+                showAlert('حضور و غیاب با موفقیت ثبت شد!', 'success');
+                modal.remove();
+            } else {
+                showAlert('خطا در ثبت حضور و غیاب: ' + error.message, 'danger');
+            }
+        } else {
+            const attendance = JSON.parse(localStorage.getItem('attendance')) || [];
+            attendanceRecords.forEach(record => {
+                attendance.push({
+                    id: Date.now() + Math.random(),
+                    userId: record.user_id,
+                    date: record.date,
+                    status: record.status,
+                    recordedBy: record.recorded_by,
+                    createdAt: new Date().toISOString()
+                });
+            });
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+            showAlert('حضور و غیاب با موفقیت ثبت شد!', 'success');
+            modal.remove();
+        }
+    };
 }
 
-function recordGrades() {
-    alert('ثبت نمرات در حال توسعه است');
+// ثبت نمرات
+async function recordGrades() {
+    let students = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('id, full_name, national_id')
+            .eq('role', 'student');
+        
+        if (!error && data) {
+            students = data;
+        }
+    } else {
+        students = registrations.map(r => ({
+            id: r.id,
+            full_name: r.fullName,
+            national_id: r.nationalId
+        }));
+    }
+    
+    const modal = createModal('ثبت نمرات', `
+        <form id="grades-form">
+            <div class="form-group">
+                <label>درس:</label>
+                <input type="text" id="subject" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>نوع نمره:</label>
+                <select id="grade-type" class="form-control" required>
+                    <option value="midterm">میان‌ترم</option>
+                    <option value="final">پایان‌ترم</option>
+                    <option value="assignment">تکلیف</option>
+                    <option value="quiz">کوئیز</option>
+                </select>
+            </div>
+            <div class="students-grades">
+                ${students.map(student => `
+                    <div class="student-grade">
+                        <span>${student.full_name}</span>
+                        <input type="number" name="grade_${student.id}" class="form-control" min="0" max="20" step="0.25" placeholder="نمره" required>
+                    </div>
+                `).join('')}
+            </div>
+            <button type="submit" class="btn btn-primary">ثبت نمرات</button>
+        </form>
+    `);
+    
+    document.body.appendChild(modal);
+    
+    // مدیریت ثبت نمرات
+    document.getElementById('grades-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const subject = document.getElementById('subject').value;
+        const gradeType = document.getElementById('grade-type').value;
+        
+        const gradeRecords = students.map(student => ({
+            user_id: student.id,
+            subject: subject,
+            grade: parseFloat(formData.get(`grade_${student.id}`)),
+            grade_type: gradeType,
+            recorded_by: currentUser.id
+        }));
+        
+        if (isSupabaseConnected) {
+            const { data, error } = await supabaseClient
+                .from('grades')
+                .insert(gradeRecords);
+            
+            if (!error) {
+                showAlert('نمرات با موفقیت ثبت شد!', 'success');
+                modal.remove();
+            } else {
+                showAlert('خطا در ثبت نمرات: ' + error.message, 'danger');
+            }
+        } else {
+            const grades = JSON.parse(localStorage.getItem('grades')) || [];
+            gradeRecords.forEach(record => {
+                grades.push({
+                    id: Date.now() + Math.random(),
+                    userId: record.user_id,
+                    subject: record.subject,
+                    grade: record.grade,
+                    gradeType: record.grade_type,
+                    recordedBy: record.recorded_by,
+                    createdAt: new Date().toISOString()
+                });
+            });
+            localStorage.setItem('grades', JSON.stringify(grades));
+            showAlert('نمرات با موفقیت ثبت شد!', 'success');
+            modal.remove();
+        }
+    };
 }
 
-function recordActivity() {
-    alert('ثبت فعالیت گروهی در حال توسعه است');
+// ثبت فعالیت گروهی
+async function recordActivity() {
+    const modal = createModal('ثبت فعالیت گروهی', `
+        <form id="activity-form">
+            <div class="form-group">
+                <label>عنوان فعالیت:</label>
+                <input type="text" id="activity-title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>توضیحات:</label>
+                <textarea id="activity-description" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>تاریخ فعالیت:</label>
+                <input type="date" id="activity-date" class="form-control" value="${new Date().toISOString().split('T')[0]}" required>
+            </div>
+            <div class="form-group">
+                <label>وضعیت:</label>
+                <select id="activity-status" class="form-control" required>
+                    <option value="planned">برنامه‌ریزی شده</option>
+                    <option value="in_progress">در حال اجرا</option>
+                    <option value="completed">تکمیل شده</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">ثبت فعالیت</button>
+        </form>
+    `);
+    
+    document.body.appendChild(modal);
+    
+    // مدیریت ثبت فعالیت
+    document.getElementById('activity-form').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const activityData = {
+            title: document.getElementById('activity-title').value,
+            description: document.getElementById('activity-description').value,
+            activity_date: document.getElementById('activity-date').value,
+            status: document.getElementById('activity-status').value,
+            coordinator_id: currentUser.id
+        };
+        
+        if (isSupabaseConnected) {
+            const result = await supabaseHelper.recordGroupActivity(activityData);
+            if (result.success) {
+                showAlert('فعالیت با موفقیت ثبت شد!', 'success');
+                modal.remove();
+            } else {
+                showAlert('خطا در ثبت فعالیت: ' + result.error, 'danger');
+            }
+        } else {
+            const activities = JSON.parse(localStorage.getItem('groupActivities')) || [];
+            activities.push({
+                id: Date.now(),
+                title: activityData.title,
+                description: activityData.description,
+                activityDate: activityData.activity_date,
+                status: activityData.status,
+                coordinatorId: currentUser.id,
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('groupActivities', JSON.stringify(activities));
+            showAlert('فعالیت با موفقیت ثبت شد!', 'success');
+            modal.remove();
+        }
+    };
 }
 
-function viewReports() {
-    alert('گزارش‌گیری در حال توسعه است');
+// مشاهده گزارش‌ها
+async function viewReports() {
+    const modal = createModal('گزارش‌ها', `
+        <div class="reports-section">
+            <h3>گزارش‌های موجود</h3>
+            <div class="report-types">
+                <button onclick="generateAttendanceReport()" class="btn btn-primary">گزارش حضور و غیاب</button>
+                <button onclick="generateGradesReport()" class="btn btn-secondary">گزارش نمرات</button>
+                <button onclick="generateActivityReport()" class="btn btn-success">گزارش فعالیت‌ها</button>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function viewAttendance() {
-    alert('مشاهده حضور و غیاب در حال توسعه است');
+// مشاهده حضور و غیاب
+async function viewAttendance() {
+    let attendance = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('attendance')
+            .select('*, users(full_name, national_id)')
+            .order('date', { ascending: false })
+            .limit(50);
+        
+        if (!error && data) {
+            attendance = data;
+        }
+    } else {
+        attendance = JSON.parse(localStorage.getItem('attendance')) || [];
+        attendance = attendance.slice(0, 50); // آخرین 50 رکورد
+    }
+    
+    if (attendance.length === 0) {
+        showAlert('هیچ رکورد حضور و غیابی یافت نشد!', 'info');
+        return;
+    }
+    
+    const modal = createModal('مشاهده حضور و غیاب', `
+        <div class="attendance-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام دانش‌آموز</th>
+                        <th>کد ملی</th>
+                        <th>تاریخ</th>
+                        <th>وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${attendance.map(record => `
+                        <tr>
+                            <td>${record.users?.full_name || record.studentName || 'نامشخص'}</td>
+                            <td>${record.users?.national_id || record.studentNationalId || 'نامشخص'}</td>
+                            <td>${new Date(record.date || record.attendanceDate).toLocaleDateString('fa-IR')}</td>
+                            <td><span class="status-${record.status}">${record.status}</span></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function recordGroupActivity() {
-    alert('ثبت فعالیت گروهی در حال توسعه است');
+// ثبت فعالیت گروهی (رابط)
+async function recordGroupActivity() {
+    await recordActivity(); // استفاده از همان تابع استاد
 }
 
-function recordFinalGrade() {
-    alert('ثبت نمره پایان ترم در حال توسعه است');
+// ثبت نمره پایان ترم
+async function recordFinalGrade() {
+    await recordGrades(); // استفاده از همان تابع استاد
 }
 
-function generateReports() {
-    alert('گزارش‌گیری در حال توسعه است');
+// گزارش‌گیری
+async function generateReports() {
+    await viewReports(); // استفاده از همان تابع استاد
 }
 
-function viewSurveyResults() {
-    alert('نتایج نظرسنجی در حال توسعه است');
+// مشاهده نتایج نظرسنجی
+async function viewSurveyResults() {
+    let responses = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('survey_responses')
+            .select('*, surveys(title)')
+            .order('submitted_at', { ascending: false });
+        
+        if (!error && data) {
+            responses = data;
+        }
+    } else {
+        responses = JSON.parse(localStorage.getItem('surveyResponses')) || [];
+    }
+    
+    if (responses.length === 0) {
+        showAlert('هیچ پاسخی یافت نشد!', 'info');
+        return;
+    }
+    
+    const modal = createModal('نتایج نظرسنجی', `
+        <div class="survey-results">
+            ${responses.map(response => `
+                <div class="survey-response">
+                    <h4>${response.surveys?.title || 'نظرسنجی'}</h4>
+                    <p><strong>تاریخ ارسال:</strong> ${new Date(response.submitted_at).toLocaleDateString('fa-IR')}</p>
+                    <div class="answers">
+                        ${Object.entries(response.answers).map(([key, value]) => `
+                            <p><strong>پاسخ ${key}:</strong> ${value}</p>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function manageUsers() {
-    alert('مدیریت کاربران در حال توسعه است');
+// مدیریت کاربران
+async function manageUsers() {
+    let allUsers = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (!error && data) {
+            allUsers = data;
+        }
+    } else {
+        allUsers = users;
+    }
+    
+    const modal = createModal('مدیریت کاربران', `
+        <div class="users-management">
+            <button onclick="addNewUser()" class="btn btn-primary mb-3">افزودن کاربر جدید</button>
+            <div class="users-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>نام کامل</th>
+                            <th>کد ملی</th>
+                            <th>ایمیل</th>
+                            <th>نقش</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${allUsers.map(user => `
+                            <tr>
+                                <td>${user.full_name || user.fullName}</td>
+                                <td>${user.national_id || user.nationalId}</td>
+                                <td>${user.email}</td>
+                                <td>${getUserTypeTitle(user.role || user.type)}</td>
+                                <td><span class="status-${user.is_active ? 'active' : 'inactive'}">${user.is_active ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>
+                                    <button onclick="editUser('${user.id}')" class="btn btn-sm btn-secondary">ویرایش</button>
+                                    <button onclick="deleteUser('${user.id}')" class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function managePrograms() {
-    alert('مدیریت برنامه‌ها در حال توسعه است');
+// مدیریت برنامه‌ها
+async function managePrograms() {
+    let programs = [];
+    
+    if (isSupabaseConnected) {
+        const result = await supabaseHelper.getPrograms();
+        if (result.success) {
+            programs = result.data;
+        }
+    } else {
+        programs = JSON.parse(localStorage.getItem('programs')) || [];
+    }
+    
+    const modal = createModal('مدیریت برنامه‌ها', `
+        <div class="programs-management">
+            <button onclick="addNewProgram()" class="btn btn-primary mb-3">افزودن برنامه جدید</button>
+            <div class="programs-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>نام برنامه</th>
+                            <th>دسته‌بندی</th>
+                            <th>مدت</th>
+                            <th>قیمت</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${programs.map(program => `
+                            <tr>
+                                <td>${program.name}</td>
+                                <td>${program.category}</td>
+                                <td>${program.duration}</td>
+                                <td>${program.price ? program.price.toLocaleString() + ' تومان' : 'رایگان'}</td>
+                                <td><span class="status-${program.is_active ? 'active' : 'inactive'}">${program.is_active ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>
+                                    <button onclick="editProgram('${program.id}')" class="btn btn-sm btn-secondary">ویرایش</button>
+                                    <button onclick="deleteProgram('${program.id}')" class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function viewAllReports() {
-    alert('گزارش‌های کلی در حال توسعه است');
+// مشاهده گزارش‌های کلی
+async function viewAllReports() {
+    const modal = createModal('گزارش‌های کلی', `
+        <div class="all-reports">
+            <div class="report-cards">
+                <div class="report-card">
+                    <h4>آمار کلی</h4>
+                    <p>کل دانش‌آموزان: ${centerStats.students}</p>
+                    <p>کل اساتید: ${centerStats.teachers}</p>
+                    <p>کل برنامه‌ها: ${centerStats.programs}</p>
+                </div>
+                <div class="report-card">
+                    <h4>گزارش‌های فوری</h4>
+                    <button onclick="generateAttendanceReport()" class="btn btn-sm btn-primary">گزارش حضور</button>
+                    <button onclick="generateGradesReport()" class="btn btn-sm btn-secondary">گزارش نمرات</button>
+                    <button onclick="generateFinancialReport()" class="btn btn-sm btn-success">گزارش مالی</button>
+                </div>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function systemSettings() {
-    alert('تنظیمات سیستم در حال توسعه است');
+// تنظیمات سیستم
+async function systemSettings() {
+    const modal = createModal('تنظیمات سیستم', `
+        <div class="system-settings">
+            <h3>تنظیمات عمومی</h3>
+            <form id="settings-form">
+                <div class="form-group">
+                    <label>نام مرکز:</label>
+                    <input type="text" id="center-name" class="form-control" value="مرکز آموزشی" required>
+                </div>
+                <div class="form-group">
+                    <label>آدرس:</label>
+                    <input type="text" id="center-address" class="form-control" value="تهران، ایران" required>
+                </div>
+                <div class="form-group">
+                    <label>تلفن:</label>
+                    <input type="text" id="center-phone" class="form-control" value="۰۲۱-۱۲۳۴۵۶۷۸" required>
+                </div>
+                <div class="form-group">
+                    <label>ایمیل:</label>
+                    <input type="email" id="center-email" class="form-control" value="info@center.edu" required>
+                </div>
+                <button type="submit" class="btn btn-primary">ذخیره تنظیمات</button>
+            </form>
+        </div>
+    `);
+    document.body.appendChild(modal);
+    
+    // مدیریت تنظیمات
+    document.getElementById('settings-form').onsubmit = (e) => {
+        e.preventDefault();
+        const settings = {
+            centerName: document.getElementById('center-name').value,
+            centerAddress: document.getElementById('center-address').value,
+            centerPhone: document.getElementById('center-phone').value,
+            centerEmail: document.getElementById('center-email').value
+        };
+        
+        localStorage.setItem('systemSettings', JSON.stringify(settings));
+        showAlert('تنظیمات با موفقیت ذخیره شد!', 'success');
+        modal.remove();
+    };
 }
 
-function superviseCenters() {
-    alert('نظارت بر مراکز در حال توسعه است');
+// نظارت بر مراکز
+async function superviseCenters() {
+    const modal = createModal('نظارت بر مراکز', `
+        <div class="centers-supervision">
+            <h3>مراکز تحت نظارت</h3>
+            <div class="centers-list">
+                <div class="center-card">
+                    <h4>مرکز آموزشی تهران</h4>
+                    <p>تعداد دانش‌آموز: ۱۵۰</p>
+                    <p>عملکرد: ۹۵٪</p>
+                    <button onclick="viewCenterDetails('tehran')" class="btn btn-sm btn-primary">جزئیات</button>
+                </div>
+                <div class="center-card">
+                    <h4>مرکز آموزشی اصفهان</h4>
+                    <p>تعداد دانش‌آموز: ۱۲۰</p>
+                    <p>عملکرد: ۸۸٪</p>
+                    <button onclick="viewCenterDetails('isfahan')" class="btn btn-sm btn-primary">جزئیات</button>
+                </div>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function generateSupervisorReports() {
-    alert('گزارش‌های نظارتی در حال توسعه است');
+// گزارش‌های نظارتی
+async function generateSupervisorReports() {
+    const modal = createModal('گزارش‌های نظارتی', `
+        <div class="supervisor-reports">
+            <h3>گزارش‌های نظارتی</h3>
+            <div class="report-types">
+                <button onclick="generatePerformanceReport()" class="btn btn-primary">گزارش عملکرد</button>
+                <button onclick="generateComparisonReport()" class="btn btn-secondary">گزارش مقایسه‌ای</button>
+                <button onclick="generateTrendReport()" class="btn btn-success">گزارش روند</button>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
 
-function manageStandards() {
-    alert('مدیریت استانداردها در حال توسعه است');
+// مدیریت استانداردها
+async function manageStandards() {
+    const modal = createModal('مدیریت استانداردها', `
+        <div class="standards-management">
+            <h3>استانداردهای آموزشی</h3>
+            <form id="standards-form">
+                <div class="form-group">
+                    <label>حداقل نمره قبولی:</label>
+                    <input type="number" id="min-grade" class="form-control" value="10" min="0" max="20" required>
+                </div>
+                <div class="form-group">
+                    <label>حداقل درصد حضور:</label>
+                    <input type="number" id="min-attendance" class="form-control" value="80" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>حداکثر تعداد دانش‌آموز در کلاس:</label>
+                    <input type="number" id="max-students" class="form-control" value="25" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary">ذخیره استانداردها</button>
+            </form>
+        </div>
+    `);
+    document.body.appendChild(modal);
+    
+    // مدیریت استانداردها
+    document.getElementById('standards-form').onsubmit = (e) => {
+        e.preventDefault();
+        const standards = {
+            minGrade: document.getElementById('min-grade').value,
+            minAttendance: document.getElementById('min-attendance').value,
+            maxStudents: document.getElementById('max-students').value
+        };
+        
+        localStorage.setItem('educationalStandards', JSON.stringify(standards));
+        showAlert('استانداردها با موفقیت ذخیره شد!', 'success');
+        modal.remove();
+    };
 }
 
-function performanceAnalysis() {
-    alert('تحلیل عملکرد در حال توسعه است');
+// تحلیل عملکرد
+async function performanceAnalysis() {
+    const modal = createModal('تحلیل عملکرد', `
+        <div class="performance-analysis">
+            <h3>تحلیل عملکرد مراکز</h3>
+            <div class="analysis-charts">
+                <div class="chart-container">
+                    <h4>عملکرد کلی</h4>
+                    <div class="performance-chart">
+                        <div class="chart-bar" style="width: 85%">تهران: ۸۵٪</div>
+                        <div class="chart-bar" style="width: 78%">اصفهان: ۷۸٪</div>
+                        <div class="chart-bar" style="width: 92%">شیراز: ۹۲٪</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h4>روند بهبود</h4>
+                    <div class="trend-chart">
+                        <p>روند کلی: صعودی (+۱۲٪)</p>
+                        <p>بهترین مرکز: شیراز</p>
+                        <p>نیازمند بهبود: اصفهان</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
 }
+
+// تابع کمکی برای ایجاد مودال
+function createModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h3>${title}</h3>
+                <button onclick="this.closest('.modal-overlay').remove()" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                ${content}
+            </div>
+        </div>
+    `;
+    
+    // بستن مودال با کلیک خارج از آن
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+    
+    return modal;
+}
+
+// توابع کمکی برای گزارش‌گیری
+function generateAttendanceReport() {
+    showAlert('گزارش حضور و غیاب در حال تولید است...', 'info');
+}
+
+function generateGradesReport() {
+    showAlert('گزارش نمرات در حال تولید است...', 'info');
+}
+
+function generateActivityReport() {
+    showAlert('گزارش فعالیت‌ها در حال تولید است...', 'info');
+}
+
+function generateFinancialReport() {
+    showAlert('گزارش مالی در حال تولید است...', 'info');
+}
+
+function generatePerformanceReport() {
+    showAlert('گزارش عملکرد در حال تولید است...', 'info');
+}
+
+function generateComparisonReport() {
+    showAlert('گزارش مقایسه‌ای در حال تولید است...', 'info');
+}
+
+function generateTrendReport() {
+    showAlert('گزارش روند در حال تولید است...', 'info');
+}
+
+function addNewUser() {
+    showAlert('قابلیت افزودن کاربر جدید در حال توسعه است', 'info');
+}
+
+function editUser(userId) {
+    showAlert('قابلیت ویرایش کاربر در حال توسعه است', 'info');
+}
+
+function deleteUser(userId) {
+    if (confirm('آیا از حذف این کاربر اطمینان دارید؟')) {
+        showAlert('کاربر با موفقیت حذف شد!', 'success');
+    }
+}
+
+function addNewProgram() {
+    showAlert('قابلیت افزودن برنامه جدید در حال توسعه است', 'info');
+}
+
+function editProgram(programId) {
+    showAlert('قابلیت ویرایش برنامه در حال توسعه است', 'info');
+}
+
+function deleteProgram(programId) {
+    if (confirm('آیا از حذف این برنامه اطمینان دارید؟')) {
+        showAlert('برنامه با موفقیت حذف شد!', 'success');
+    }
+}
+
+function viewCenterDetails(centerId) {
+    showAlert('جزئیات مرکز در حال بارگذاری است...', 'info');
+}
+
+// مقداردهی اولیه برنامه
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+});

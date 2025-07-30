@@ -745,3 +745,486 @@ body {
         max-width: 300px;
     }
 }
+
+/* مودال */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    width: 600px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: #f8f9fa;
+    color: #333;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* وضعیت‌ها */
+.status-present {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-absent {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.status-late {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.status-excused {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.status-approved {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.status-rejected {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* جدول‌های پیشرفته */
+.grades-table,
+.attendance-table,
+.users-table,
+.programs-table {
+    margin-top: 1rem;
+}
+
+.students-attendance,
+.students-grades {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.student-attendance,
+.student-grade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.student-attendance:last-child,
+.student-grade:last-child {
+    border-bottom: none;
+}
+
+.student-attendance span,
+.student-grade span {
+    font-weight: 500;
+    color: #333;
+}
+
+.student-attendance .form-control,
+.student-grade .form-control {
+    width: 120px;
+    margin: 0;
+}
+
+/* کارت‌های برنامه */
+.programs-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.program-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid #007bff;
+}
+
+.program-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.program-card p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+/* نظرسنجی */
+.survey-results {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.survey-response {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.survey-response h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.survey-response .answers {
+    margin-top: 0.5rem;
+}
+
+.survey-response .answers p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+/* مدیریت کاربران و برنامه‌ها */
+.users-management,
+.programs-management {
+    margin-top: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 4px;
+}
+
+/* گزارش‌ها */
+.report-cards {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.report-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+}
+
+.report-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.report-card p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+.report-types {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+/* تنظیمات سیستم */
+.system-settings form {
+    margin-top: 1rem;
+}
+
+/* نظارت بر مراکز */
+.centers-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.center-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+}
+
+.center-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.center-card p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+/* تحلیل عملکرد */
+.analysis-charts {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.chart-container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.chart-container h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.performance-chart {
+    margin-top: 1rem;
+}
+
+.chart-bar {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.chart-bar:hover {
+    transform: scale(1.02);
+}
+
+.trend-chart p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+/* استانداردها */
+.standards-management form {
+    margin-top: 1rem;
+}
+
+/* ریسپانسیو برای مودال */
+@media (max-width: 768px) {
+    .modal {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .student-attendance,
+    .student-grade {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .student-attendance .form-control,
+    .student-grade .form-control {
+        width: 100%;
+    }
+    
+    .report-types {
+        flex-direction: column;
+    }
+    
+    .report-types .btn {
+        width: 100%;
+    }
+}
+
+/* انیمیشن‌های اضافی */
+.modal-overlay {
+    animation: fadeIn 0.3s ease;
+}
+
+.modal {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* بهبود جدول‌ها */
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+.table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background: #e9ecef;
+}
+
+/* دکمه‌های عملیات */
+.action-buttons .btn {
+    margin: 0.25rem;
+    min-width: 120px;
+}
+
+/* بهبود فرم‌ها */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* بهبود پیام‌ها */
+.alert {
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.alert::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+.alert-success::before {
+    content: "\f00c";
+}
+
+.alert-danger::before {
+    content: "\f071";
+}
+
+.alert-warning::before {
+    content: "\f071";
+}
+
+.alert-info::before {
+    content: "\f05a";
+}
