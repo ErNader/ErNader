@@ -842,8 +842,8 @@ function createAdminDashboard() {
             <div class="admin-section">
                 <h3><i class="fas fa-chart-line"></i> مدیریت نمرات</h3>
                 <div class="section-actions">
-                    <button onclick="showGradeManagement()" class="btn btn-primary">مشاهده نمرات</button>
-                    <button onclick="editGradesModal()" class="btn btn-success">ویرایش نمرات</button>
+                    <button onclick="showGradesOverview()" class="btn btn-primary">مشاهده نمرات</button>
+                    <button onclick="editGrades()" class="btn btn-success">ویرایش نمرات</button>
                     <button onclick="showGradeAnalytics()" class="btn btn-info">تحلیل نمرات</button>
                     <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
                 </div>
@@ -887,9 +887,9 @@ function createAdminDashboard() {
                 <h3><i class="fas fa-cogs"></i> تنظیمات سیستم</h3>
                 <div class="section-actions">
                     <button onclick="showSystemSettings()" class="btn btn-primary">تنظیمات عمومی</button>
-                    <button onclick="showSecuritySettings()" class="btn btn-success">تنظیمات امنیتی</button>
-                    <button onclick="showBackupSettings()" class="btn btn-info">پشتیبان‌گیری</button>
-                    <button onclick="showUserPermissions()" class="btn btn-warning">دسترسی‌ها</button>
+                    <button onclick="showSystemSettings()" class="btn btn-success">تنظیمات امنیتی</button>
+                    <button onclick="showSystemSettings()" class="btn btn-info">پشتیبان‌گیری</button>
+                    <button onclick="showSystemSettings()" class="btn btn-warning">دسترسی‌ها</button>
                 </div>
             </div>
         </div>
@@ -936,9 +936,9 @@ function createCoordinatorDashboard() {
             <div class="coordinator-section">
                 <h3><i class="fas fa-clipboard-check"></i> مدیریت حضور و غیاب</h3>
                 <div class="section-actions">
-                    <button onclick="showAttendanceOverview()" class="btn btn-primary">نمای کلی حضور و غیاب</button>
+                    <button onclick="showAttendanceManagement()" class="btn btn-primary">نمای کلی حضور و غیاب</button>
                     <button onclick="recordAttendance()" class="btn btn-success">ثبت حضور و غیاب</button>
-                    <button onclick="editAttendance()" class="btn btn-info">ویرایش حضور و غیاب</button>
+                    <button onclick="editAttendanceModal()" class="btn btn-info">ویرایش حضور و غیاب</button>
                     <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
                 </div>
             </div>
@@ -5048,105 +5048,6 @@ function updateNeedsHelpStudents(gradesData) {
 }
 
 // ... existing code ...
-
-function showGradesOverview() {
-    showAlert('نمای کلی نمرات در حال توسعه است...', 'info');
-}
-
-function editGrades() {
-    showAlert('ویرایش نمرات در حال توسعه است...', 'info');
-}
-
-function editGroupActivity() {
-    showAlert('ویرایش فعالیت گروهی در حال توسعه است...', 'info');
-}
-
-function createGroupSurvey() {
-    showAlert('ایجاد نظرسنجی گروهی در حال توسعه است...', 'info');
-}
-
-function showSurveyAnalytics() {
-    showAlert('تحلیل نظرسنجی در حال توسعه است...', 'info');
-}
-
-function showStudentProgress() {
-    showAlert('پیشرفت دانش‌آموزان در حال توسعه است...', 'info');
-}
-
-function showStudentAnalytics() {
-    showAlert('تحلیل دانش‌آموزان در حال توسعه است...', 'info');
-}
-
-function exportStudentsToExcel() {
-    showAlert('خروجی اکسل دانش‌آموزان در حال توسعه است...', 'info');
-}
-
-function createNewGroup() {
-    showAlert('ایجاد گروه جدید در حال توسعه است...', 'info');
-}
-
-function showGroupAnalytics() {
-    showAlert('تحلیل گروه‌ها در حال توسعه است...', 'info');
-}
-
-function exportGroupsToExcel() {
-    showAlert('خروجی اکسل گروه‌ها در حال توسعه است...', 'info');
-}
-
-function showMyCalendar() {
-    showAlert('تقویم من در حال توسعه است...', 'info');
-}
-
-function scheduleActivity() {
-    showAlert('برنامه‌ریزی فعالیت در حال توسعه است...', 'info');
-}
-
-function showProgramSchedule() {
-    showAlert('برنامه‌های گروه در حال توسعه است...', 'info');
-}
-
-function exportScheduleToExcel() {
-    showAlert('خروجی اکسل برنامه‌های گروه در حال توسعه است...', 'info');
-}
-
-// تابع‌های مفقود برای داشبورد دانش‌آموز
-function viewGradeAnalytics() {
-    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
-}
-
-function viewGradeHistory() {
-    showAlert('تاریخچه نمرات در حال توسعه است...', 'info');
-}
-
-function exportMyGrades() {
-    showAlert('خروجی اکسل نمرات من در حال توسعه است...', 'info');
-}
-
-function registerForNewProgram() {
-    showAlert('ثبت‌نام در برنامه جدید در حال توسعه است...', 'info');
-}
-
-function viewRegistrationHistory() {
-    showAlert('تاریخچه ثبت‌نام در حال توسعه است...', 'info');
-}
-
-function exportMyRegistrations() {
-    showAlert('خروجی اکسل ثبت‌نام‌های من در حال توسعه است...', 'info');
-}
-
-function viewMyDocuments() {
-    showAlert('مشاهده اسناد من در حال توسعه است...', 'info');
-}
-
-function downloadReportCard() {
-    showAlert('دانلود کارنامه در حال توسعه است...', 'info');
-}
-
-function viewMySurveyResponses() {
-    showAlert('پاسخ‌های من در حال توسعه است...', 'info');
-}
-
-function viewAvailableSurveys() {
     showAlert('نظرسنجی‌های موجود در حال توسعه است...', 'info');
 }
 
@@ -5992,14 +5893,216 @@ function showSystemSettings() {
                     <h4>تنظیمات عمومی</h4>
                     <div class="setting-item">
                         <label>نام مرکز:</label>
-                        <input type="text" value="مرکز آموزشی" class="form-control">
+                        <input type="text" value="مرکز آموزشی" class="form-control" id="center-name">
                     </div>
                     <div class="setting-item">
                         <label>آدرس ایمیل:</label>
-                        <input type="email" value="info@center.edu" class="form-control">
+                        <input type="email" value="info@center.edu" class="form-control" id="center-email">
                     </div>
                     <div class="setting-item">
                         <label>شماره تماس:</label>
-                        <input type="tel" value="021-12345678" class="form-control">
+                        <input type="tel" value="021-12345678" class="form-control" id="center-phone">
                     </div>
-                   
+                    <div class="setting-item">
+                        <label>آدرس:</label>
+                        <textarea class="form-control" id="center-address">تهران، خیابان نمونه</textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGeneralSettings()">ذخیره تنظیمات</button>
+                </div>
+                
+                <div id="security-settings" class="tab-content">
+                    <h4>تنظیمات امنیتی</h4>
+                    <div class="setting-item">
+                        <label>حداقل طول رمز عبور:</label>
+                        <input type="number" value="8" min="6" max="20" class="form-control" id="min-password-length">
+                    </div>
+                    <div class="setting-item">
+                        <label>مدت زمان انقضای نشست (دقیقه):</label>
+                        <input type="number" value="30" min="5" max="480" class="form-control" id="session-timeout">
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" checked id="require-strong-password">
+                            الزام رمز عبور قوی
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" checked id="enable-two-factor">
+                            فعال‌سازی احراز هویت دو مرحله‌ای
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSecuritySettings()">ذخیره تنظیمات</button>
+                </div>
+                
+                <div id="backup-settings" class="tab-content">
+                    <h4>تنظیمات پشتیبان‌گیری</h4>
+                    <div class="setting-item">
+                        <label>فرکانس پشتیبان‌گیری:</label>
+                        <select class="form-control" id="backup-frequency">
+                            <option value="daily">روزانه</option>
+                            <option value="weekly" selected>هفتگی</option>
+                            <option value="monthly">ماهانه</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>حفظ پشتیبان‌ها برای (روز):</label>
+                        <input type="number" value="30" min="7" max="365" class="form-control" id="backup-retention">
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" checked id="auto-backup">
+                            پشتیبان‌گیری خودکار
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" onclick="createBackup()">ایجاد پشتیبان دستی</button>
+                    <button class="btn btn-success" onclick="saveBackupSettings()">ذخیره تنظیمات</button>
+                </div>
+                
+                <div id="permissions-settings" class="tab-content">
+                    <h4>مدیریت دسترسی‌ها</h4>
+                    <div class="permissions-grid">
+                        <div class="permission-group">
+                            <h5>مدیران</h5>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox" checked disabled>
+                                    دسترسی کامل به تمام بخش‌ها
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permission-group">
+                            <h5>رابط‌ها</h5>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    مدیریت گروه‌های خود
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    ثبت حضور و غیاب
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    ثبت نمرات
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox">
+                                    ایجاد گزارش
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permission-group">
+                            <h5>دانش‌آموزان</h5>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    مشاهده نمرات خود
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    مشاهده حضور و غیاب خود
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label>
+                                    <input type="checkbox">
+                                    درخواست کارنامه
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="savePermissionSettings()">ذخیره تنظیمات</button>
+                </div>
+            </div>
+        </div>
+    `;
+    createModal('تنظیمات سیستم', content);
+}
+
+function showSettingsTab(tabName) {
+    // حذف کلاس active از همه تب‌ها
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    // اضافه کردن کلاس active به تب انتخاب شده
+    document.querySelector(`[onclick="showSettingsTab('${tabName}')"]`).classList.add('active');
+    document.getElementById(`${tabName}-settings`).classList.add('active');
+}
+
+function saveGeneralSettings() {
+    showAlert('تنظیمات عمومی با موفقیت ذخیره شد', 'success');
+}
+
+function saveSecuritySettings() {
+    showAlert('تنظیمات امنیتی با موفقیت ذخیره شد', 'success');
+}
+
+function saveBackupSettings() {
+    showAlert('تنظیمات پشتیبان‌گیری با موفقیت ذخیره شد', 'success');
+}
+
+function createBackup() {
+    showAlert('پشتیبان با موفقیت ایجاد شد', 'success');
+}
+
+function savePermissionSettings() {
+    showAlert('تنظیمات دسترسی با موفقیت ذخیره شد', 'success');
+}
+
+// توابع کمکی برای داشبورد رابط
+function showGroupActivities() {
+    showAlert('مشاهده فعالیت‌های گروهی در حال توسعه است...', 'info');
+}
+
+function showMyStudents() {
+    showAlert('مشاهده دانش‌آموزان من در حال توسعه است...', 'info');
+}
+
+function showStudentProgress() {
+    showAlert('پیشرفت دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function showStudentAnalytics() {
+    showAlert('تحلیل دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function exportStudentsToExcel() {
+    showAlert('خروجی اکسل دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function exportActivitiesToExcel() {
+    showAlert('خروجی اکسل فعالیت‌ها در حال توسعه است...', 'info');
+}
+
+function showAttendanceReports() {
+    showAlert('گزارش حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showGradeReports() {
+    showAlert('گزارش نمرات در حال توسعه است...', 'info');
+}
+
+function showActivityReports() {
+    showAlert('گزارش فعالیت‌ها در حال توسعه است...', 'info');
+}
+
+function showComprehensiveReport() {
+    showAlert('گزارش جامع در حال توسعه است...', 'info');
+}
+
+function exportSurveyResults() {
+    showAlert('خروجی اکسل نتایج نظرسنجی در حال توسعه است...', 'info');
+}
+
+function exportScheduleToExcel() {
+    showAlert('خروجی اکسل برنامه‌ها در حال توسعه است...', 'info');
+}

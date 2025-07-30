@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست کامل سیستم حضور و غیاب و مدیریت</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Vazir', sans-serif;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        
+        .test-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .test-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .test-card h4 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-button.success {
+            background: #28a745;
+        }
+        
+        .test-button.success:hover {
+            background: #1e7e34;
+        }
+        
+        .test-button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .test-button.warning:hover {
+            background: #e0a800;
+        }
+        
+        .test-button.danger {
+            background: #dc3545;
+        }
+        
+        .test-button.danger:hover {
+            background: #c82333;
+        }
+        
+        .status-display {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .login-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .login-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .login-form input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .login-form button {
+            background: white;
+            color: #f5576c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .current-user {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .feature-card h5 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 تست کامل سیستم حضور و غیاب و مدیریت</h1>
+            <p>بررسی تمام قابلیت‌ها و اطمینان از عملکرد صحیح</p>
+        </div>
+
+        <!-- بخش ورود -->
+        <div class="login-section">
+            <h3>🔐 ورود به سیستم</h3>
+            <div class="login-form">
+                <div>
+                    <label>کد ملی:</label>
+                    <input type="text" id="test-national-id" placeholder="کد ملی را وارد کنید">
+                </div>
+                <div>
+                    <label>رمز عبور:</label>
+                    <input type="password" id="test-password" placeholder="رمز عبور را وارد کنید">
+                </div>
+                <div>
+                    <button onclick="testLogin()">ورود</button>
+                </div>
+            </div>
+            <div id="login-status"></div>
+        </div>
+
+        <!-- تست بخش مدیر -->
+        <div class="test-section">
+            <h3><i class="fas fa-user-shield"></i> تست بخش مدیر</h3>
+            <div class="test-grid">
+                <div class="test-card">
+                    <h4>مدیریت حضور و غیاب</h4>
+                    <button class="test-button" onclick="testAttendanceManagement()">مشاهده حضور و غیاب</button>
+                    <button class="test-button success" onclick="testRecordAttendance()">ثبت حضور و غیاب</button>
+                    <button class="test-button warning" onclick="testEditAttendance()">ویرایش حضور و غیاب</button>
+                    <button class="test-button" onclick="testAttendanceAnalytics()">تحلیل حضور و غیاب</button>
+                    <div id="attendance-status"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>مدیریت نمرات</h4>
+                    <button class="test-button" onclick="testGradesOverview()">مشاهده نمرات</button>
+                    <button class="test-button success" onclick="testRecordGrades()">ثبت نمرات</button>
+                    <button class="test-button warning" onclick="testEditGrades()">ویرایش نمرات</button>
+                    <button class="test-button" onclick="testGradesAnalytics()">تحلیل نمرات</button>
+                    <div id="grades-status"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>گزارش‌گیری</h4>
+                    <button class="test-button" onclick="testGeneralReports()">گزارش‌های کلی</button>
+                    <button class="test-button" onclick="testFinancialReports()">گزارش‌های مالی</button>
+                    <button class="test-button" onclick="testPerformanceReports()">گزارش‌های عملکرد</button>
+                    <button class="test-button warning" onclick="testExportReports()">خروجی اکسل</button>
+                    <div id="reports-status"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>تنظیمات و مدیریت</h4>
+                    <button class="test-button" onclick="testSystemSettings()">تنظیمات سیستم</button>
+                    <button class="test-button" onclick="testUserManagement()">مدیریت کاربران</button>
+                    <button class="test-button" onclick="testProgramManagement()">مدیریت برنامه‌ها</button>
+                    <button class="test-button" onclick="testGroupManagement()">مدیریت گروه‌ها</button>
+                    <div id="management-status"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تست بخش رابط -->
+        <div class="test-section">
+            <h3><i class="fas fa-user-tie"></i> تست بخش رابط</h3>
+            <div class="test-grid">
+                <div class="test-card">
+                    <h4>مدیریت گروه‌ها</h4>
+                    <button class="test-button" onclick="testMyGroups()">گروه‌های من</button>
+                    <button class="test-button" onclick="testSubGroups()">بچه‌گروهی</button>
+                    <button class="test-button success" onclick="testCreateGroup()">ایجاد گروه جدید</button>
+                    <button class="test-button" onclick="testGroupAnalytics()">تحلیل گروه‌ها</button>
+                    <div id="coordinator-groups-status"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>مدیریت دانش‌آموزان</h4>
+                    <button class="test-button" onclick="testMyStudents()">دانش‌آموزان من</button>
+                    <button class="test-button" onclick="testStudentProgress()">پیشرفت دانش‌آموزان</button>
+                    <button class="test-button" onclick="testStudentAnalytics()">تحلیل دانش‌آموزان</button>
+                    <button class="test-button warning" onclick="testExportStudents()">خروجی اکسل</button>
+                    <div id="coordinator-students-status"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تست حضور و غیاب برنامه‌محور -->
+        <div class="test-section">
+            <h3><i class="fas fa-calendar-check"></i> تست حضور و غیاب برنامه‌محور</h3>
+            <p>تست کنید که حضور و غیاب برای هر برنامه به صورت جداگانه ثبت و مدیریت می‌شود:</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>کلاس‌های تقویتی ریاضی</h5>
+                    <p>برنامه ID: 1</p>
+                    <button class="test-button" onclick="testProgramAttendance(1)">مشاهده حضور</button>
+                </div>
+                <div class="feature-card">
+                    <h5>کلاس‌های تقویتی علوم</h5>
+                    <p>برنامه ID: 2</p>
+                    <button class="test-button" onclick="testProgramAttendance(2)">مشاهده حضور</button>
+                </div>
+                <div class="feature-card">
+                    <h5>کلاس‌های تقویتی ادبیات</h5>
+                    <p>برنامه ID: 3</p>
+                    <button class="test-button" onclick="testProgramAttendance(3)">مشاهده حضور</button>
+                </div>
+                <div class="feature-card">
+                    <h5>کلاس‌های تقویتی زبان</h5>
+                    <p>برنامه ID: 4</p>
+                    <button class="test-button" onclick="testProgramAttendance(4)">مشاهده حضور</button>
+                </div>
+            </div>
+            <div id="program-attendance-status"></div>
+        </div>
+
+        <!-- وضعیت فعلی سیستم -->
+        <div class="test-section">
+            <h3><i class="fas fa-info-circle"></i> وضعیت فعلی سیستم</h3>
+            <div id="system-status">
+                <div class="status-display status-info">
+                    <strong>وضعیت:</strong> در حال بارگذاری...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // متغیرهای تست
+        let currentTestUser = null;
+        let testResults = {};
+
+        // تابع ورود تست
+        async function testLogin() {
+            const nationalId = document.getElementById('test-national-id').value;
+            const password = document.getElementById('test-password').value;
+            const statusDiv = document.getElementById('login-status');
+
+            if (!nationalId || !password) {
+                statusDiv.innerHTML = '<div class="status-display status-error">لطفاً کد ملی و رمز عبور را وارد کنید</div>';
+                return;
+            }
+
+            try {
+                // شبیه‌سازی ورود
+                const testUsers = [
+                    { nationalId: '1234567890', password: 'admin123', type: 'admin', fullName: 'مدیر سیستم' },
+                    { nationalId: '1111111111', password: '123456', type: 'coordinator', fullName: 'رابط نمونه' },
+                    { nationalId: '3333333333', password: '123456', type: 'student', fullName: 'دانش‌آموز نمونه' }
+                ];
+
+                const user = testUsers.find(u => u.nationalId === nationalId && u.password === password);
+                
+                if (user) {
+                    currentTestUser = user;
+                    currentUser = user; // برای سازگاری با کد اصلی
+                    
+                    statusDiv.innerHTML = `
+                        <div class="status-display status-success">
+                            <strong>ورود موفق:</strong> ${user.fullName} (${getUserTypeTitle(user.type)})
+                        </div>
+                    `;
+                    
+                    updateSystemStatus();
+                } else {
+                    statusDiv.innerHTML = '<div class="status-display status-error">کد ملی یا رمز عبور اشتباه است</div>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<div class="status-display status-error">خطا در ورود: ' + error.message + '</div>';
+            }
+        }
+
+        // تابع نمایش عنوان نوع کاربر
+        function getUserTypeTitle(type) {
+            switch(type) {
+                case 'admin': return 'مدیر';
+                case 'coordinator': return 'رابط';
+                case 'student': return 'دانش‌آموز';
+                default: return 'کاربر';
+            }
+        }
+
+        // تست مدیریت حضور و غیاب
+        function testAttendanceManagement() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showAttendanceManagement();
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-success">مدیریت حضور و غیاب باز شد</div>';
+            } catch (error) {
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست ثبت حضور و غیاب
+        function testRecordAttendance() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                recordAttendance();
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-success">فرم ثبت حضور و غیاب باز شد</div>';
+            } catch (error) {
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست ویرایش حضور و غیاب
+        function testEditAttendance() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                editAttendanceModal();
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-success">فرم ویرایش حضور و غیاب باز شد</div>';
+            } catch (error) {
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست تحلیل حضور و غیاب
+        function testAttendanceAnalytics() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showAttendanceAnalytics();
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-success">تحلیل حضور و غیاب باز شد</div>';
+            } catch (error) {
+                document.getElementById('attendance-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست مدیریت نمرات
+        function testGradesOverview() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showGradesOverview();
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-success">نمای کلی نمرات باز شد</div>';
+            } catch (error) {
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست ثبت نمرات
+        function testRecordGrades() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                recordGrades();
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-success">فرم ثبت نمرات باز شد</div>';
+            } catch (error) {
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست ویرایش نمرات
+        function testEditGrades() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                editGrades();
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-success">فرم ویرایش نمرات باز شد</div>';
+            } catch (error) {
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست تحلیل نمرات
+        function testGradesAnalytics() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showGradeAnalytics();
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-success">تحلیل نمرات باز شد</div>';
+            } catch (error) {
+                document.getElementById('grades-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست گزارش‌های کلی
+        function testGeneralReports() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showGeneralReports();
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-success">گزارش‌های کلی باز شد</div>';
+            } catch (error) {
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست گزارش‌های مالی
+        function testFinancialReports() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showFinancialReports();
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-success">گزارش‌های مالی باز شد</div>';
+            } catch (error) {
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست گزارش‌های عملکرد
+        function testPerformanceReports() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showPerformanceReports();
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-success">گزارش‌های عملکرد باز شد</div>';
+            } catch (error) {
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست خروجی اکسل
+        function testExportReports() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                exportAllReportsToExcel();
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-success">درخواست خروجی اکسل ارسال شد</div>';
+            } catch (error) {
+                document.getElementById('reports-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست تنظیمات سیستم
+        function testSystemSettings() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showSystemSettings();
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-success">تنظیمات سیستم باز شد</div>';
+            } catch (error) {
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست مدیریت کاربران
+        function testUserManagement() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showUserManagement();
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-success">مدیریت کاربران باز شد</div>';
+            } catch (error) {
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست مدیریت برنامه‌ها
+        function testProgramManagement() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showProgramManagement();
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-success">مدیریت برنامه‌ها باز شد</div>';
+            } catch (error) {
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست مدیریت گروه‌ها
+        function testGroupManagement() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showGroupManagement();
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-success">مدیریت گروه‌ها باز شد</div>';
+            } catch (error) {
+                document.getElementById('management-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست گروه‌های من (رابط)
+        function testMyGroups() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showMyGroups();
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-success">گروه‌های من باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست بچه‌گروهی
+        function testSubGroups() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showSubGroups();
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-success">بچه‌گروهی باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست ایجاد گروه جدید
+        function testCreateGroup() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                createNewGroup();
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-success">فرم ایجاد گروه جدید باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست تحلیل گروه‌ها
+        function testGroupAnalytics() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showGroupAnalytics();
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-success">تحلیل گروه‌ها باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-groups-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست دانش‌آموزان من
+        function testMyStudents() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showMyStudents();
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-success">دانش‌آموزان من باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست پیشرفت دانش‌آموزان
+        function testStudentProgress() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showStudentProgress();
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-success">پیشرفت دانش‌آموزان باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست تحلیل دانش‌آموزان
+        function testStudentAnalytics() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                showStudentAnalytics();
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-success">تحلیل دانش‌آموزان باز شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست خروجی اکسل دانش‌آموزان
+        function testExportStudents() {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                exportStudentsToExcel();
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-success">درخواست خروجی اکسل دانش‌آموزان ارسال شد</div>';
+            } catch (error) {
+                document.getElementById('coordinator-students-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تست حضور و غیاب برنامه‌محور
+        function testProgramAttendance(programId) {
+            if (!currentTestUser) {
+                showTestAlert('لطفاً ابتدا وارد شوید', 'error');
+                return;
+            }
+            
+            try {
+                // شبیه‌سازی نمایش حضور و غیاب برنامه خاص
+                const programNames = {
+                    1: 'کلاس‌های تقویتی ریاضی',
+                    2: 'کلاس‌های تقویتی علوم',
+                    3: 'کلاس‌های تقویتی ادبیات',
+                    4: 'کلاس‌های تقویتی زبان'
+                };
+                
+                const programName = programNames[programId] || `برنامه ${programId}`;
+                
+                // فیلتر کردن حضور و غیاب بر اساس برنامه
+                const programAttendance = attendance.filter(a => a.programId == programId);
+                
+                const statusDiv = document.getElementById('program-attendance-status');
+                statusDiv.innerHTML = `
+                    <div class="status-display status-success">
+                        <h4>حضور و غیاب ${programName}</h4>
+                        <p><strong>تعداد رکوردها:</strong> ${programAttendance.length}</p>
+                        <p><strong>آخرین رکورد:</strong> ${programAttendance.length > 0 ? 
+                            new Date(programAttendance[programAttendance.length - 1].date).toLocaleDateString('fa-IR') : 
+                            'هیچ رکوردی یافت نشد'}</p>
+                    </div>
+                `;
+                
+                // باز کردن مدیریت حضور و غیاب با فیلتر برنامه
+                showAttendanceManagement();
+                
+            } catch (error) {
+                document.getElementById('program-attendance-status').innerHTML = 
+                    '<div class="status-display status-error">خطا: ' + error.message + '</div>';
+            }
+        }
+
+        // تابع نمایش پیام تست
+        function showTestAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `status-display status-${type === 'error' ? 'error' : type === 'success' ? 'success' : 'info'}`;
+            alertDiv.textContent = message;
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.style.minWidth = '300px';
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                document.body.removeChild(alertDiv);
+            }, 3000);
+        }
+
+        // تابع به‌روزرسانی وضعیت سیستم
+        function updateSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+            
+            if (currentTestUser) {
+                statusDiv.innerHTML = `
+                    <div class="status-display status-success">
+                        <strong>کاربر فعلی:</strong> ${currentTestUser.fullName} (${getUserTypeTitle(currentTestUser.type)})
+                    </div>
+                    <div class="status-display status-info">
+                        <strong>تعداد کاربران:</strong> ${users.length}
+                    </div>
+                    <div class="status-display status-info">
+                        <strong>تعداد برنامه‌ها:</strong> ${programs.length}
+                    </div>
+                    <div class="status-display status-info">
+                        <strong>تعداد گروه‌ها:</strong> ${groups.length}
+                    </div>
+                    <div class="status-display status-info">
+                        <strong>تعداد رکوردهای حضور و غیاب:</strong> ${attendance.length}
+                    </div>
+                    <div class="status-display status-info">
+                        <strong>تعداد نمرات:</strong> ${grades.length}
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status-display status-info">
+                        <strong>وضعیت:</strong> کاربر وارد نشده است
+                    </div>
+                `;
+            }
+        }
+
+        // راه‌اندازی اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSystemStatus();
+            
+            // تنظیم مقادیر پیش‌فرض برای تست
+            document.getElementById('test-national-id').value = '1234567890';
+            document.getElementById('test-password').value = 'admin123';
+        });
+    </script>
+</body>
+</html>
