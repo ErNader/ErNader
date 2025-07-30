@@ -1228,3 +1228,1111 @@ body {
 .alert-info::before {
     content: "\f05a";
 }
+
+/* استایل‌های جدید برای داشبوردهای پیشرفته */
+
+/* بخش‌های داشبورد */
+.admin-sections,
+.supervisor-sections,
+.coordinator-sections,
+.student-sections,
+.teacher-sections {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.admin-section,
+.supervisor-section,
+.coordinator-section,
+.student-section,
+.teacher-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.admin-section:hover,
+.supervisor-section:hover,
+.coordinator-section:hover,
+.student-section:hover,
+.teacher-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.admin-section h3,
+.supervisor-section h3,
+.coordinator-section h3,
+.student-section h3,
+.teacher-section h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-section h3 i,
+.supervisor-section h3 i,
+.coordinator-section h3 i,
+.student-section h3 i,
+.teacher-section h3 i {
+    color: #007bff;
+    font-size: 1.2rem;
+}
+
+.section-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.section-actions .btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.section-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* رنگ‌بندی مخصوص هر نقش */
+.admin-section {
+    border-left-color: #dc3545;
+}
+
+.admin-section h3 i {
+    color: #dc3545;
+}
+
+.supervisor-section {
+    border-left-color: #28a745;
+}
+
+.supervisor-section h3 i {
+    color: #28a745;
+}
+
+.coordinator-section {
+    border-left-color: #ffc107;
+}
+
+.coordinator-section h3 i {
+    color: #ffc107;
+}
+
+.student-section {
+    border-left-color: #17a2b8;
+}
+
+.student-section h3 i {
+    color: #17a2b8;
+}
+
+.teacher-section {
+    border-left-color: #6f42c1;
+}
+
+.teacher-section h3 i {
+    color: #6f42c1;
+}
+
+/* بهبود داشبورد استات */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.dashboard-stat {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-stat:hover::before {
+    transform: translateX(0);
+}
+
+.dashboard-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-stat .number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.dashboard-stat .label {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* بهبود هدر داشبورد */
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.user-info span {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* دکمه‌های بهبود یافته */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #1e7e34, #155724);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8, #117a8b);
+    color: white;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #117a8b, #0c5460);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800, #d39e00);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #545b62);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #545b62, #495057);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* بهبود مودال‌ها */
+.modal {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    width: 700px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+    padding: 0.5rem;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+/* بهبود جداول */
+.table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: right;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.table th {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background: #e9ecef;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* بهبود فرم‌ها */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.form-control:hover {
+    border-color: #007bff;
+}
+
+/* بهبود کارت‌های اطلاعات */
+.info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007bff;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.info-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.info-card p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+/* بهبود نمودارها */
+.chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.chart-container h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.performance-chart {
+    margin-top: 1rem;
+}
+
+.chart-bar {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.chart-bar:hover::before {
+    transform: translateX(0);
+}
+
+.chart-bar:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* ریسپانسیو برای بخش‌های جدید */
+@media (max-width: 768px) {
+    .admin-sections,
+    .supervisor-sections,
+    .coordinator-sections,
+    .student-sections,
+    .teacher-sections {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .section-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .dashboard-stat {
+        padding: 1.5rem;
+    }
+    
+    .dashboard-stat .number {
+        font-size: 2rem;
+    }
+    
+    .modal {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-actions .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .dashboard-stat .number {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard-title {
+        font-size: 1.4rem;
+    }
+}
+
+/* انیمیشن‌های اضافی */
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.admin-section,
+.supervisor-section,
+.coordinator-section,
+.student-section,
+.teacher-section {
+    animation: slideInFromTop 0.5s ease;
+}
+
+.dashboard-stat {
+    animation: fadeInScale 0.5s ease;
+}
+
+/* بهبود اسکرول */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* بهبود لودینگ */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* بهبود نوتیفیکیشن‌ها */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left: 4px solid #28a745;
+}
+
+.notification.error {
+    border-left: 4px solid #dc3545;
+}
+
+.notification.warning {
+    border-left: 4px solid #ffc107;
+}
+
+.notification.info {
+    border-left: 4px solid #17a2b8;
+}
+
+/* استایل‌های اضافی برای بخش‌های مدیریت */
+
+/* فرم ردیف‌ها */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* هدر مدیریت */
+.management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-box {
+    min-width: 150px;
+}
+
+/* فوتر مدیریت */
+.management-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* دکمه‌های عملیات */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+}
+
+/* نشانگرهای نقش */
+.role-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+    min-width: 80px;
+}
+
+.role-student {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.role-teacher {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.role-coordinator {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.role-admin {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.role-supervisor {
+    background: #e8f5e8;
+    color: #388e3c;
+}
+
+/* نشانگرهای دسته‌بندی */
+.category-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+    min-width: 80px;
+}
+
+.category-academic {
+    background: #e8f5e8;
+    color: #388e3c;
+}
+
+.category-recreational {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.category-sports {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.category-cultural {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+/* نشانگرهای وضعیت */
+.status-active {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.status-inactive {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* بخش سوالات نظرسنجی */
+.questions-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.questions-section h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.question-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #e9ecef;
+    position: relative;
+}
+
+.question-item:last-child {
+    margin-bottom: 0;
+}
+
+.options-container {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+/* فرم اکشن‌ها */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+/* بهبود جداول مدیریت */
+.user-management .table,
+.program-management .table,
+.survey-management .table {
+    font-size: 0.85rem;
+}
+
+.user-management .table th,
+.program-management .table th,
+.survey-management .table th {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+}
+
+.user-management .table td,
+.program-management .table td,
+.survey-management .table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+/* انیمیشن‌های اضافی */
+.question-item {
+    animation: slideInFromLeft 0.3s ease;
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* بهبود اسکرول برای مودال‌های بزرگ */
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* استایل‌های اضافی برای بخش‌های مختلف */
+.user-management,
+.program-management,
+.survey-management {
+    min-height: 400px;
+}
+
+/* بهبود نمایش در موبایل */
+@media (max-width: 480px) {
+    .management-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box,
+    .filter-box {
+        min-width: auto;
+    }
+    
+    .management-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .role-badge,
+    .category-badge {
+        font-size: 0.7rem;
+        min-width: 60px;
+    }
+}
+
+/* بهبود نمایش آیکون‌ها */
+.btn i {
+    font-size: 0.9em;
+}
+
+.btn-sm i {
+    font-size: 0.8em;
+}
+
+/* استایل‌های اضافی برای فرم‌های پیچیده */
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* بهبود نمایش تاریخ‌ها */
+.date-display {
+    font-family: 'Courier New', monospace;
+    background: #f8f9fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* استایل‌های اضافی برای بخش‌های مختلف داشبورد */
+.dashboard-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dashboard-section:hover::before {
+    opacity: 1;
+}
+
+/* بهبود نمایش آمار */
+.dashboard-stat {
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-stat::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-stat:hover::after {
+    transform: rotate(45deg) scale(1.2);
+}
+
+/* استایل‌های اضافی برای مودال‌های مدیریت */
+.modal .management-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: -2rem -2rem 1.5rem -2rem;
+}
+
+.modal .management-footer {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1.5rem -2rem -2rem -2rem;
+}
+
+/* بهبود نمایش جداول در مودال */
+.modal .table-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal .table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f8f9fa;
+}
+
+/* استایل‌های اضافی برای دکمه‌های عملیات */
+.action-buttons .btn {
+    transition: all 0.2s ease;
+}
+
+.action-buttons .btn:hover {
+    transform: scale(1.1);
+}
+
+.action-buttons .btn:active {
+    transform: scale(0.95);
+}
+
+/* بهبود نمایش پیام‌ها */
+.alert {
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+
+.alert:hover::after {
+    transform: translateX(100%);
+}

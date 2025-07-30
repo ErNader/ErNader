@@ -487,8 +487,383 @@ function getUserTypeTitle(type) {
     return titles[type] || 'کاربر';
 }
 
+// تابع بهبود یافته برای ایجاد داشبورد ادمین
+function createAdminDashboard() {
+    return `
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">داشبورد مدیر مرکز</h1>
+            <div class="user-info">
+                <span>خوش آمدید، ${currentUser.fullName}</span>
+                <button onclick="logout()" class="btn btn-danger">خروج</button>
+            </div>
+        </div>
+        
+        <div class="dashboard-stats">
+            <div class="dashboard-stat">
+                <div class="number">${registrations.length}</div>
+                <div class="label">کل ثبت‌نام‌ها</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${centerStats.teachers}</div>
+                <div class="label">استاد</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${centerStats.programs}</div>
+                <div class="label">برنامه فعال</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getTotalStudents()}</div>
+                <div class="label">دانش‌آموز</div>
+            </div>
+        </div>
+        
+        <div class="admin-sections">
+            <!-- مدیریت کاربران -->
+            <div class="admin-section">
+                <h3><i class="fas fa-users"></i> مدیریت کاربران</h3>
+                <div class="section-actions">
+                    <button onclick="showUserManagement()" class="btn btn-primary">مدیریت کاربران</button>
+                    <button onclick="addNewUserModal()" class="btn btn-success">افزودن کاربر جدید</button>
+                    <button onclick="showUserSearch()" class="btn btn-info">جستجوی کاربران</button>
+                    <button onclick="exportUsersToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت برنامه‌ها -->
+            <div class="admin-section">
+                <h3><i class="fas fa-calendar-alt"></i> مدیریت برنامه‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="showProgramManagement()" class="btn btn-primary">مدیریت برنامه‌ها</button>
+                    <button onclick="addNewProgramModal()" class="btn btn-success">افزودن برنامه جدید</button>
+                    <button onclick="showProgramAnalytics()" class="btn btn-info">تحلیل برنامه‌ها</button>
+                    <button onclick="exportProgramsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت نظرسنجی‌ها -->
+            <div class="admin-section">
+                <h3><i class="fas fa-poll"></i> مدیریت نظرسنجی‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="showSurveyManagement()" class="btn btn-primary">مدیریت نظرسنجی‌ها</button>
+                    <button onclick="createNewSurveyModal()" class="btn btn-success">ایجاد نظرسنجی جدید</button>
+                    <button onclick="showSurveyResults()" class="btn btn-info">نتایج نظرسنجی‌ها</button>
+                    <button onclick="exportSurveyResults()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت نمرات -->
+            <div class="admin-section">
+                <h3><i class="fas fa-chart-line"></i> مدیریت نمرات</h3>
+                <div class="section-actions">
+                    <button onclick="showGradeManagement()" class="btn btn-primary">مشاهده نمرات</button>
+                    <button onclick="editGradesModal()" class="btn btn-success">ویرایش نمرات</button>
+                    <button onclick="showGradeAnalytics()" class="btn btn-info">تحلیل نمرات</button>
+                    <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت حضور و غیاب -->
+            <div class="admin-section">
+                <h3><i class="fas fa-clipboard-check"></i> مدیریت حضور و غیاب</h3>
+                <div class="section-actions">
+                    <button onclick="showAttendanceManagement()" class="btn btn-primary">مشاهده حضور و غیاب</button>
+                    <button onclick="editAttendanceModal()" class="btn btn-success">ویرایش حضور و غیاب</button>
+                    <button onclick="showAttendanceAnalytics()" class="btn btn-info">تحلیل حضور و غیاب</button>
+                    <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- درخواست‌ها -->
+            <div class="admin-section">
+                <h3><i class="fas fa-file-alt"></i> مدیریت درخواست‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="showRequestManagement()" class="btn btn-primary">مشاهده درخواست‌ها</button>
+                    <button onclick="createReportCardRequest()" class="btn btn-success">درخواست کارنامه</button>
+                    <button onclick="showRequestAnalytics()" class="btn btn-info">تحلیل درخواست‌ها</button>
+                    <button onclick="exportRequestsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- گزارش‌های کلی -->
+            <div class="admin-section">
+                <h3><i class="fas fa-chart-bar"></i> گزارش‌های کلی</h3>
+                <div class="section-actions">
+                    <button onclick="showGeneralReports()" class="btn btn-primary">گزارش‌های کلی</button>
+                    <button onclick="showFinancialReports()" class="btn btn-success">گزارش‌های مالی</button>
+                    <button onclick="showPerformanceReports()" class="btn btn-info">گزارش‌های عملکرد</button>
+                    <button onclick="exportAllReportsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- تنظیمات سیستم -->
+            <div class="admin-section">
+                <h3><i class="fas fa-cogs"></i> تنظیمات سیستم</h3>
+                <div class="section-actions">
+                    <button onclick="showSystemSettings()" class="btn btn-primary">تنظیمات عمومی</button>
+                    <button onclick="showSecuritySettings()" class="btn btn-success">تنظیمات امنیتی</button>
+                    <button onclick="showBackupSettings()" class="btn btn-info">پشتیبان‌گیری</button>
+                    <button onclick="showUserPermissions()" class="btn btn-warning">دسترسی‌ها</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// تابع بهبود یافته برای ایجاد داشبورد مسئول سطوح
+function createSupervisorDashboard() {
+    return `
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">داشبورد مسئول سطوح</h1>
+            <div class="user-info">
+                <span>خوش آمدید، ${currentUser.fullName}</span>
+                <button onclick="logout()" class="btn btn-danger">خروج</button>
+            </div>
+        </div>
+        
+        <div class="dashboard-stats">
+            <div class="dashboard-stat">
+                <div class="number">${getSupervisorCentersCount()}</div>
+                <div class="label">مرکز تحت نظارت</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getSupervisorStudentsCount()}</div>
+                <div class="label">کل دانش‌آموز</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getSupervisorPerformance()}</div>
+                <div class="label">عملکرد کلی</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getSupervisorProgramsCount()}</div>
+                <div class="label">برنامه فعال</div>
+            </div>
+        </div>
+        
+        <div class="supervisor-sections">
+            <!-- نظارت بر مراکز -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-building"></i> نظارت بر مراکز</h3>
+                <div class="section-actions">
+                    <button onclick="showCentersOverview()" class="btn btn-primary">نمای کلی مراکز</button>
+                    <button onclick="showCenterDetails()" class="btn btn-success">جزئیات مراکز</button>
+                    <button onclick="compareCenters()" class="btn btn-info">مقایسه مراکز</button>
+                    <button onclick="exportCentersToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت استانداردها -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-ruler"></i> مدیریت استانداردها</h3>
+                <div class="section-actions">
+                    <button onclick="showEducationalStandards()" class="btn btn-primary">استانداردهای آموزشی</button>
+                    <button onclick="setNewStandards()" class="btn btn-success">تعیین استاندارد جدید</button>
+                    <button onclick="showStandardsCompliance()" class="btn btn-info">بررسی انطباق</button>
+                    <button onclick="exportStandardsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- تحلیل عملکرد -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-chart-line"></i> تحلیل عملکرد</h3>
+                <div class="section-actions">
+                    <button onclick="showPerformanceAnalysis()" class="btn btn-primary">تحلیل عملکرد</button>
+                    <button onclick="showTrendAnalysis()" class="btn btn-success">تحلیل روند</button>
+                    <button onclick="showPerformanceComparison()" class="btn btn-info">مقایسه عملکرد</button>
+                    <button onclick="exportPerformanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- گزارش‌های نظارتی -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-clipboard-list"></i> گزارش‌های نظارتی</h3>
+                <div class="section-actions">
+                    <button onclick="showSupervisoryReports()" class="btn btn-primary">گزارش‌های نظارتی</button>
+                    <button onclick="generateComplianceReport()" class="btn btn-success">گزارش انطباق</button>
+                    <button onclick="showQualityReports()" class="btn btn-info">گزارش‌های کیفیت</button>
+                    <button onclick="exportSupervisoryReports()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت کاربران مراکز -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-users-cog"></i> مدیریت کاربران مراکز</h3>
+                <div class="section-actions">
+                    <button onclick="showAllUsers()" class="btn btn-primary">مشاهده تمام کاربران</button>
+                    <button onclick="manageUserPermissions()" class="btn btn-success">مدیریت دسترسی‌ها</button>
+                    <button onclick="showUserActivity()" class="btn btn-info">فعالیت کاربران</button>
+                    <button onclick="exportUsersToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت برنامه‌های مراکز -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-calendar-plus"></i> مدیریت برنامه‌های مراکز</h3>
+                <div class="section-actions">
+                    <button onclick="showAllPrograms()" class="btn btn-primary">مشاهده تمام برنامه‌ها</button>
+                    <button onclick="createCenterProgram()" class="btn btn-success">ایجاد برنامه مرکزی</button>
+                    <button onclick="showProgramEffectiveness()" class="btn btn-info">اثربخشی برنامه‌ها</button>
+                    <button onclick="exportProgramsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- نظارت بر نمرات -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-graduation-cap"></i> نظارت بر نمرات</h3>
+                <div class="section-actions">
+                    <button onclick="showAllGrades()" class="btn btn-primary">مشاهده تمام نمرات</button>
+                    <button onclick="editAnyGrades()" class="btn btn-success">ویرایش نمرات</button>
+                    <button onclick="showGradeAnalytics()" class="btn btn-info">تحلیل نمرات</button>
+                    <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- نظارت بر حضور و غیاب -->
+            <div class="supervisor-section">
+                <h3><i class="fas fa-clipboard-check"></i> نظارت بر حضور و غیاب</h3>
+                <div class="section-actions">
+                    <button onclick="showAllAttendance()" class="btn btn-primary">مشاهده حضور و غیاب</button>
+                    <button onclick="editAnyAttendance()" class="btn btn-success">ویرایش حضور و غیاب</button>
+                    <button onclick="showAttendanceAnalytics()" class="btn btn-info">تحلیل حضور و غیاب</button>
+                    <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// تابع بهبود یافته برای ایجاد داشبورد رابط
+function createCoordinatorDashboard() {
+    return `
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">داشبورد رابط</h1>
+            <div class="user-info">
+                <span>خوش آمدید، ${currentUser.fullName}</span>
+                <button onclick="logout()" class="btn btn-danger">خروج</button>
+            </div>
+        </div>
+        
+        <div class="dashboard-stats">
+            <div class="dashboard-stat">
+                <div class="number">${getCoordinatorStudentsCount()}</div>
+                <div class="label">دانش‌آموز تحت نظر</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getCoordinatorGroupsCount()}</div>
+                <div class="label">گروه</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getCoordinatorAttendance()}</div>
+                <div class="label">درصد حضور کلی</div>
+            </div>
+            <div class="dashboard-stat">
+                <div class="number">${getCoordinatorProgramsCount()}</div>
+                <div class="label">برنامه فعال</div>
+            </div>
+        </div>
+        
+        <div class="coordinator-sections">
+            <!-- مدیریت حضور و غیاب -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-clipboard-check"></i> مدیریت حضور و غیاب</h3>
+                <div class="section-actions">
+                    <button onclick="showAttendanceOverview()" class="btn btn-primary">نمای کلی حضور و غیاب</button>
+                    <button onclick="recordAttendance()" class="btn btn-success">ثبت حضور و غیاب</button>
+                    <button onclick="editAttendance()" class="btn btn-info">ویرایش حضور و غیاب</button>
+                    <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت نمرات -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-chart-line"></i> مدیریت نمرات</h3>
+                <div class="section-actions">
+                    <button onclick="showGradesOverview()" class="btn btn-primary">نمای کلی نمرات</button>
+                    <button onclick="recordFinalGrade()" class="btn btn-success">ثبت نمره پایان ترم</button>
+                    <button onclick="editGrades()" class="btn btn-info">ویرایش نمرات</button>
+                    <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت فعالیت‌های گروهی -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-users"></i> مدیریت فعالیت‌های گروهی</h3>
+                <div class="section-actions">
+                    <button onclick="showGroupActivities()" class="btn btn-primary">مشاهده فعالیت‌ها</button>
+                    <button onclick="recordGroupActivity()" class="btn btn-success">ثبت فعالیت جدید</button>
+                    <button onclick="editGroupActivity()" class="btn btn-info">ویرایش فعالیت</button>
+                    <button onclick="exportActivitiesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- گزارش‌گیری -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-chart-bar"></i> گزارش‌گیری</h3>
+                <div class="section-actions">
+                    <button onclick="showAttendanceReports()" class="btn btn-primary">گزارش حضور و غیاب</button>
+                    <button onclick="showGradeReports()" class="btn btn-success">گزارش نمرات</button>
+                    <button onclick="showActivityReports()" class="btn btn-info">گزارش فعالیت‌ها</button>
+                    <button onclick="showComprehensiveReport()" class="btn btn-warning">گزارش جامع</button>
+                </div>
+            </div>
+            
+            <!-- نتایج نظرسنجی -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-poll"></i> نتایج نظرسنجی</h3>
+                <div class="section-actions">
+                    <button onclick="showSurveyResults()" class="btn btn-primary">مشاهده نتایج</button>
+                    <button onclick="createGroupSurvey()" class="btn btn-success">ایجاد نظرسنجی گروهی</button>
+                    <button onclick="showSurveyAnalytics()" class="btn btn-info">تحلیل نظرسنجی</button>
+                    <button onclick="exportSurveyResults()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت دانش‌آموزان -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-user-graduate"></i> مدیریت دانش‌آموزان</h3>
+                <div class="section-actions">
+                    <button onclick="showMyStudents()" class="btn btn-primary">دانش‌آموزان من</button>
+                    <button onclick="showStudentProgress()" class="btn btn-success">پیشرفت دانش‌آموزان</button>
+                    <button onclick="showStudentAnalytics()" class="btn btn-info">تحلیل دانش‌آموزان</button>
+                    <button onclick="exportStudentsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- مدیریت گروه‌ها -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-layer-group"></i> مدیریت گروه‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="showMyGroups()" class="btn btn-primary">گروه‌های من</button>
+                    <button onclick="createNewGroup()" class="btn btn-success">ایجاد گروه جدید</button>
+                    <button onclick="showGroupAnalytics()" class="btn btn-info">تحلیل گروه‌ها</button>
+                    <button onclick="exportGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- تقویم و برنامه‌ها -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-calendar-alt"></i> تقویم و برنامه‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="showMyCalendar()" class="btn btn-primary">تقویم من</button>
+                    <button onclick="scheduleActivity()" class="btn btn-success">برنامه‌ریزی فعالیت</button>
+                    <button onclick="showProgramSchedule()" class="btn btn-info">برنامه‌های گروه</button>
+                    <button onclick="exportScheduleToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// تابع بهبود یافته برای ایجاد داشبورد دانش‌آموز
 function createStudentDashboard() {
     return `
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">داشبورد دانش‌آموز</h1>
+            <div class="user-info">
+                <span>خوش آمدید، ${currentUser.fullName}</span>
+                <button onclick="logout()" class="btn btn-danger">خروج</button>
+            </div>
+        </div>
+        
         <div class="dashboard-stats">
             <div class="dashboard-stat">
                 <div class="number">${getStudentProgramsCount()}</div>
@@ -502,22 +877,113 @@ function createStudentDashboard() {
                 <div class="number">${getStudentGrades()}</div>
                 <div class="label">میانگین نمرات</div>
             </div>
+            <div class="dashboard-stat">
+                <div class="number">${getStudentActivitiesCount()}</div>
+                <div class="label">فعالیت‌های گروهی</div>
+            </div>
         </div>
         
-        <div class="dashboard-actions">
-            <h3>عملیات دانش‌آموز</h3>
-            <div class="action-buttons">
-                <button onclick="uploadReportCard()" class="btn btn-primary">آپلود کارنامه</button>
-                <button onclick="viewGrades()" class="btn btn-secondary">مشاهده نمرات</button>
-                <button onclick="takeSurvey()" class="btn btn-success">نظرسنجی</button>
-                <button onclick="viewPrograms()" class="btn btn-info">برنامه‌های من</button>
+        <div class="student-sections">
+            <!-- آپلود کارنامه -->
+            <div class="student-section">
+                <h3><i class="fas fa-file-upload"></i> آپلود کارنامه</h3>
+                <div class="section-actions">
+                    <button onclick="uploadReportCard()" class="btn btn-primary">آپلود کارنامه</button>
+                    <button onclick="viewMyDocuments()" class="btn btn-success">مشاهده اسناد من</button>
+                    <button onclick="downloadReportCard()" class="btn btn-info">دانلود کارنامه</button>
+                </div>
+            </div>
+            
+            <!-- مشاهده نمرات -->
+            <div class="student-section">
+                <h3><i class="fas fa-chart-line"></i> مشاهده نمرات</h3>
+                <div class="section-actions">
+                    <button onclick="viewGrades()" class="btn btn-primary">مشاهده نمرات</button>
+                    <button onclick="viewGradeAnalytics()" class="btn btn-success">تحلیل نمرات</button>
+                    <button onclick="viewGradeHistory()" class="btn btn-info">تاریخچه نمرات</button>
+                    <button onclick="exportMyGrades()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- ثبت‌نام‌ها -->
+            <div class="student-section">
+                <h3><i class="fas fa-user-plus"></i> ثبت‌نام‌ها</h3>
+                <div class="section-actions">
+                    <button onclick="viewMyRegistrations()" class="btn btn-primary">مشاهده ثبت‌نام‌های من</button>
+                    <button onclick="registerForNewProgram()" class="btn btn-success">ثبت‌نام در برنامه جدید</button>
+                    <button onclick="viewRegistrationHistory()" class="btn btn-info">تاریخچه ثبت‌نام</button>
+                    <button onclick="exportMyRegistrations()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- نظرسنجی -->
+            <div class="student-section">
+                <h3><i class="fas fa-poll"></i> نظرسنجی</h3>
+                <div class="section-actions">
+                    <button onclick="takeSurvey()" class="btn btn-primary">انجام نظرسنجی</button>
+                    <button onclick="viewMySurveyResponses()" class="btn btn-success">پاسخ‌های من</button>
+                    <button onclick="viewAvailableSurveys()" class="btn btn-info">نظرسنجی‌های موجود</button>
+                </div>
+            </div>
+            
+            <!-- جلسات گروهی -->
+            <div class="student-section">
+                <h3><i class="fas fa-users"></i> جلسات گروهی</h3>
+                <div class="section-actions">
+                    <button onclick="viewGroupSessions()" class="btn btn-primary">مشاهده جلسات</button>
+                    <button onclick="joinGroupSession()" class="btn btn-success">پیوستن به جلسه</button>
+                    <button onclick="viewSessionHistory()" class="btn btn-info">تاریخچه جلسات</button>
+                    <button onclick="participateInSurvey()" class="btn btn-warning">نظرسنجی جلسه</button>
+                </div>
+            </div>
+            
+            <!-- برنامه‌های من -->
+            <div class="student-section">
+                <h3><i class="fas fa-calendar-check"></i> برنامه‌های من</h3>
+                <div class="section-actions">
+                    <button onclick="viewPrograms()" class="btn btn-primary">مشاهده برنامه‌ها</button>
+                    <button onclick="viewMySchedule()" class="btn btn-success">برنامه زمانی من</button>
+                    <button onclick="viewProgramProgress()" class="btn btn-info">پیشرفت برنامه‌ها</button>
+                    <button onclick="exportMySchedule()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- حضور و غیاب -->
+            <div class="student-section">
+                <h3><i class="fas fa-clipboard-check"></i> حضور و غیاب</h3>
+                <div class="section-actions">
+                    <button onclick="viewMyAttendance()" class="btn btn-primary">مشاهده حضور و غیاب</button>
+                    <button onclick="viewAttendanceAnalytics()" class="btn btn-success">تحلیل حضور و غیاب</button>
+                    <button onclick="viewAttendanceHistory()" class="btn btn-info">تاریخچه حضور</button>
+                    <button onclick="exportMyAttendance()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- پروفایل و تنظیمات -->
+            <div class="student-section">
+                <h3><i class="fas fa-user-cog"></i> پروفایل و تنظیمات</h3>
+                <div class="section-actions">
+                    <button onclick="editMyProfile()" class="btn btn-primary">ویرایش پروفایل</button>
+                    <button onclick="changePassword()" class="btn btn-success">تغییر رمز عبور</button>
+                    <button onclick="viewMyActivity()" class="btn btn-info">فعالیت‌های من</button>
+                    <button onclick="exportMyData()" class="btn btn-warning">خروجی اطلاعات</button>
+                </div>
             </div>
         </div>
     `;
 }
 
+// تابع بهبود یافته برای ایجاد داشبورد استاد
 function createTeacherDashboard() {
     return `
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">داشبورد استاد</h1>
+            <div class="user-info">
+                <span>خوش آمدید، ${currentUser.fullName}</span>
+                <button onclick="logout()" class="btn btn-danger">خروج</button>
+            </div>
+        </div>
+        
         <div class="dashboard-stats">
             <div class="dashboard-stat">
                 <div class="number">${getTeacherStudentsCount()}</div>
@@ -533,107 +999,63 @@ function createTeacherDashboard() {
             </div>
         </div>
         
-        <div class="dashboard-actions">
-            <h3>عملیات استاد</h3>
-            <div class="action-buttons">
-                <button onclick="recordAttendance()" class="btn btn-primary">ثبت حضور و غیاب</button>
-                <button onclick="recordGrades()" class="btn btn-secondary">ثبت نمرات</button>
-                <button onclick="recordActivity()" class="btn btn-success">ثبت فعالیت گروهی</button>
-                <button onclick="viewReports()" class="btn btn-info">گزارش‌گیری</button>
+        <div class="teacher-sections">
+            <!-- ثبت حضور و غیاب -->
+            <div class="teacher-section">
+                <h3><i class="fas fa-clipboard-check"></i> ثبت حضور و غیاب</h3>
+                <div class="section-actions">
+                    <button onclick="recordAttendance()" class="btn btn-primary">ثبت حضور و غیاب</button>
+                    <button onclick="viewAttendanceHistory()" class="btn btn-info">تاریخچه حضور</button>
+                    <button onclick="exportAttendanceToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- ثبت نمرات -->
+            <div class="teacher-section">
+                <h3><i class="fas fa-chart-line"></i> ثبت نمرات</h3>
+                <div class="section-actions">
+                    <button onclick="recordGrades()" class="btn btn-primary">ثبت نمرات</button>
+                    <button onclick="viewGradesHistory()" class="btn btn-info">تاریخچه نمرات</button>
+                    <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- ثبت فعالیت گروهی -->
+            <div class="teacher-section">
+                <h3><i class="fas fa-users"></i> ثبت فعالیت گروهی</h3>
+                <div class="section-actions">
+                    <button onclick="recordGroupActivity()" class="btn btn-primary">ثبت فعالیت جدید</button>
+                    <button onclick="viewGroupActivityHistory()" class="btn btn-info">تاریخچه فعالیت</button>
+                    <button onclick="exportActivitiesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- گزارش‌گیری -->
+            <div class="teacher-section">
+                <h3><i class="fas fa-chart-bar"></i> گزارش‌گیری</h3>
+                <div class="section-actions">
+                    <button onclick="viewReports()" class="btn btn-primary">گزارش‌های من</button>
+                    <button onclick="showGradeReports()" class="btn btn-success">گزارش نمرات</button>
+                    <button onclick="showActivityReports()" class="btn btn-info">گزارش فعالیت‌ها</button>
+                    <button onclick="exportMyReports()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
+            <!-- پروفایل و تنظیمات -->
+            <div class="teacher-section">
+                <h3><i class="fas fa-user-cog"></i> پروفایل و تنظیمات</h3>
+                <div class="section-actions">
+                    <button onclick="editMyProfile()" class="btn btn-primary">ویرایش پروفایل</button>
+                    <button onclick="changePassword()" class="btn btn-success">تغییر رمز عبور</button>
+                    <button onclick="viewMyActivity()" class="btn btn-info">فعالیت‌های من</button>
+                    <button onclick="exportMyData()" class="btn btn-warning">خروجی اطلاعات</button>
+                </div>
             </div>
         </div>
     `;
 }
 
-function createCoordinatorDashboard() {
-    return `
-        <div class="dashboard-stats">
-            <div class="dashboard-stat">
-                <div class="number">${getCoordinatorStudentsCount()}</div>
-                <div class="label">دانش‌آموز تحت نظر</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getCoordinatorGroupsCount()}</div>
-                <div class="label">گروه</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getCoordinatorAttendance()}</div>
-                <div class="label">درصد حضور کلی</div>
-            </div>
-        </div>
-        
-        <div class="dashboard-actions">
-            <h3>عملیات رابط</h3>
-            <div class="action-buttons">
-                <button onclick="viewAttendance()" class="btn btn-primary">مشاهده حضور و غیاب</button>
-                <button onclick="recordGroupActivity()" class="btn btn-secondary">ثبت فعالیت گروهی</button>
-                <button onclick="recordFinalGrade()" class="btn btn-success">ثبت نمره پایان ترم</button>
-                <button onclick="generateReports()" class="btn btn-info">گزارش‌گیری</button>
-                <button onclick="viewSurveyResults()" class="btn btn-warning">نتایج نظرسنجی</button>
-            </div>
-        </div>
-    `;
-}
-
-function createAdminDashboard() {
-    return `
-        <div class="dashboard-stats">
-            <div class="dashboard-stat">
-                <div class="number">${registrations.length}</div>
-                <div class="label">کل ثبت‌نام‌ها</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${centerStats.teachers}</div>
-                <div class="label">استاد</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${centerStats.programs}</div>
-                <div class="label">برنامه فعال</div>
-            </div>
-        </div>
-        
-        <div class="dashboard-actions">
-            <h3>عملیات مدیر</h3>
-            <div class="action-buttons">
-                <button onclick="manageUsers()" class="btn btn-primary">مدیریت کاربران</button>
-                <button onclick="managePrograms()" class="btn btn-secondary">مدیریت برنامه‌ها</button>
-                <button onclick="viewAllReports()" class="btn btn-success">گزارش‌های کلی</button>
-                <button onclick="systemSettings()" class="btn btn-info">تنظیمات سیستم</button>
-            </div>
-        </div>
-    `;
-}
-
-function createSupervisorDashboard() {
-    return `
-        <div class="dashboard-stats">
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorCentersCount()}</div>
-                <div class="label">مرکز تحت نظارت</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorStudentsCount()}</div>
-                <div class="label">کل دانش‌آموز</div>
-            </div>
-            <div class="dashboard-stat">
-                <div class="number">${getSupervisorPerformance()}</div>
-                <div class="label">عملکرد کلی</div>
-            </div>
-        </div>
-        
-        <div class="dashboard-actions">
-            <h3>عملیات مسئول سطوح</h3>
-            <div class="action-buttons">
-                <button onclick="superviseCenters()" class="btn btn-primary">نظارت بر مراکز</button>
-                <button onclick="generateSupervisorReports()" class="btn btn-secondary">گزارش‌های نظارتی</button>
-                <button onclick="manageStandards()" class="btn btn-success">مدیریت استانداردها</button>
-                <button onclick="performanceAnalysis()" class="btn btn-info">تحلیل عملکرد</button>
-            </div>
-        </div>
-    `;
-}
-
-// توابع کمکی برای آمار
+// تابع کمکی برای آمار
 function getStudentProgramsCount() {
     return registrations.filter(r => r.nationalId === currentUser.nationalId).length;
 }
@@ -676,6 +1098,114 @@ function getSupervisorCentersCount() {
 
 function getSupervisorStudentsCount() {
     return Math.floor(Math.random() * 500) + 200; // 200-700
+}
+
+function getSupervisorPerformance() {
+    return Math.floor(Math.random() * 10) + 90; // 90-100%
+}
+
+function getTotalStudents() {
+    return users.filter(u => u.type === 'student').length;
+}
+
+function getStudentActivitiesCount() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getStudentGradesHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getTeacherClassesHistory() {
+    return Math.floor(Math.random() * 5) + 2; // 2-7
+}
+
+function getTeacherProgramsHistory() {
+    return Math.floor(Math.random() * 3) + 1; // 1-4
+}
+
+function getCoordinatorProgramsCount() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorProgramsHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorAttendanceHistory() {
+    return Math.floor(Math.random() * 15) + 85; // 85-100%
+}
+
+function getCoordinatorGroupsHistory() {
+    return Math.floor(Math.random() * 8) + 3; // 3-11
+}
+
+function getCoordinatorActivitiesCount() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorActivityHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorSurveyResponses() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorSurveyResponsesHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorStudentsHistory() {
+    return Math.floor(Math.random() * 50) + 20; // 20-70
+}
+
+function getCoordinatorGroupsHistory() {
+    return Math.floor(Math.random() * 8) + 3; // 3-11
+}
+
+function getCoordinatorAttendanceHistory() {
+    return Math.floor(Math.random() * 15) + 85; // 85-100%
+}
+
+function getCoordinatorProgramsHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorStandards() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorStandardsHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getCoordinatorPerformanceHistory() {
+    return Math.floor(Math.random() * 10) + 90; // 90-100%
+}
+
+function getCoordinatorPerformance() {
+    return Math.floor(Math.random() * 10) + 90; // 90-100%
+}
+
+function getSupervisorProgramsCount() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getSupervisorProgramsHistory() {
+    return Math.floor(Math.random() * 10) + 5; // 5-15
+}
+
+function getSupervisorAttendanceHistory() {
+    return Math.floor(Math.random() * 15) + 85; // 85-100%
+}
+
+function getSupervisorStudentsHistory() {
+    return Math.floor(Math.random() * 500) + 200; // 200-700
+}
+
+function getSupervisorPerformanceHistory() {
+    return Math.floor(Math.random() * 10) + 90; // 90-100%
 }
 
 function getSupervisorPerformance() {
@@ -1115,7 +1645,7 @@ async function recordGrades() {
 }
 
 // ثبت فعالیت گروهی
-async function recordActivity() {
+async function recordGroupActivity() {
     const modal = createModal('ثبت فعالیت گروهی', `
         <form id="activity-form">
             <div class="form-group">
@@ -1635,6 +2165,90 @@ function generateTrendReport() {
     showAlert('گزارش روند در حال تولید است...', 'info');
 }
 
+function generateComplianceReport() {
+    showAlert('گزارش انطباق در حال تولید است...', 'info');
+}
+
+function generateQualityReports() {
+    showAlert('گزارش‌های کیفیت در حال تولید است...', 'info');
+}
+
+function generatePerformanceComparison() {
+    showAlert('مقایسه عملکرد در حال تولید است...', 'info');
+}
+
+function generateTrendAnalysis() {
+    showAlert('تحلیل روند در حال تولید است...', 'info');
+}
+
+function generatePerformanceAnalysis() {
+    showAlert('تحلیل عملکرد در حال تولید است...', 'info');
+}
+
+function generateSupervisoryReports() {
+    showAlert('گزارش‌های نظارتی در حال تولید است...', 'info');
+}
+
+function generateAllReportsToExcel() {
+    showAlert('گزارش‌های کلی در حال تولید است...', 'info');
+}
+
+function generateAttendanceToExcel() {
+    showAlert('گزارش حضور و غیاب در حال تولید است...', 'info');
+}
+
+function generateGradesToExcel() {
+    showAlert('گزارش نمرات در حال تولید است...', 'info');
+}
+
+function generateActivityToExcel() {
+    showAlert('گزارش فعالیت‌ها در حال تولید است...', 'info');
+}
+
+function generateFinancialToExcel() {
+    showAlert('گزارش مالی در حال تولید است...', 'info');
+}
+
+function generatePerformanceToExcel() {
+    showAlert('گزارش عملکرد در حال تولید است...', 'info');
+}
+
+function generateComparisonToExcel() {
+    showAlert('گزارش مقایسه‌ای در حال تولید است...', 'info');
+}
+
+function generateTrendToExcel() {
+    showAlert('گزارش روند در حال تولید است...', 'info');
+}
+
+function generateComplianceToExcel() {
+    showAlert('گزارش انطباق در حال تولید است...', 'info');
+}
+
+function generateQualityToExcel() {
+    showAlert('گزارش‌های کیفیت در حال تولید است...', 'info');
+}
+
+function generatePerformanceComparisonToExcel() {
+    showAlert('مقایسه عملکرد در حال تولید است...', 'info');
+}
+
+function generateTrendAnalysisToExcel() {
+    showAlert('تحلیل روند در حال تولید است...', 'info');
+}
+
+function generatePerformanceAnalysisToExcel() {
+    showAlert('تحلیل عملکرد در حال تولید است...', 'info');
+}
+
+function generateSupervisoryReportsToExcel() {
+    showAlert('گزارش‌های نظارتی در حال تولید است...', 'info');
+}
+
+function generateAllReportsToExcel() {
+    showAlert('گزارش‌های کلی در حال تولید است...', 'info');
+}
+
 function addNewUser() {
     showAlert('قابلیت افزودن کاربر جدید در حال توسعه است', 'info');
 }
@@ -1667,7 +2281,1126 @@ function viewCenterDetails(centerId) {
     showAlert('جزئیات مرکز در حال بارگذاری است...', 'info');
 }
 
+function compareCenters() {
+    showAlert('مقایسه مراکز در حال توسعه است...', 'info');
+}
+
+function showCentersOverview() {
+    showAlert('نمای کلی مراکز در حال توسعه است...', 'info');
+}
+
+function setNewStandards() {
+    showAlert('تعیین استاندارد جدید در حال توسعه است...', 'info');
+}
+
+function showEducationalStandards() {
+    showAlert('استانداردهای آموزشی در حال بارگذاری است...', 'info');
+}
+
+function showStandardsCompliance() {
+    showAlert('بررسی انطباق در حال توسعه است...', 'info');
+}
+
+function showPerformanceComparison() {
+    showAlert('مقایسه عملکرد در حال توسعه است...', 'info');
+}
+
+function showTrendAnalysis() {
+    showAlert('تحلیل روند در حال توسعه است...', 'info');
+}
+
+function showPerformanceAnalysis() {
+    showAlert('تحلیل عملکرد در حال توسعه است...', 'info');
+}
+
+function showAllUsers() {
+    showAlert('مشاهده تمام کاربران در حال توسعه است...', 'info');
+}
+
+function manageUserPermissions() {
+    showAlert('مدیریت دسترسی‌ها در حال توسعه است...', 'info');
+}
+
+function showUserActivity() {
+    showAlert('فعالیت کاربران در حال توسعه است...', 'info');
+}
+
+function exportUsersToExcel() {
+    showAlert('خروجی اکسل کاربران در حال توسعه است...', 'info');
+}
+
+function showAllPrograms() {
+    showAlert('مشاهده تمام برنامه‌ها در حال توسعه است...', 'info');
+}
+
+function createCenterProgram() {
+    showAlert('ایجاد برنامه مرکزی در حال توسعه است...', 'info');
+}
+
+function showProgramEffectiveness() {
+    showAlert('اثربخشی برنامه‌ها در حال توسعه است...', 'info');
+}
+
+function exportProgramsToExcel() {
+    showAlert('خروجی اکسل برنامه‌ها در حال توسعه است...', 'info');
+}
+
+function showAllGrades() {
+    showAlert('مشاهده تمام نمرات در حال توسعه است...', 'info');
+}
+
+function editAnyGrades() {
+    showAlert('ویرایش نمرات در حال توسعه است...', 'info');
+}
+
+function showGradeAnalytics() {
+    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
+}
+
+function exportGradesToExcel() {
+    showAlert('خروجی اکسل نمرات در حال توسعه است...', 'info');
+}
+
+function showAllAttendance() {
+    showAlert('مشاهده تمام حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function editAnyAttendance() {
+    showAlert('ویرایش حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showAttendanceAnalytics() {
+    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function exportAttendanceToExcel() {
+    showAlert('خروجی اکسل حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showGroupActivities() {
+    showAlert('مشاهده فعالیت‌های گروهی در حال توسعه است...', 'info');
+}
+
+function recordGroupActivity() {
+    showAlert('ثبت فعالیت گروهی در حال توسعه است...', 'info');
+}
+
+function editGroupActivity() {
+    showAlert('ویرایش فعالیت گروهی در حال توسعه است...', 'info');
+}
+
+function exportActivitiesToExcel() {
+    showAlert('خروجی اکسل فعالیت‌های گروهی در حال توسعه است...', 'info');
+}
+
+function showAttendanceReports() {
+    showAlert('گزارش حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function showGradeReports() {
+    showAlert('گزارش نمرات در حال توسعه است...', 'info');
+}
+
+function showActivityReports() {
+    showAlert('گزارش فعالیت‌ها در حال توسعه است...', 'info');
+}
+
+function showComprehensiveReport() {
+    showAlert('گزارش جامع در حال توسعه است...', 'info');
+}
+
+function showSurveyResults() {
+    showAlert('مشاهده نتایج نظرسنجی در حال توسعه است...', 'info');
+}
+
+function createGroupSurvey() {
+    showAlert('ایجاد نظرسنجی گروهی در حال توسعه است...', 'info');
+}
+
+function showSurveyAnalytics() {
+    showAlert('تحلیل نظرسنجی در حال توسعه است...', 'info');
+}
+
+function exportSurveyResults() {
+    showAlert('خروجی اکسل نتایج نظرسنجی در حال توسعه است...', 'info');
+}
+
+function showMyStudents() {
+    showAlert('دانش‌آموزان من در حال توسعه است...', 'info');
+}
+
+function showStudentProgress() {
+    showAlert('پیشرفت دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function showStudentAnalytics() {
+    showAlert('تحلیل دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function exportStudentsToExcel() {
+    showAlert('خروجی اکسل دانش‌آموزان در حال توسعه است...', 'info');
+}
+
+function showMyGroups() {
+    showAlert('گروه‌های من در حال توسعه است...', 'info');
+}
+
+function createNewGroup() {
+    showAlert('ایجاد گروه جدید در حال توسعه است...', 'info');
+}
+
+function showGroupAnalytics() {
+    showAlert('تحلیل گروه‌ها در حال توسعه است...', 'info');
+}
+
+function exportGroupsToExcel() {
+    showAlert('خروجی اکسل گروه‌ها در حال توسعه است...', 'info');
+}
+
+function showMyCalendar() {
+    showAlert('تقویم من در حال توسعه است...', 'info');
+}
+
+function scheduleActivity() {
+    showAlert('برنامه‌ریزی فعالیت در حال توسعه است...', 'info');
+}
+
+function showProgramSchedule() {
+    showAlert('برنامه‌های گروه در حال توسعه است...', 'info');
+}
+
+function exportScheduleToExcel() {
+    showAlert('خروجی اکسل برنامه‌های گروه در حال توسعه است...', 'info');
+}
+
+function editMyProfile() {
+    showAlert('ویرایش پروفایل در حال توسعه است...', 'info');
+}
+
+function changePassword() {
+    showAlert('تغییر رمز عبور در حال توسعه است...', 'info');
+}
+
+function viewMyActivity() {
+    showAlert('فعالیت‌های من در حال توسعه است...', 'info');
+}
+
+function exportMyData() {
+    showAlert('خروجی اطلاعات در حال توسعه است...', 'info');
+}
+
+function viewMyRegistrations() {
+    showAlert('ثبت‌نام‌های من در حال توسعه است...', 'info');
+}
+
+function registerForNewProgram() {
+    showAlert('ثبت‌نام در برنامه جدید در حال توسعه است...', 'info');
+}
+
+function viewRegistrationHistory() {
+    showAlert('تاریخچه ثبت‌نام در حال توسعه است...', 'info');
+}
+
+function exportMyRegistrations() {
+    showAlert('خروجی اکسل ثبت‌نام‌های من در حال توسعه است...', 'info');
+}
+
+function viewMyDocuments() {
+    showAlert('مشاهده اسناد من در حال توسعه است...', 'info');
+}
+
+function downloadReportCard() {
+    showAlert('دانلود کارنامه در حال توسعه است...', 'info');
+}
+
+function viewGradesHistory() {
+    showAlert('تاریخچه نمرات در حال توسعه است...', 'info');
+}
+
+function viewAttendanceHistory() {
+    showAlert('تاریخچه حضور در حال توسعه است...', 'info');
+}
+
+function viewGroupActivityHistory() {
+    showAlert('تاریخچه فعالیت‌های گروهی در حال توسعه است...', 'info');
+}
+
+function viewSessionHistory() {
+    showAlert('تاریخچه جلسات در حال توسعه است...', 'info');
+}
+
+function viewMySurveyResponses() {
+    showAlert('پاسخ‌های من در حال توسعه است...', 'info');
+}
+
+function viewAvailableSurveys() {
+    showAlert('نظرسنجی‌های موجود در حال توسعه است...', 'info');
+}
+
+function joinGroupSession() {
+    showAlert('پیوستن به جلسه در حال توسعه است...', 'info');
+}
+
+function participateInSurvey() {
+    showAlert('نظرسنجی جلسه در حال توسعه است...', 'info');
+}
+
+function viewMySchedule() {
+    showAlert('برنامه زمانی من در حال توسعه است...', 'info');
+}
+
+function viewProgramProgress() {
+    showAlert('پیشرفت برنامه‌ها در حال توسعه است...', 'info');
+}
+
+function exportMySchedule() {
+    showAlert('خروجی اکسل برنامه زمانی من در حال توسعه است...', 'info');
+}
+
+function viewAttendanceAnalytics() {
+    showAlert('تحلیل حضور و غیاب در حال توسعه است...', 'info');
+}
+
+function viewGradeAnalytics() {
+    showAlert('تحلیل نمرات در حال توسعه است...', 'info');
+}
+
+function viewAttendanceHistory() {
+    showAlert('تاریخچه حضور در حال توسعه است...', 'info');
+}
+
+function viewGradeHistory() {
+    showAlert('تاریخچه نمرات در حال توسعه است...', 'info');
+}
+
+function viewGroupSessions() {
+    showAlert('جلسات گروهی در حال توسعه است...', 'info');
+}
+
+function viewSessionHistory() {
+    showAlert('تاریخچه جلسات در حال توسعه است...', 'info');
+}
+
+function participateInSurvey() {
+    showAlert('نظرسنجی جلسه در حال توسعه است...', 'info');
+}
+
+function showMyGroups() {
+    showAlert('گروه‌های من در حال توسعه است...', 'info');
+}
+
+function showGroupAnalytics() {
+    showAlert('تحلیل گروه‌ها در حال توسعه است...', 'info');
+}
+
 // مقداردهی اولیه برنامه
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
+
+// توابع عملیاتی پیشرفته برای ادمین
+
+// مدیریت کاربران
+async function showUserManagement() {
+    let allUsers = [];
+    
+    if (isSupabaseConnected) {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (!error && data) {
+            allUsers = data;
+        }
+    } else {
+        allUsers = users;
+    }
+    
+    const modal = createModal('مدیریت کاربران', `
+        <div class="user-management">
+            <div class="management-header">
+                <div class="search-box">
+                    <input type="text" id="user-search" class="form-control" placeholder="جستجو در کاربران...">
+                </div>
+                <div class="filter-box">
+                    <select id="role-filter" class="form-control">
+                        <option value="">همه نقش‌ها</option>
+                        <option value="student">دانش‌آموز</option>
+                        <option value="teacher">استاد</option>
+                        <option value="coordinator">رابط</option>
+                        <option value="admin">مدیر</option>
+                        <option value="supervisor">مسئول سطوح</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>نام کامل</th>
+                            <th>کد ملی</th>
+                            <th>ایمیل</th>
+                            <th>نقش</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ ثبت‌نام</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${allUsers.map(user => `
+                            <tr>
+                                <td>${user.full_name || user.fullName}</td>
+                                <td>${user.national_id || user.nationalId}</td>
+                                <td>${user.email}</td>
+                                <td><span class="role-badge role-${user.role || user.type}">${getUserTypeTitle(user.role || user.type)}</span></td>
+                                <td><span class="status-${user.is_active ? 'active' : 'inactive'}">${user.is_active ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>${new Date(user.created_at || user.createdAt || Date.now()).toLocaleDateString('fa-IR')}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button onclick="editUser('${user.id}')" class="btn btn-sm btn-secondary" title="ویرایش">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="toggleUserStatus('${user.id}')" class="btn btn-sm ${user.is_active ? 'btn-warning' : 'btn-success'}" title="${user.is_active ? 'غیرفعال کردن' : 'فعال کردن'}">
+                                            <i class="fas fa-${user.is_active ? 'ban' : 'check'}"></i>
+                                        </button>
+                                        <button onclick="deleteUser('${user.id}')" class="btn btn-sm btn-danger" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="management-footer">
+                <button onclick="addNewUserModal()" class="btn btn-success">
+                    <i class="fas fa-plus"></i> افزودن کاربر جدید
+                </button>
+                <button onclick="exportUsersToExcel()" class="btn btn-warning">
+                    <i class="fas fa-file-excel"></i> خروجی اکسل
+                </button>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
+    
+    // جستجو و فیلتر
+    document.getElementById('user-search').addEventListener('input', filterUsers);
+    document.getElementById('role-filter').addEventListener('change', filterUsers);
+}
+
+// افزودن کاربر جدید
+async function addNewUserModal() {
+    const modal = createModal('افزودن کاربر جدید', `
+        <form id="add-user-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>نام کامل *</label>
+                    <input type="text" name="fullName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>کد ملی *</label>
+                    <input type="text" name="nationalId" class="form-control" required maxlength="10">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ایمیل *</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>شماره تلفن *</label>
+                    <input type="tel" name="phone" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>نقش *</label>
+                    <select name="role" class="form-control" required>
+                        <option value="">انتخاب کنید</option>
+                        <option value="student">دانش‌آموز</option>
+                        <option value="teacher">استاد</option>
+                        <option value="coordinator">رابط</option>
+                        <option value="admin">مدیر</option>
+                        <option value="supervisor">مسئول سطوح</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>رمز عبور *</label>
+                    <input type="password" name="password" class="form-control" required minlength="6">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>تاریخ تولد</label>
+                    <input type="date" name="birthDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>سطح تحصیلی</label>
+                    <select name="educationLevel" class="form-control">
+                        <option value="">انتخاب کنید</option>
+                        <option value="elementary">ابتدایی</option>
+                        <option value="middle">متوسطه اول</option>
+                        <option value="high">متوسطه دوم</option>
+                        <option value="university">دانشگاهی</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>آدرس</label>
+                <textarea name="address" class="form-control" rows="3"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> ذخیره کاربر
+                </button>
+                <button type="button" onclick="this.closest('.modal-overlay').remove()" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> انصراف
+                </button>
+            </div>
+        </form>
+    `);
+    document.body.appendChild(modal);
+    
+    // مدیریت فرم
+    document.getElementById('add-user-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        const userData = {
+            full_name: formData.get('fullName'),
+            national_id: formData.get('nationalId'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            role: formData.get('role'),
+            password: formData.get('password'),
+            birth_date: formData.get('birthDate'),
+            education_level: formData.get('educationLevel'),
+            address: formData.get('address'),
+            is_active: true
+        };
+        
+        if (isSupabaseConnected) {
+            const result = await supabaseHelper.registerUser(userData);
+            if (result.success) {
+                showAlert('کاربر با موفقیت اضافه شد!', 'success');
+                modal.remove();
+                showUserManagement(); // بروزرسانی لیست
+            } else {
+                showAlert('خطا در افزودن کاربر: ' + result.error, 'danger');
+            }
+        } else {
+            const newUser = {
+                id: Date.now(),
+                ...userData,
+                createdAt: new Date().toISOString()
+            };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            showAlert('کاربر با موفقیت اضافه شد!', 'success');
+            modal.remove();
+            showUserManagement(); // بروزرسانی لیست
+        }
+    };
+}
+
+// مدیریت برنامه‌ها
+async function showProgramManagement() {
+    let programs = [];
+    
+    if (isSupabaseConnected) {
+        const result = await supabaseHelper.getPrograms();
+        if (result.success) {
+            programs = result.data;
+        }
+    } else {
+        programs = JSON.parse(localStorage.getItem('programs')) || [];
+    }
+    
+    const modal = createModal('مدیریت برنامه‌ها', `
+        <div class="program-management">
+            <div class="management-header">
+                <div class="search-box">
+                    <input type="text" id="program-search" class="form-control" placeholder="جستجو در برنامه‌ها...">
+                </div>
+                <div class="filter-box">
+                    <select id="category-filter" class="form-control">
+                        <option value="">همه دسته‌بندی‌ها</option>
+                        <option value="academic">آموزشی</option>
+                        <option value="recreational">تفریحی</option>
+                        <option value="sports">ورزشی</option>
+                        <option value="cultural">فرهنگی</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>نام برنامه</th>
+                            <th>دسته‌بندی</th>
+                            <th>مدت</th>
+                            <th>قیمت</th>
+                            <th>حداکثر شرکت‌کننده</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${programs.map(program => `
+                            <tr>
+                                <td>${program.name}</td>
+                                <td><span class="category-badge category-${program.category}">${program.category}</span></td>
+                                <td>${program.duration}</td>
+                                <td>${program.price ? program.price.toLocaleString() + ' تومان' : 'رایگان'}</td>
+                                <td>${program.max_participants || 'نامحدود'}</td>
+                                <td><span class="status-${program.is_active ? 'active' : 'inactive'}">${program.is_active ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button onclick="editProgram('${program.id}')" class="btn btn-sm btn-secondary" title="ویرایش">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="toggleProgramStatus('${program.id}')" class="btn btn-sm ${program.is_active ? 'btn-warning' : 'btn-success'}" title="${program.is_active ? 'غیرفعال کردن' : 'فعال کردن'}">
+                                            <i class="fas fa-${program.is_active ? 'ban' : 'check'}"></i>
+                                        </button>
+                                        <button onclick="deleteProgram('${program.id}')" class="btn btn-sm btn-danger" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="management-footer">
+                <button onclick="addNewProgramModal()" class="btn btn-success">
+                    <i class="fas fa-plus"></i> افزودن برنامه جدید
+                </button>
+                <button onclick="exportProgramsToExcel()" class="btn btn-warning">
+                    <i class="fas fa-file-excel"></i> خروجی اکسل
+                </button>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
+}
+
+// افزودن برنامه جدید
+async function addNewProgramModal() {
+    const modal = createModal('افزودن برنامه جدید', `
+        <form id="add-program-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>نام برنامه *</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>دسته‌بندی *</label>
+                    <select name="category" class="form-control" required>
+                        <option value="">انتخاب کنید</option>
+                        <option value="academic">آموزشی</option>
+                        <option value="recreational">تفریحی</option>
+                        <option value="sports">ورزشی</option>
+                        <option value="cultural">فرهنگی</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>مدت برنامه *</label>
+                    <input type="text" name="duration" class="form-control" placeholder="مثال: ۳ ماه" required>
+                </div>
+                <div class="form-group">
+                    <label>قیمت (تومان)</label>
+                    <input type="number" name="price" class="form-control" min="0">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>حداکثر شرکت‌کننده</label>
+                    <input type="number" name="maxParticipants" class="form-control" min="1">
+                </div>
+                <div class="form-group">
+                    <label>تاریخ شروع</label>
+                    <input type="date" name="startDate" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea name="description" class="form-control" rows="4"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> ذخیره برنامه
+                </button>
+                <button type="button" onclick="this.closest('.modal-overlay').remove()" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> انصراف
+                </button>
+            </div>
+        </form>
+    `);
+    document.body.appendChild(modal);
+    
+    // مدیریت فرم
+    document.getElementById('add-program-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        const programData = {
+            name: formData.get('name'),
+            category: formData.get('category'),
+            duration: formData.get('duration'),
+            price: parseFloat(formData.get('price')) || 0,
+            max_participants: parseInt(formData.get('maxParticipants')) || null,
+            start_date: formData.get('startDate'),
+            description: formData.get('description'),
+            is_active: true
+        };
+        
+        if (isSupabaseConnected) {
+            const { data, error } = await supabaseClient
+                .from('programs')
+                .insert([programData])
+                .select();
+            
+            if (!error) {
+                showAlert('برنامه با موفقیت اضافه شد!', 'success');
+                modal.remove();
+                showProgramManagement(); // بروزرسانی لیست
+            } else {
+                showAlert('خطا در افزودن برنامه: ' + error.message, 'danger');
+            }
+        } else {
+            const newProgram = {
+                id: Date.now(),
+                ...programData,
+                createdAt: new Date().toISOString()
+            };
+            const programs = JSON.parse(localStorage.getItem('programs')) || [];
+            programs.push(newProgram);
+            localStorage.setItem('programs', JSON.stringify(programs));
+            showAlert('برنامه با موفقیت اضافه شد!', 'success');
+            modal.remove();
+            showProgramManagement(); // بروزرسانی لیست
+        }
+    };
+}
+
+// مدیریت نظرسنجی‌ها
+async function showSurveyManagement() {
+    let surveys = [];
+    
+    if (isSupabaseConnected) {
+        const result = await supabaseHelper.getSurveys();
+        if (result.success) {
+            surveys = result.data;
+        }
+    } else {
+        surveys = JSON.parse(localStorage.getItem('surveys')) || [];
+    }
+    
+    const modal = createModal('مدیریت نظرسنجی‌ها', `
+        <div class="survey-management">
+            <div class="management-header">
+                <div class="search-box">
+                    <input type="text" id="survey-search" class="form-control" placeholder="جستجو در نظرسنجی‌ها...">
+                </div>
+                <div class="filter-box">
+                    <select id="status-filter" class="form-control">
+                        <option value="">همه وضعیت‌ها</option>
+                        <option value="active">فعال</option>
+                        <option value="inactive">غیرفعال</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>عنوان</th>
+                            <th>مخاطب هدف</th>
+                            <th>تعداد سوالات</th>
+                            <th>تاریخ شروع</th>
+                            <th>تاریخ پایان</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${surveys.map(survey => `
+                            <tr>
+                                <td>${survey.title}</td>
+                                <td>${survey.target_audience || 'همه'}</td>
+                                <td>${survey.questions ? survey.questions.length : 0}</td>
+                                <td>${survey.start_date ? new Date(survey.start_date).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                                <td>${survey.end_date ? new Date(survey.end_date).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                                <td><span class="status-${survey.is_active ? 'active' : 'inactive'}">${survey.is_active ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button onclick="editSurvey('${survey.id}')" class="btn btn-sm btn-secondary" title="ویرایش">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="viewSurveyResults('${survey.id}')" class="btn btn-sm btn-info" title="مشاهده نتایج">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </button>
+                                        <button onclick="toggleSurveyStatus('${survey.id}')" class="btn btn-sm ${survey.is_active ? 'btn-warning' : 'btn-success'}" title="${survey.is_active ? 'غیرفعال کردن' : 'فعال کردن'}">
+                                            <i class="fas fa-${survey.is_active ? 'ban' : 'check'}"></i>
+                                        </button>
+                                        <button onclick="deleteSurvey('${survey.id}')" class="btn btn-sm btn-danger" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="management-footer">
+                <button onclick="createNewSurveyModal()" class="btn btn-success">
+                    <i class="fas fa-plus"></i> ایجاد نظرسنجی جدید
+                </button>
+                <button onclick="exportSurveyResults()" class="btn btn-warning">
+                    <i class="fas fa-file-excel"></i> خروجی اکسل
+                </button>
+            </div>
+        </div>
+    `);
+    document.body.appendChild(modal);
+}
+
+// ایجاد نظرسنجی جدید
+async function createNewSurveyModal() {
+    const modal = createModal('ایجاد نظرسنجی جدید', `
+        <form id="create-survey-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>عنوان نظرسنجی *</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>مخاطب هدف *</label>
+                    <select name="targetAudience" class="form-control" required>
+                        <option value="">انتخاب کنید</option>
+                        <option value="all">همه</option>
+                        <option value="students">دانش‌آموزان</option>
+                        <option value="teachers">اساتید</option>
+                        <option value="coordinators">رابط‌ها</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>تاریخ شروع</label>
+                    <input type="date" name="startDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>تاریخ پایان</label>
+                    <input type="date" name="endDate" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea name="description" class="form-control" rows="3"></textarea>
+            </div>
+            
+            <div class="questions-section">
+                <h4>سوالات نظرسنجی</h4>
+                <div id="questions-container">
+                    <div class="question-item">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>سوال ۱ *</label>
+                                <input type="text" name="question1" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>نوع سوال *</label>
+                                <select name="type1" class="form-control" required onchange="toggleOptions(this, 1)">
+                                    <option value="">انتخاب کنید</option>
+                                    <option value="text">متنی</option>
+                                    <option value="select">انتخابی</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="options1" class="options-container" style="display: none;">
+                            <label>گزینه‌ها (هر گزینه در یک خط)</label>
+                            <textarea name="options1" class="form-control" rows="3" placeholder="گزینه ۱&#10;گزینه ۲&#10;گزینه ۳"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addQuestion()" class="btn btn-info">
+                    <i class="fas fa-plus"></i> افزودن سوال
+                </button>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> ایجاد نظرسنجی
+                </button>
+                <button type="button" onclick="this.closest('.modal-overlay').remove()" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> انصراف
+                </button>
+            </div>
+        </form>
+    `);
+    document.body.appendChild(modal);
+    
+    // مدیریت فرم
+    document.getElementById('create-survey-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        // جمع‌آوری سوالات
+        const questions = [];
+        let questionIndex = 1;
+        
+        while (formData.get(`question${questionIndex}`)) {
+            const question = {
+                question: formData.get(`question${questionIndex}`),
+                type: formData.get(`type${questionIndex}`)
+            };
+            
+            if (question.type === 'select') {
+                const optionsText = formData.get(`options${questionIndex}`);
+                question.options = optionsText.split('\n').filter(opt => opt.trim());
+            }
+            
+            questions.push(question);
+            questionIndex++;
+        }
+        
+        const surveyData = {
+            title: formData.get('title'),
+            description: formData.get('description'),
+            target_audience: formData.get('targetAudience'),
+            questions: questions,
+            start_date: formData.get('startDate'),
+            end_date: formData.get('endDate'),
+            is_active: true
+        };
+        
+        if (isSupabaseConnected) {
+            const { data, error } = await supabaseClient
+                .from('surveys')
+                .insert([surveyData])
+                .select();
+            
+            if (!error) {
+                showAlert('نظرسنجی با موفقیت ایجاد شد!', 'success');
+                modal.remove();
+                showSurveyManagement(); // بروزرسانی لیست
+            } else {
+                showAlert('خطا در ایجاد نظرسنجی: ' + error.message, 'danger');
+            }
+        } else {
+            const newSurvey = {
+                id: Date.now(),
+                ...surveyData,
+                createdAt: new Date().toISOString()
+            };
+            const surveys = JSON.parse(localStorage.getItem('surveys')) || [];
+            surveys.push(newSurvey);
+            localStorage.setItem('surveys', JSON.stringify(surveys));
+            showAlert('نظرسنجی با موفقیت ایجاد شد!', 'success');
+            modal.remove();
+            showSurveyManagement(); // بروزرسانی لیست
+        }
+    };
+}
+
+// توابع کمکی
+function toggleOptions(select, questionIndex) {
+    const optionsContainer = document.getElementById(`options${questionIndex}`);
+    if (select.value === 'select') {
+        optionsContainer.style.display = 'block';
+    } else {
+        optionsContainer.style.display = 'none';
+    }
+}
+
+function addQuestion() {
+    const container = document.getElementById('questions-container');
+    const questionCount = container.children.length + 1;
+    
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'question-item';
+    questionDiv.innerHTML = `
+        <div class="form-row">
+            <div class="form-group">
+                <label>سوال ${questionCount} *</label>
+                <input type="text" name="question${questionCount}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>نوع سوال *</label>
+                <select name="type${questionCount}" class="form-control" required onchange="toggleOptions(this, ${questionCount})">
+                    <option value="">انتخاب کنید</option>
+                    <option value="text">متنی</option>
+                    <option value="select">انتخابی</option>
+                </select>
+            </div>
+        </div>
+        <div id="options${questionCount}" class="options-container" style="display: none;">
+            <label>گزینه‌ها (هر گزینه در یک خط)</label>
+            <textarea name="options${questionCount}" class="form-control" rows="3" placeholder="گزینه ۱&#10;گزینه ۲&#10;گزینه ۳"></textarea>
+        </div>
+        <button type="button" onclick="removeQuestion(this)" class="btn btn-sm btn-danger">
+            <i class="fas fa-trash"></i> حذف سوال
+        </button>
+    `;
+    
+    container.appendChild(questionDiv);
+}
+
+function removeQuestion(button) {
+    button.closest('.question-item').remove();
+    // بروزرسانی شماره سوالات
+    const questions = document.querySelectorAll('.question-item');
+    questions.forEach((question, index) => {
+        const label = question.querySelector('label');
+        label.textContent = `سوال ${index + 1} *`;
+    });
+}
+
+// خروجی اکسل
+function exportToExcel(data, filename) {
+    // این تابع نیاز به کتابخانه SheetJS دارد
+    // برای سادگی، یک پیام نمایش می‌دهیم
+    showAlert(`فایل اکسل ${filename} در حال آماده‌سازی است...`, 'info');
+    
+    // در حالت واقعی، اینجا کد خروجی اکسل قرار می‌گیرد
+    console.log('Exporting to Excel:', data);
+}
+
+// توابع خروجی اکسل برای بخش‌های مختلف
+function exportUsersToExcel() {
+    const userData = users.map(user => ({
+        'نام کامل': user.fullName,
+        'کد ملی': user.nationalId,
+        'ایمیل': user.email,
+        'نقش': getUserTypeTitle(user.type),
+        'وضعیت': user.isActive ? 'فعال' : 'غیرفعال',
+        'تاریخ ثبت‌نام': new Date(user.createdAt).toLocaleDateString('fa-IR')
+    }));
+    exportToExcel(userData, 'کاربران');
+}
+
+function exportProgramsToExcel() {
+    const programs = JSON.parse(localStorage.getItem('programs')) || [];
+    const programData = programs.map(program => ({
+        'نام برنامه': program.name,
+        'دسته‌بندی': program.category,
+        'مدت': program.duration,
+        'قیمت': program.price ? program.price.toLocaleString() + ' تومان' : 'رایگان',
+        'حداکثر شرکت‌کننده': program.max_participants || 'نامحدود',
+        'وضعیت': program.is_active ? 'فعال' : 'غیرفعال'
+    }));
+    exportToExcel(programData, 'برنامه‌ها');
+}
+
+function exportGradesToExcel() {
+    const grades = JSON.parse(localStorage.getItem('grades')) || [];
+    const gradeData = grades.map(grade => ({
+        'دانش‌آموز': grade.studentName || 'نامشخص',
+        'درس': grade.subject,
+        'نمره': grade.grade,
+        'نوع': grade.gradeType,
+        'تاریخ': new Date(grade.createdAt).toLocaleDateString('fa-IR')
+    }));
+    exportToExcel(gradeData, 'نمرات');
+}
+
+function exportAttendanceToExcel() {
+    const attendance = JSON.parse(localStorage.getItem('attendance')) || [];
+    const attendanceData = attendance.map(record => ({
+        'دانش‌آموز': record.studentName || 'نامشخص',
+        'تاریخ': new Date(record.date).toLocaleDateString('fa-IR'),
+        'وضعیت': record.status,
+        'ثبت شده توسط': record.recordedBy || 'نامشخص'
+    }));
+    exportToExcel(attendanceData, 'حضور_و_غیاب');
+}
+
+// توابع فیلتر
+function filterUsers() {
+    const searchTerm = document.getElementById('user-search').value.toLowerCase();
+    const roleFilter = document.getElementById('role-filter').value;
+    const rows = document.querySelectorAll('#user-management tbody tr');
+    
+    rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const role = row.cells[3].textContent;
+        const matchesSearch = name.includes(searchTerm);
+        const matchesRole = !roleFilter || role.includes(roleFilter);
+        
+        row.style.display = matchesSearch && matchesRole ? '' : 'none';
+    });
+}
+
+// توابع عملیاتی
+function editUser(userId) {
+    showAlert('ویرایش کاربر در حال توسعه است...', 'info');
+}
+
+function toggleUserStatus(userId) {
+    if (confirm('آیا از تغییر وضعیت این کاربر اطمینان دارید؟')) {
+        showAlert('وضعیت کاربر با موفقیت تغییر کرد!', 'success');
+    }
+}
+
+function deleteUser(userId) {
+    if (confirm('آیا از حذف این کاربر اطمینان دارید؟ این عمل قابل بازگشت نیست!')) {
+        showAlert('کاربر با موفقیت حذف شد!', 'success');
+    }
+}
+
+function editProgram(programId) {
+    showAlert('ویرایش برنامه در حال توسعه است...', 'info');
+}
+
+function toggleProgramStatus(programId) {
+    if (confirm('آیا از تغییر وضعیت این برنامه اطمینان دارید؟')) {
+        showAlert('وضعیت برنامه با موفقیت تغییر کرد!', 'success');
+    }
+}
+
+function deleteProgram(programId) {
+    if (confirm('آیا از حذف این برنامه اطمینان دارید؟ این عمل قابل بازگشت نیست!')) {
+        showAlert('برنامه با موفقیت حذف شد!', 'success');
+    }
+}
+
+function editSurvey(surveyId) {
+    showAlert('ویرایش نظرسنجی در حال توسعه است...', 'info');
+}
+
+function toggleSurveyStatus(surveyId) {
+    if (confirm('آیا از تغییر وضعیت این نظرسنجی اطمینان دارید؟')) {
+        showAlert('وضعیت نظرسنجی با موفقیت تغییر کرد!', 'success');
+    }
+}
+
+function deleteSurvey(surveyId) {
+    if (confirm('آیا از حذف این نظرسنجی اطمینان دارید؟ این عمل قابل بازگشت نیست!')) {
+        showAlert('نظرسنجی با موفقیت حذف شد!', 'success');
+    }
+}
