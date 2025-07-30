@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست قابلیت‌های ادمین</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .test-section h3 { color: #333; margin-bottom: 10px; }
+        .test-button { margin: 5px; padding: 8px 15px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .status.success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .status.error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .status.warning { background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        .user-list { max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; }
+        .user-item { padding: 5px; border-bottom: 1px solid #eee; }
+        .role-badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; color: white; }
+        .role-admin { background-color: #dc3545; }
+        .role-teacher { background-color: #007bff; }
+        .role-student { background-color: #28a745; }
+        .role-coordinator { background-color: #ffc107; color: #212529; }
+        .role-supervisor { background-color: #6f42c1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>تست قابلیت‌های ادمین</h1>
+        
+        <!-- تست ورود -->
+        <div class="test-section">
+            <h3>🔐 تست ورود ادمین</h3>
+            <p>اطلاعات ورود: کد ملی: 1234567890، رمز عبور: admin123</p>
+            <button onclick="testAdminLogin()" class="btn btn-primary test-button">تست ورود ادمین</button>
+            <div id="login-status"></div>
+        </div>
+
+        <!-- تست مدیریت کاربران -->
+        <div class="test-section">
+            <h3>👥 تست مدیریت کاربران</h3>
+            <button onclick="testUserManagement()" class="btn btn-success test-button">نمایش مدیریت کاربران</button>
+            <button onclick="testAddUser()" class="btn btn-info test-button">افزودن کاربر تست</button>
+            <button onclick="testListUsers()" class="btn btn-warning test-button">لیست کاربران</button>
+            <div id="user-management-status"></div>
+            <div id="user-list" class="user-list"></div>
+        </div>
+
+        <!-- تست نقش‌های مختلف -->
+        <div class="test-section">
+            <h3>🎭 تست نقش‌های مختلف</h3>
+            <button onclick="testStudentRole()" class="btn btn-success test-button">تست نقش دانش‌آموز</button>
+            <button onclick="testTeacherRole()" class="btn btn-primary test-button">تست نقش استاد</button>
+            <button onclick="testCoordinatorRole()" class="btn btn-warning test-button">تست نقش رابط</button>
+            <button onclick="testSupervisorRole()" class="btn btn-info test-button">تست نقش مسئول سطوح</button>
+            <div id="role-test-status"></div>
+        </div>
+
+        <!-- تست قابلیت‌های ادمین -->
+        <div class="test-section">
+            <h3>⚙️ تست قابلیت‌های ادمین</h3>
+            <button onclick="testProgramManagement()" class="btn btn-success test-button">مدیریت برنامه‌ها</button>
+            <button onclick="testSurveyManagement()" class="btn btn-info test-button">مدیریت نظرسنجی‌ها</button>
+            <button onclick="testGradeManagement()" class="btn btn-warning test-button">مدیریت نمرات</button>
+            <button onclick="testAttendanceManagement()" class="btn btn-primary test-button">مدیریت حضور و غیاب</button>
+            <div id="admin-features-status"></div>
+        </div>
+
+        <!-- تست اتصال دیتابیس -->
+        <div class="test-section">
+            <h3>🗄️ تست اتصال دیتابیس</h3>
+            <button onclick="testDatabaseConnection()" class="btn btn-secondary test-button">تست اتصال</button>
+            <button onclick="testDatabaseTables()" class="btn btn-secondary test-button">بررسی جداول</button>
+            <div id="database-status"></div>
+        </div>
+
+        <!-- وضعیت فعلی -->
+        <div class="test-section">
+            <h3>📊 وضعیت فعلی</h3>
+            <div id="current-status"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let currentUser = null;
+        let isSupabaseConnected = false;
+
+        // تست اتصال دیتابیس
+        async function testDatabaseConnection() {
+            const statusDiv = document.getElementById('database-status');
+            statusDiv.innerHTML = '<div class="status warning">در حال تست اتصال...</div>';
+            
+            try {
+                const { data, error } = await supabaseClient.from('users').select('*').limit(1);
+                if (error) {
+                    statusDiv.innerHTML = `<div class="status error">خطا در اتصال: ${error.message}</div>`;
+                } else {
+                    isSupabaseConnected = true;
+                    statusDiv.innerHTML = '<div class="status success">اتصال به دیتابیس موفق است!</div>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطای غیرمنتظره: ${error.message}</div>`;
+            }
+        }
+
+        // تست جداول دیتابیس
+        async function testDatabaseTables() {
+            const statusDiv = document.getElementById('database-status');
+            statusDiv.innerHTML = '<div class="status warning">در حال بررسی جداول...</div>';
+            
+            const tables = ['users', 'registrations', 'programs', 'attendance', 'grades'];
+            let results = '';
+            
+            for (const table of tables) {
+                try {
+                    const { data, error } = await supabaseClient.from(table).select('count').limit(1);
+                    if (error) {
+                        results += `<div class="status error">❌ ${table}: ${error.message}</div>`;
+                    } else {
+                        results += `<div class="status success">✅ ${table}: موجود</div>`;
+                    }
+                } catch (err) {
+                    results += `<div class="status error">❌ ${table}: ${err.message}</div>`;
+                }
+            }
+            
+            statusDiv.innerHTML = results;
+        }
+
+        // تست ورود ادمین
+        async function testAdminLogin() {
+            const statusDiv = document.getElementById('login-status');
+            statusDiv.innerHTML = '<div class="status warning">در حال تست ورود...</div>';
+            
+            try {
+                const result = await supabaseHelper.loginUser('1234567890', 'admin123');
+                if (result.success) {
+                    currentUser = result.user;
+                    statusDiv.innerHTML = `<div class="status success">ورود موفق! خوش آمدید ${currentUser.full_name}</div>`;
+                } else {
+                    statusDiv.innerHTML = `<div class="status error">خطا در ورود: ${result.error}</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        // تست مدیریت کاربران
+        async function testUserManagement() {
+            const statusDiv = document.getElementById('user-management-status');
+            if (!currentUser) {
+                statusDiv.innerHTML = '<div class="status error">ابتدا وارد شوید</div>';
+                return;
+            }
+            
+            try {
+                showUserManagement();
+                statusDiv.innerHTML = '<div class="status success">پنل مدیریت کاربران باز شد</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        // تست افزودن کاربر
+        async function testAddUser() {
+            const statusDiv = document.getElementById('user-management-status');
+            if (!currentUser) {
+                statusDiv.innerHTML = '<div class="status error">ابتدا وارد شوید</div>';
+                return;
+            }
+            
+            try {
+                addNewUserModal();
+                statusDiv.innerHTML = '<div class="status success">فرم افزودن کاربر باز شد</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        // تست لیست کاربران
+        async function testListUsers() {
+            const statusDiv = document.getElementById('user-management-status');
+            const userListDiv = document.getElementById('user-list');
+            
+            try {
+                const { data, error } = await supabaseClient.from('users').select('*').order('created_at', { ascending: false });
+                
+                if (error) {
+                    statusDiv.innerHTML = `<div class="status error">خطا در دریافت کاربران: ${error.message}</div>`;
+                    return;
+                }
+                
+                if (data && data.length > 0) {
+                    let userList = '<h4>لیست کاربران:</h4>';
+                    data.forEach(user => {
+                        userList += `
+                            <div class="user-item">
+                                <strong>${user.full_name}</strong> 
+                                <span class="role-badge role-${user.role}">${user.role}</span>
+                                <br>
+                                <small>کد ملی: ${user.national_id} | ایمیل: ${user.email}</small>
+                            </div>
+                        `;
+                    });
+                    userListDiv.innerHTML = userList;
+                    statusDiv.innerHTML = `<div class="status success">تعداد کاربران: ${data.length}</div>`;
+                } else {
+                    userListDiv.innerHTML = '<div class="status warning">هیچ کاربری یافت نشد</div>';
+                    statusDiv.innerHTML = '<div class="status warning">هیچ کاربری در دیتابیس وجود ندارد</div>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        // تست نقش‌های مختلف
+        async function testStudentRole() {
+            testRole('student', '1111111111', '123456');
+        }
+
+        async function testTeacherRole() {
+            testRole('teacher', '2222222222', '123456');
+        }
+
+        async function testCoordinatorRole() {
+            testRole('coordinator', '3333333333', '123456');
+        }
+
+        async function testSupervisorRole() {
+            testRole('supervisor', '4444444444', '123456');
+        }
+
+        async function testRole(role, nationalId, password) {
+            const statusDiv = document.getElementById('role-test-status');
+            statusDiv.innerHTML = `<div class="status warning">در حال تست نقش ${role}...</div>`;
+            
+            try {
+                const result = await supabaseHelper.loginUser(nationalId, password);
+                if (result.success) {
+                    statusDiv.innerHTML = `<div class="status success">ورود با نقش ${role} موفق بود!</div>`;
+                } else {
+                    statusDiv.innerHTML = `<div class="status error">خطا در ورود با نقش ${role}: ${result.error}</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا در تست نقش ${role}: ${error.message}</div>`;
+            }
+        }
+
+        // تست قابلیت‌های ادمین
+        async function testProgramManagement() {
+            const statusDiv = document.getElementById('admin-features-status');
+            if (!currentUser) {
+                statusDiv.innerHTML = '<div class="status error">ابتدا وارد شوید</div>';
+                return;
+            }
+            
+            try {
+                showProgramManagement();
+                statusDiv.innerHTML = '<div class="status success">پنل مدیریت برنامه‌ها باز شد</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        async function testSurveyManagement() {
+            const statusDiv = document.getElementById('admin-features-status');
+            if (!currentUser) {
+                statusDiv.innerHTML = '<div class="status error">ابتدا وارد شوید</div>';
+                return;
+            }
+            
+            try {
+                showSurveyManagement();
+                statusDiv.innerHTML = '<div class="status success">پنل مدیریت نظرسنجی‌ها باز شد</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        async function testGradeManagement() {
+            const statusDiv = document.getElementById('admin-features-status');
+            if (!currentUser) {
+                statusDiv.innerHTML = '<div class="status error">ابتدا وارد شوید</div>';
+                return;
+            }
+            
+            try {
+                showGradeManagement();
+                statusDiv.innerHTML = '<div class="status success">پنل مدیریت نمرات باز شد</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        async function testAttendanceManagement() {
+            const statusDiv = document.getElementById('admin-features-status');
+            if (!currentUser) {
+                statusDiv.innerHTML = '<div class="status error">ابتدا وارد شوید</div>';
+                return;
+            }
+            
+            try {
+                showAttendanceManagement();
+                statusDiv.innerHTML = '<div class="status success">پنل مدیریت حضور و غیاب باز شد</div>';
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">خطا: ${error.message}</div>`;
+            }
+        }
+
+        // بروزرسانی وضعیت فعلی
+        function updateCurrentStatus() {
+            const statusDiv = document.getElementById('current-status');
+            let status = '';
+            
+            status += `<div class="status ${isSupabaseConnected ? 'success' : 'error'}">`;
+            status += `اتصال دیتابیس: ${isSupabaseConnected ? 'برقرار' : 'قطع'}`;
+            status += '</div>';
+            
+            if (currentUser) {
+                status += `<div class="status success">کاربر فعلی: ${currentUser.full_name} (${currentUser.role})</div>`;
+            } else {
+                status += '<div class="status warning">هیچ کاربری وارد نشده است</div>';
+            }
+            
+            statusDiv.innerHTML = status;
+        }
+
+        // مقداردهی اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentStatus();
+            testDatabaseConnection();
+        });
+
+        // بروزرسانی وضعیت هر 5 ثانیه
+        setInterval(updateCurrentStatus, 5000);
+    </script>
+</body>
+</html>
