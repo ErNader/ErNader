@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راه‌اندازی دیتابیس - سیستم مدیریت مرکز آموزشی</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .setup-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .setup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .setup-header h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .setup-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .setup-steps {
+            margin-bottom: 2rem;
+        }
+        
+        .setup-step {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .setup-step h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .setup-step p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .setup-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .setup-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .setup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+        }
+        
+        .setup-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .setup-results {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #28a745;
+        }
+        
+        .setup-results h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .setup-results pre {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+        }
+        
+        .status-success {
+            background: #28a745;
+        }
+        
+        .status-error {
+            background: #dc3545;
+        }
+        
+        .status-warning {
+            background: #ffc107;
+        }
+        
+        .status-info {
+            background: #17a2b8;
+        }
+        
+        .test-users {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .test-users h4 {
+            margin: 0 0 1rem 0;
+            color: #333;
+        }
+        
+        .user-item {
+            background: white;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+        }
+        
+        .user-item strong {
+            color: #333;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        
+        .role-admin {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .role-student {
+            background: #28a745;
+            color: white;
+        }
+        
+        .role-teacher {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .role-coordinator {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .role-supervisor {
+            background: #6f42c1;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <div class="setup-header">
+            <h1>🔧 راه‌اندازی دیتابیس</h1>
+            <p>این صفحه برای راه‌اندازی کامل دیتابیس و رفع خطاهای موجود طراحی شده است</p>
+        </div>
+        
+        <div class="setup-steps">
+            <div class="setup-step">
+                <h3>📋 مشکلات شناسایی شده:</h3>
+                <ul>
+                    <li>جداول دیتابیس موجود نیستند</li>
+                    <li>کاربران تست برای نقش‌های مختلف وجود ندارند</li>
+                    <li>توابع مدیریتی تعریف نشده‌اند</li>
+                    <li>خطاهای ورود با نقش‌های مختلف</li>
+                </ul>
+            </div>
+            
+            <div class="setup-step">
+                <h3>🛠️ راه‌حل‌های ارائه شده:</h3>
+                <ul>
+                    <li>ایجاد تمام جداول مورد نیاز</li>
+                    <li>افزودن کاربران تست برای تمام نقش‌ها</li>
+                    <li>افزودن برنامه‌های نمونه</li>
+                    <li>بررسی و رفع خطاهای توابع</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="setup-buttons">
+            <button onclick="runSetup()" class="setup-btn" id="setup-btn">
+                🚀 شروع راه‌اندازی
+            </button>
+            <button onclick="checkDatabase()" class="setup-btn">
+                🔍 بررسی وضعیت
+            </button>
+            <button onclick="testLogin()" class="setup-btn">
+                🧪 تست ورود
+            </button>
+        </div>
+        
+        <div class="setup-results" id="setup-results" style="display: none;">
+            <h4>نتایج راه‌اندازی:</h4>
+            <pre id="setup-log"></pre>
+        </div>
+        
+        <div class="test-users" id="test-users" style="display: none;">
+            <h4>👥 کاربران تست موجود:</h4>
+            <div id="users-list"></div>
+        </div>
+    </div>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Setup Script -->
+    <script src="setup-database.js"></script>
+    
+    <script>
+        let setupLog = '';
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('fa-IR');
+            const statusIcon = {
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'info': 'ℹ️'
+            };
+            
+            setupLog += `[${timestamp}] ${statusIcon[type]} ${message}\n`;
+            document.getElementById('setup-log').textContent = setupLog;
+        }
+        
+        async function runSetup() {
+            const setupBtn = document.getElementById('setup-btn');
+            const resultsDiv = document.getElementById('setup-results');
+            
+            setupBtn.disabled = true;
+            setupBtn.textContent = '⏳ در حال راه‌اندازی...';
+            resultsDiv.style.display = 'block';
+            
+            log('شروع راه‌اندازی دیتابیس...', 'info');
+            
+            try {
+                log('بررسی اتصال به Supabase...', 'info');
+                
+                // تست اتصال
+                const { data, error } = await supabaseClient.from('users').select('count');
+                if (error) {
+                    log('خطا در اتصال به دیتابیس: ' + error.message, 'error');
+                    return;
+                }
+                
+                log('اتصال به دیتابیس برقرار است', 'success');
+                
+                // اجرای راه‌اندازی
+                const success = await setupDatabase();
+                
+                if (success) {
+                    log('راه‌اندازی با موفقیت انجام شد!', 'success');
+                    setupBtn.textContent = '✅ راه‌اندازی کامل شد';
+                    await checkDatabase();
+                } else {
+                    log('خطا در راه‌اندازی', 'error');
+                    setupBtn.textContent = '❌ خطا در راه‌اندازی';
+                }
+                
+            } catch (error) {
+                log('خطای غیرمنتظره: ' + error.message, 'error');
+                setupBtn.textContent = '❌ خطا در راه‌اندازی';
+            }
+        }
+        
+        async function checkDatabase() {
+            log('بررسی وضعیت دیتابیس...', 'info');
+            
+            try {
+                // بررسی جداول
+                const tables = ['users', 'programs', 'registrations', 'attendance', 'grades', 'surveys'];
+                
+                for (const table of tables) {
+                    try {
+                        const { data, error } = await supabaseClient.from(table).select('count');
+                        if (error) {
+                            log(`جدول ${table} موجود نیست`, 'error');
+                        } else {
+                            log(`جدول ${table} موجود است`, 'success');
+                        }
+                    } catch (error) {
+                        log(`خطا در بررسی جدول ${table}: ${error.message}`, 'error');
+                    }
+                }
+                
+                // بررسی کاربران
+                const { data: users, error: usersError } = await supabaseClient.from('users').select('*');
+                if (usersError) {
+                    log('خطا در دریافت کاربران: ' + usersError.message, 'error');
+                } else {
+                    log(`تعداد کاربران: ${users.length}`, 'success');
+                    
+                    // نمایش کاربران تست
+                    const testUsersDiv = document.getElementById('test-users');
+                    const usersListDiv = document.getElementById('users-list');
+                    
+                    if (users.length > 0) {
+                        let usersHtml = '';
+                        users.forEach(user => {
+                            usersHtml += `
+                                <div class="user-item">
+                                    <strong>${user.full_name}</strong>
+                                    <span class="role-badge role-${user.role}">${user.role}</span>
+                                    <br>
+                                    <small>کد ملی: ${user.national_id} | ایمیل: ${user.email}</small>
+                                </div>
+                            `;
+                        });
+                        usersListDiv.innerHTML = usersHtml;
+                        testUsersDiv.style.display = 'block';
+                    }
+                }
+                
+                // بررسی برنامه‌ها
+                const { data: programs, error: programsError } = await supabaseClient.from('programs').select('*');
+                if (programsError) {
+                    log('خطا در دریافت برنامه‌ها: ' + programsError.message, 'error');
+                } else {
+                    log(`تعداد برنامه‌ها: ${programs.length}`, 'success');
+                }
+                
+            } catch (error) {
+                log('خطا در بررسی دیتابیس: ' + error.message, 'error');
+            }
+        }
+        
+        async function testLogin() {
+            log('تست ورود با نقش‌های مختلف...', 'info');
+            
+            const testUsers = [
+                { national_id: '1234567890', password: 'admin123', role: 'admin' },
+                { national_id: '1111111111', password: '123456', role: 'student' },
+                { national_id: '2222222222', password: '123456', role: 'teacher' },
+                { national_id: '3333333333', password: '123456', role: 'coordinator' },
+                { national_id: '4444444444', password: '123456', role: 'supervisor' }
+            ];
+            
+            for (const testUser of testUsers) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('national_id', testUser.national_id)
+                        .eq('password', testUser.password)
+                        .single();
+                    
+                    if (error) {
+                        log(`خطا در ورود با نقش ${testUser.role}: ${error.message}`, 'error');
+                    } else if (data) {
+                        log(`ورود با نقش ${testUser.role} موفق بود`, 'success');
+                    } else {
+                        log(`کاربری با نقش ${testUser.role} یافت نشد`, 'warning');
+                    }
+                } catch (error) {
+                    log(`خطا در تست ورود با نقش ${testUser.role}: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        // بررسی اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            log('صفحه راه‌اندازی بارگذاری شد', 'info');
+        });
+    </script>
+</body>
+</html>

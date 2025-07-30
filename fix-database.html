@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رفع خطاهای دیتابیس - سیستم مدیریت مرکز آموزشی</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .fix-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .fix-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #dc3545;
+        }
+        
+        .fix-header h1 {
+            color: #dc3545;
+            margin-bottom: 0.5rem;
+        }
+        
+        .fix-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .error-list {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .error-list h3 {
+            color: #c53030;
+            margin-bottom: 1rem;
+        }
+        
+        .error-item {
+            background: white;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid #dc3545;
+        }
+        
+        .fix-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .fix-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .fix-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+        }
+        
+        .fix-btn.success {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+        }
+        
+        .fix-btn.warning {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+        }
+        
+        .fix-btn.info {
+            background: linear-gradient(135deg, #17a2b8, #117a8b);
+        }
+        
+        .fix-results {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #28a745;
+        }
+        
+        .fix-results h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .fix-results pre {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .test-section {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .test-section h4 {
+            margin: 0 0 1rem 0;
+            color: #333;
+        }
+        
+        .test-result {
+            background: white;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+        }
+        
+        .test-result.success {
+            border-left-color: #28a745;
+        }
+        
+        .test-result.error {
+            border-left-color: #dc3545;
+        }
+        
+        .test-result.warning {
+            border-left-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="fix-container">
+        <div class="fix-header">
+            <h1>🔧 رفع خطاهای دیتابیس</h1>
+            <p>این صفحه برای شناسایی و رفع تمام خطاهای موجود در سیستم طراحی شده است</p>
+        </div>
+        
+        <div class="error-list">
+            <h3>📋 خطاهای شناسایی شده:</h3>
+            <div class="error-item">❌ showUserManagement is not defined</div>
+            <div class="error-item">❌ addNewUserModal is not defined</div>
+            <div class="error-item">❌ showProgramManagement is not defined</div>
+            <div class="error-item">❌ showSurveyManagement is not defined</div>
+            <div class="error-item">❌ showGradeManagement is not defined</div>
+            <div class="error-item">❌ showAttendanceManagement is not defined</div>
+            <div class="error-item">❌ خطا در ورود با نقش student: کاربری یافت نشد</div>
+            <div class="error-item">❌ خطا در ورود با نقش teacher: کاربری یافت نشد</div>
+            <div class="error-item">❌ خطا در ورود با نقش coordinator: کاربری یافت نشد</div>
+            <div class="error-item">❌ خطا در ورود با نقش supervisor: کاربری یافت نشد</div>
+        </div>
+        
+        <div class="fix-buttons">
+            <button onclick="checkDatabaseTables()" class="fix-btn">
+                🔍 بررسی جداول دیتابیس
+            </button>
+            <button onclick="createMissingTables()" class="fix-btn">
+                📊 ایجاد جداول گمشده
+            </button>
+            <button onclick="addTestUsers()" class="fix-btn">
+                👥 افزودن کاربران تست
+            </button>
+            <button onclick="testAllFunctions()" class="fix-btn">
+                🧪 تست تمام توابع
+            </button>
+            <button onclick="testAllLogins()" class="fix-btn">
+                🔐 تست تمام ورودها
+            </button>
+            <button onclick="runCompleteFix()" class="fix-btn success">
+                🚀 اجرای رفع کامل
+            </button>
+        </div>
+        
+        <div class="fix-results" id="fix-results" style="display: none;">
+            <h4>نتایج رفع خطا:</h4>
+            <pre id="fix-log"></pre>
+        </div>
+        
+        <div class="test-section" id="test-results" style="display: none;">
+            <h4>نتایج تست‌ها:</h4>
+            <div id="test-list"></div>
+        </div>
+    </div>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        const SUPABASE_URL = 'https://fzyubobcjzjfsowjflqr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6eXVib2JjanpqZnNvd2pmbHFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4OTY5NDksImV4cCI6MjA2OTQ3Mjk0OX0.4KVQOVvuy0QpkXtTLNxE8yjqugsVjkAJ-7IvoxJtZTQ';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let fixLog = '';
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('fa-IR');
+            const statusIcon = {
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'info': 'ℹ️'
+            };
+            
+            fixLog += `[${timestamp}] ${statusIcon[type]} ${message}\n`;
+            document.getElementById('fix-log').textContent = fixLog;
+        }
+        
+        async function checkDatabaseTables() {
+            const resultsDiv = document.getElementById('fix-results');
+            resultsDiv.style.display = 'block';
+            
+            log('بررسی جداول دیتابیس...', 'info');
+            
+            const tables = ['users', 'programs', 'registrations', 'attendance', 'grades', 'surveys', 'survey_responses', 'group_activities'];
+            
+            for (const table of tables) {
+                try {
+                    const { data, error } = await supabaseClient.from(table).select('count');
+                    if (error) {
+                        log(`جدول ${table} موجود نیست: ${error.message}`, 'error');
+                    } else {
+                        log(`جدول ${table} موجود است`, 'success');
+                    }
+                } catch (error) {
+                    log(`خطا در بررسی جدول ${table}: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        async function createMissingTables() {
+            const resultsDiv = document.getElementById('fix-results');
+            resultsDiv.style.display = 'block';
+            
+            log('ایجاد جداول گمشده...', 'info');
+            
+            try {
+                // ایجاد جدول کاربران
+                const { error: usersError } = await supabaseClient.rpc('exec_sql', {
+                    sql: `
+                        CREATE TABLE IF NOT EXISTS users (
+                            id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                            national_id VARCHAR(10) UNIQUE NOT NULL,
+                            full_name VARCHAR(255) NOT NULL,
+                            email VARCHAR(255) UNIQUE NOT NULL,
+                            phone VARCHAR(15) NOT NULL,
+                            password VARCHAR(255) NOT NULL,
+                            role VARCHAR(50) NOT NULL DEFAULT 'student',
+                            birth_date DATE,
+                            education_level VARCHAR(50),
+                            parent_name VARCHAR(255),
+                            parent_phone VARCHAR(15),
+                            address TEXT,
+                            emergency_contact VARCHAR(15),
+                            medical_info TEXT,
+                            is_active BOOLEAN DEFAULT true,
+                            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                            updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                        );
+                    `
+                });
+                
+                if (usersError) {
+                    log('خطا در ایجاد جدول users: ' + usersError.message, 'error');
+                } else {
+                    log('جدول users ایجاد شد', 'success');
+                }
+                
+                // ایجاد سایر جداول...
+                const tables = [
+                    {
+                        name: 'programs',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS programs (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                name VARCHAR(255) NOT NULL,
+                                description TEXT,
+                                category VARCHAR(50) NOT NULL,
+                                duration VARCHAR(100),
+                                max_participants INTEGER,
+                                price DECIMAL(10,2),
+                                is_active BOOLEAN DEFAULT true,
+                                start_date DATE,
+                                end_date DATE,
+                                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                                updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    },
+                    {
+                        name: 'registrations',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS registrations (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                user_id UUID REFERENCES users(id),
+                                program_type VARCHAR(50) NOT NULL,
+                                program_name VARCHAR(255),
+                                registration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                                status VARCHAR(50) DEFAULT 'pending',
+                                payment_status VARCHAR(50) DEFAULT 'pending',
+                                amount DECIMAL(10,2),
+                                notes TEXT,
+                                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                                updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    },
+                    {
+                        name: 'attendance',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS attendance (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                user_id UUID REFERENCES users(id) NOT NULL,
+                                program_id UUID REFERENCES programs(id),
+                                date DATE NOT NULL,
+                                status VARCHAR(20) NOT NULL,
+                                notes TEXT,
+                                recorded_by UUID REFERENCES users(id),
+                                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    },
+                    {
+                        name: 'grades',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS grades (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                user_id UUID REFERENCES users(id) NOT NULL,
+                                program_id UUID REFERENCES programs(id),
+                                subject VARCHAR(100),
+                                grade DECIMAL(5,2),
+                                max_grade DECIMAL(5,2) DEFAULT 20,
+                                grade_type VARCHAR(50),
+                                notes TEXT,
+                                recorded_by UUID REFERENCES users(id),
+                                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                                updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    },
+                    {
+                        name: 'surveys',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS surveys (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                title VARCHAR(255) NOT NULL,
+                                description TEXT,
+                                questions JSONB NOT NULL,
+                                target_audience VARCHAR(50),
+                                is_active BOOLEAN DEFAULT true,
+                                start_date DATE,
+                                end_date DATE,
+                                created_by UUID REFERENCES users(id),
+                                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    },
+                    {
+                        name: 'survey_responses',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS survey_responses (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                survey_id UUID REFERENCES surveys(id) NOT NULL,
+                                user_id UUID REFERENCES users(id) NOT NULL,
+                                answers JSONB NOT NULL,
+                                submitted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    },
+                    {
+                        name: 'group_activities',
+                        sql: `
+                            CREATE TABLE IF NOT EXISTS group_activities (
+                                id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                                program_id UUID REFERENCES programs(id),
+                                title VARCHAR(255) NOT NULL,
+                                description TEXT,
+                                activity_date DATE,
+                                participants JSONB,
+                                coordinator_id UUID REFERENCES users(id),
+                                status VARCHAR(50) DEFAULT 'planned',
+                                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                                updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                            );
+                        `
+                    }
+                ];
+                
+                for (const table of tables) {
+                    try {
+                        const { error } = await supabaseClient.rpc('exec_sql', { sql: table.sql });
+                        if (error) {
+                            log(`خطا در ایجاد جدول ${table.name}: ${error.message}`, 'error');
+                        } else {
+                            log(`جدول ${table.name} ایجاد شد`, 'success');
+                        }
+                    } catch (error) {
+                        log(`خطا در ایجاد جدول ${table.name}: ${error.message}`, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                log('خطا در ایجاد جداول: ' + error.message, 'error');
+            }
+        }
+        
+        async function addTestUsers() {
+            const resultsDiv = document.getElementById('fix-results');
+            resultsDiv.style.display = 'block';
+            
+            log('افزودن کاربران تست...', 'info');
+            
+            const testUsers = [
+                {
+                    national_id: '1234567890',
+                    full_name: 'مدیر سیستم',
+                    email: 'admin@center.edu',
+                    phone: '09123456789',
+                    password: 'admin123',
+                    role: 'admin'
+                },
+                {
+                    national_id: '1111111111',
+                    full_name: 'علی احمدی',
+                    email: 'ali@example.com',
+                    phone: '09111111111',
+                    password: '123456',
+                    role: 'student'
+                },
+                {
+                    national_id: '2222222222',
+                    full_name: 'فاطمه محمدی',
+                    email: 'fateme@example.com',
+                    phone: '09222222222',
+                    password: '123456',
+                    role: 'teacher'
+                },
+                {
+                    national_id: '3333333333',
+                    full_name: 'حسن رضایی',
+                    email: 'hasan@example.com',
+                    phone: '09333333333',
+                    password: '123456',
+                    role: 'coordinator'
+                },
+                {
+                    national_id: '4444444444',
+                    full_name: 'مریم کریمی',
+                    email: 'maryam@example.com',
+                    phone: '09444444444',
+                    password: '123456',
+                    role: 'supervisor'
+                }
+            ];
+            
+            try {
+                for (const user of testUsers) {
+                    const { error } = await supabaseClient
+                        .from('users')
+                        .upsert([user], { onConflict: 'national_id' });
+                    
+                    if (error) {
+                        log(`خطا در افزودن کاربر ${user.full_name}: ${error.message}`, 'error');
+                    } else {
+                        log(`کاربر ${user.full_name} با موفقیت اضافه شد`, 'success');
+                    }
+                }
+                
+                log('تمام کاربران تست با موفقیت اضافه شدند!', 'success');
+                
+            } catch (error) {
+                log('خطا در افزودن کاربران تست: ' + error.message, 'error');
+            }
+        }
+        
+        async function testAllFunctions() {
+            const resultsDiv = document.getElementById('fix-results');
+            const testResultsDiv = document.getElementById('test-results');
+            resultsDiv.style.display = 'block';
+            testResultsDiv.style.display = 'block';
+            
+            log('تست تمام توابع...', 'info');
+            
+            const functions = [
+                'showUserManagement',
+                'addNewUserModal',
+                'showProgramManagement',
+                'showSurveyManagement',
+                'showGradeManagement',
+                'showAttendanceManagement'
+            ];
+            
+            const testListDiv = document.getElementById('test-list');
+            let testResults = '';
+            
+            for (const funcName of functions) {
+                try {
+                    if (typeof window[funcName] === 'function') {
+                        testResults += `<div class="test-result success">✅ ${funcName} تعریف شده است</div>`;
+                        log(`تابع ${funcName} تعریف شده است`, 'success');
+                    } else {
+                        testResults += `<div class="test-result error">❌ ${funcName} تعریف نشده است</div>`;
+                        log(`تابع ${funcName} تعریف نشده است`, 'error');
+                    }
+                } catch (error) {
+                    testResults += `<div class="test-result error">❌ خطا در تست ${funcName}: ${error.message}</div>`;
+                    log(`خطا در تست تابع ${funcName}: ${error.message}`, 'error');
+                }
+            }
+            
+            testListDiv.innerHTML = testResults;
+        }
+        
+        async function testAllLogins() {
+            const resultsDiv = document.getElementById('fix-results');
+            resultsDiv.style.display = 'block';
+            
+            log('تست تمام ورودها...', 'info');
+            
+            const testUsers = [
+                { national_id: '1234567890', password: 'admin123', role: 'admin' },
+                { national_id: '1111111111', password: '123456', role: 'student' },
+                { national_id: '2222222222', password: '123456', role: 'teacher' },
+                { national_id: '3333333333', password: '123456', role: 'coordinator' },
+                { national_id: '4444444444', password: '123456', role: 'supervisor' }
+            ];
+            
+            for (const testUser of testUsers) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('national_id', testUser.national_id)
+                        .eq('password', testUser.password)
+                        .single();
+                    
+                    if (error) {
+                        log(`خطا در ورود با نقش ${testUser.role}: ${error.message}`, 'error');
+                    } else if (data) {
+                        log(`ورود با نقش ${testUser.role} موفق بود`, 'success');
+                    } else {
+                        log(`کاربری با نقش ${testUser.role} یافت نشد`, 'warning');
+                    }
+                } catch (error) {
+                    log(`خطا در تست ورود با نقش ${testUser.role}: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        async function runCompleteFix() {
+            const resultsDiv = document.getElementById('fix-results');
+            resultsDiv.style.display = 'block';
+            
+            log('شروع رفع کامل خطاها...', 'info');
+            
+            try {
+                // مرحله 1: بررسی جداول
+                log('مرحله 1: بررسی جداول دیتابیس', 'info');
+                await checkDatabaseTables();
+                
+                // مرحله 2: ایجاد جداول گمشده
+                log('مرحله 2: ایجاد جداول گمشده', 'info');
+                await createMissingTables();
+                
+                // مرحله 3: افزودن کاربران تست
+                log('مرحله 3: افزودن کاربران تست', 'info');
+                await addTestUsers();
+                
+                // مرحله 4: تست توابع
+                log('مرحله 4: تست توابع', 'info');
+                await testAllFunctions();
+                
+                // مرحله 5: تست ورودها
+                log('مرحله 5: تست ورودها', 'info');
+                await testAllLogins();
+                
+                log('رفع کامل خطاها با موفقیت انجام شد!', 'success');
+                
+            } catch (error) {
+                log('خطا در رفع کامل: ' + error.message, 'error');
+            }
+        }
+        
+        // بررسی اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            log('صفحه رفع خطا بارگذاری شد', 'info');
+        });
+    </script>
+</body>
+</html>
