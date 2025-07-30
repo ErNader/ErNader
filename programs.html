@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامه‌ها - مرکز آموزشی</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html" class="nav-link">صفحه اصلی</a></li>
+                    <li><a href="programs.html" class="nav-link active">برنامه‌ها</a></li>
+                    <li><a href="register.html" class="nav-link">ثبت‌نام</a></li>
+                    <li><a href="login.html" class="nav-link">ورود</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <!-- معرفی برنامه‌ها -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1>برنامه‌های مرکز آموزشی</h1>
+                    <p>مجموعه‌ای از برنامه‌های متنوع و با کیفیت برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+            </section>
+
+            <!-- فیلتر برنامه‌ها -->
+            <section class="filter-section">
+                <div class="filter-container">
+                    <h3>فیلتر برنامه‌ها:</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">همه</button>
+                        <button class="filter-btn" data-filter="academic">آموزشی</button>
+                        <button class="filter-btn" data-filter="recreational">تفریحی</button>
+                        <button class="filter-btn" data-filter="sports">ورزشی</button>
+                        <button class="filter-btn" data-filter="cultural">فرهنگی</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- لیست برنامه‌ها -->
+            <section class="programs-list">
+                <div class="programs-grid" id="programs-container">
+                    <!-- برنامه‌های آموزشی -->
+                    <div class="program-card" data-category="academic">
+                        <div class="program-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>کلاس‌های تقویتی</h3>
+                        <p>کلاس‌های تقویتی در دروس مختلف برای دانش‌آموزان</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۳ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۱۵ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۲,۵۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=academic" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <div class="program-card" data-category="academic">
+                        <div class="program-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>برنامه‌نویسی</h3>
+                        <p>آموزش برنامه‌نویسی و مهارت‌های دیجیتال</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۶ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۱۲ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۴,۰۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=programming" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <!-- برنامه‌های تفریحی -->
+                    <div class="program-card" data-category="recreational">
+                        <div class="program-icon">
+                            <i class="fas fa-campground"></i>
+                        </div>
+                        <h3>اردوهای تفریحی</h3>
+                        <p>اردوهای متنوع و جذاب در طبیعت</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۳ روز</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۳۰ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۱,۵۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=camp" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <div class="program-card" data-category="recreational">
+                        <div class="program-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>کلاس‌های هنری</h3>
+                        <p>آموزش نقاشی، موسیقی و هنرهای تجسمی</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۴ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۱۰ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۳,۲۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=art" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <!-- برنامه‌های ورزشی -->
+                    <div class="program-card" data-category="sports">
+                        <div class="program-icon">
+                            <i class="fas fa-futbol"></i>
+                        </div>
+                        <h3>کلاس‌های ورزشی</h3>
+                        <p>آموزش انواع ورزش‌ها و فعالیت‌های بدنی</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۶ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۲۰ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۲,۸۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=sports" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <div class="program-card" data-category="sports">
+                        <div class="program-icon">
+                            <i class="fas fa-swimming-pool"></i>
+                        </div>
+                        <h3>شنا</h3>
+                        <p>آموزش شنا برای تمام سنین</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۳ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۸ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۳,۵۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=swimming" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <!-- برنامه‌های فرهنگی -->
+                    <div class="program-card" data-category="cultural">
+                        <div class="program-icon">
+                            <i class="fas fa-theater-masks"></i>
+                        </div>
+                        <h3>تئاتر و نمایش</h3>
+                        <p>آموزش هنرهای نمایشی و تئاتر</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۴ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۱۲ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۲,۹۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=theater" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+
+                    <div class="program-card" data-category="cultural">
+                        <div class="program-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h3>زبان‌های خارجی</h3>
+                        <p>آموزش زبان انگلیسی، آلمانی و فرانسه</p>
+                        <div class="program-details">
+                            <span><i class="fas fa-clock"></i> ۸ ماه</span>
+                            <span><i class="fas fa-users"></i> حداکثر ۱۰ نفر</span>
+                            <span><i class="fas fa-money-bill"></i> ۵,۵۰۰,۰۰۰ تومان</span>
+                        </div>
+                        <a href="register.html?program=language" class="btn btn-primary">ثبت‌نام</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- برنامه‌های ویژه -->
+            <section class="special-programs">
+                <h2>برنامه‌های ویژه</h2>
+                <div class="special-programs-grid">
+                    <div class="special-program-card">
+                        <div class="special-program-header">
+                            <i class="fas fa-star"></i>
+                            <h3>برنامه تابستانی</h3>
+                        </div>
+                        <p>مجموعه‌ای از برنامه‌های متنوع در فصل تابستان</p>
+                        <ul>
+                            <li>کلاس‌های تقویتی</li>
+                            <li>اردوهای تفریحی</li>
+                            <li>کارگاه‌های هنری</li>
+                            <li>فعالیت‌های ورزشی</li>
+                        </ul>
+                        <a href="register.html?program=summer" class="btn btn-primary">ثبت‌نام ویژه</a>
+                    </div>
+
+                    <div class="special-program-card">
+                        <div class="special-program-header">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h3>آمادگی کنکور</h3>
+                        </div>
+                        <p>برنامه ویژه آمادگی برای کنکور سراسری</p>
+                        <ul>
+                            <li>کلاس‌های تخصصی</li>
+                            <li>آزمون‌های آزمایشی</li>
+                            <li>مشاوره تحصیلی</li>
+                            <li>برنامه مطالعاتی</li>
+                        </ul>
+                        <a href="register.html?program=konkur" class="btn btn-primary">ثبت‌نام ویژه</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+                <div class="footer-section">
+                    <h3>لینک‌های مفید</h3>
+                    <ul>
+                        <li><a href="programs.html">برنامه‌ها</a></li>
+                        <li><a href="register.html">ثبت‌نام</a></li>
+                        <li><a href="login.html">ورود</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

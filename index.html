@@ -3,12 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم مدیریت مرکز</title>
+    <title>مرکز آموزشی - صفحه اصلی</title>
     <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html" class="nav-link active">صفحه اصلی</a></li>
+                    <li><a href="programs.html" class="nav-link">برنامه‌ها</a></li>
+                    <li><a href="register.html" class="nav-link">ثبت‌نام</a></li>
+                    <li><a href="login.html" class="nav-link">ورود</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <!-- معرفی مرکز -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1>به مرکز آموزشی ما خوش آمدید</h1>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان با برنامه‌های متنوع و با کیفیت</p>
+                    <div class="hero-buttons">
+                        <a href="programs.html" class="btn btn-primary">مشاهده برنامه‌ها</a>
+                        <a href="register.html" class="btn btn-secondary">ثبت‌نام کنید</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <i class="fas fa-users"></i>
+                </div>
+            </section>
+
+            <!-- ویژگی‌های مرکز -->
+            <section class="features-section">
+                <h2>ویژگی‌های مرکز ما</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h3>اساتید مجرب</h3>
+                        <p>تیم آموزشی با تجربه و متخصص در زمینه‌های مختلف</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-book-open"></i>
+                        <h3>برنامه‌های متنوع</h3>
+                        <p>انواع مختلف برنامه‌های آموزشی و تفریحی</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>پیگیری پیشرفت</h3>
+                        <p>سیستم نظارت و پیگیری پیشرفت دانش‌آموزان</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-users"></i>
+                        <h3>گروه‌های کوچک</h3>
+                        <p>کلاس‌های با تعداد محدود برای کیفیت بهتر</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- برنامه‌های ویژه -->
+            <section class="programs-section">
+                <h2>برنامه‌های ویژه</h2>
+                <div class="programs-grid">
+                    <div class="program-card">
+                        <div class="program-icon">
+                            <i class="fas fa-campground"></i>
+                        </div>
+                        <h3>اردوهای تفریحی</h3>
+                        <p>اردوهای متنوع و جذاب برای دانش‌آموزان</p>
+                        <a href="register.html?program=camp" class="btn btn-primary">ثبت‌نام اردو</a>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>برنامه‌های سالانه</h3>
+                        <p>برنامه‌های منظم و مستمر در طول سال</p>
+                        <a href="register.html?program=yearly" class="btn btn-primary">ثبت‌نام سالانه</a>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3>پذیرش جدید</h3>
+                        <p>ثبت‌نام دانش‌آموزان جدید در مرکز</p>
+                        <a href="register.html?program=admission" class="btn btn-primary">ثبت‌نام پذیرش</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- آمار مرکز -->
+            <section class="stats-section">
+                <h2>آمار مرکز</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="students-count">0</div>
+                        <div class="stat-label">دانش‌آموز</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="teachers-count">0</div>
+                        <div class="stat-label">استاد</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="programs-count">0</div>
+                        <div class="stat-label">برنامه</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="years-count">0</div>
+                        <div class="stat-label">سال تجربه</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+                <div class="footer-section">
+                    <h3>لینک‌های مفید</h3>
+                    <ul>
+                        <li><a href="programs.html">برنامه‌ها</a></li>
+                        <li><a href="register.html">ثبت‌نام</a></li>
+                        <li><a href="login.html">ورود</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

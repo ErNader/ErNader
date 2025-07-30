@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت‌نام - مرکز آموزشی</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- نوار ناوبری -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    مرکز آموزشی
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html" class="nav-link">صفحه اصلی</a></li>
+                    <li><a href="programs.html" class="nav-link">برنامه‌ها</a></li>
+                    <li><a href="register.html" class="nav-link active">ثبت‌نام</a></li>
+                    <li><a href="login.html" class="nav-link">ورود</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- بخش اصلی -->
+    <main class="main-content">
+        <div class="container">
+            <div class="form-container">
+                <h2 class="form-title">ثبت‌نام در برنامه‌ها</h2>
+                
+                <div id="alert-container"></div>
+                
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="program-type">نوع برنامه:</label>
+                        <select id="program-type" class="form-control" required>
+                            <option value="">انتخاب کنید</option>
+                            <option value="admission">پذیرش جدید</option>
+                            <option value="camp">اردوهای تفریحی</option>
+                            <option value="yearly">برنامه‌های سالانه</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="full-name">نام و نام خانوادگی:</label>
+                        <input type="text" id="full-name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="national-id">کد ملی:</label>
+                        <input type="text" id="national-id" class="form-control" maxlength="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">شماره تلفن:</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">ایمیل:</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birth-date">تاریخ تولد:</label>
+                        <input type="date" id="birth-date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education-level">مقطع تحصیلی:</label>
+                        <select id="education-level" class="form-control" required>
+                            <option value="">انتخاب کنید</option>
+                            <option value="primary">ابتدایی</option>
+                            <option value="middle">متوسطه اول</option>
+                            <option value="high">متوسطه دوم</option>
+                            <option value="university">دانشگاهی</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parent-name">نام والدین:</label>
+                        <input type="text" id="parent-name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parent-phone">تلفن والدین:</label>
+                        <input type="tel" id="parent-phone" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">آدرس:</label>
+                        <textarea id="address" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergency-contact">شماره تماس اضطراری:</label>
+                        <input type="tel" id="emergency-contact" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medical-info">اطلاعات پزشکی (اختیاری):</label>
+                        <textarea id="medical-info" class="form-control" rows="2" placeholder="آلرژی، بیماری خاص و..."></textarea>
+                    </div>
+
+                    <button type="submit" class="form-btn">ثبت‌نام</button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1rem;">
+                    <p>قبلاً ثبت‌نام کرده‌اید؟ <a href="login.html">ورود کنید</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>مرکز آموزشی</h3>
+                    <p>مرکزی برای رشد و پیشرفت دانش‌آموزان</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fas fa-envelope"></i> info@center.edu</p>
+                </div>
+                <div class="footer-section">
+                    <h3>لینک‌های مفید</h3>
+                    <ul>
+                        <li><a href="programs.html">برنامه‌ها</a></li>
+                        <li><a href="register.html">ثبت‌نام</a></li>
+                        <li><a href="login.html">ورود</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ۱۴۰۲ مرکز آموزشی. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
