@@ -3404,7 +3404,103 @@ function showProgramAnalytics() {
 }
 
 function showGradeManagement() {
-    showAlert('مدیریت نمرات در حال توسعه است...', 'info');
+    if (!currentUser || currentUser.role !== 'admin') {
+        showAlert('فقط مدیران می‌توانند به این بخش دسترسی داشته باشند', 'error');
+        return;
+    }
+
+    const content = `
+        <div class="grade-management">
+            <h3>مدیریت نمرات</h3>
+            
+            <div class="management-tabs">
+                <button class="tab-btn active" onclick="showGradesTab('overview')">نمای کلی</button>
+                <button class="tab-btn" onclick="showGradesTab('by-student')">بر اساس دانش‌آموز</button>
+                <button class="tab-btn" onclick="showGradesTab('by-program')">بر اساس برنامه</button>
+                <button class="tab-btn" onclick="showGradesTab('reports')">گزارش‌ها</button>
+            </div>
+            
+            <div id="grades-content">
+                <div id="grades-overview" class="tab-content active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>میانگین کل نمرات</h4>
+                            <div class="number">${calculateOverallGradeAverage()}%</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>بالاترین نمره</h4>
+                            <div class="number">${getHighestGrade()}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>پایین‌ترین نمره</h4>
+                            <div class="number">${getLowestGrade()}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>تعداد نمرات</h4>
+                            <div class="number">${grades.length}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grades-table">
+                        <h4>جدول نمرات</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>دانش‌آموز</th>
+                                    <th>برنامه</th>
+                                    <th>موضوع</th>
+                                    <th>نمره</th>
+                                    <th>نوع</th>
+                                    <th>تاریخ</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateGradesTableRows()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="grades-by-student" class="tab-content">
+                    <div class="student-selector">
+                        <label>انتخاب دانش‌آموز:</label>
+                        <select id="student-select" onchange="loadStudentGrades()">
+                            <option value="">همه دانش‌آموزان</option>
+                            ${students.map(student => `
+                                <option value="${student.id}">${student.full_name}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div id="student-grades-data"></div>
+                </div>
+                
+                <div id="grades-by-program" class="tab-content">
+                    <div class="program-selector">
+                        <label>انتخاب برنامه:</label>
+                        <select id="program-grade-select" onchange="loadProgramGrades()">
+                            <option value="">همه برنامه‌ها</option>
+                            ${programs.map(program => `
+                                <option value="${program.id}">${program.name}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div id="program-grades-data"></div>
+                </div>
+                
+                <div id="grades-reports" class="tab-content">
+                    <div class="report-options">
+                        <button onclick="generateGradesReport('summary')" class="btn btn-primary">گزارش خلاصه</button>
+                        <button onclick="generateGradesReport('detailed')" class="btn btn-success">گزارش تفصیلی</button>
+                        <button onclick="exportGradesToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                    </div>
+                    <div id="grade-report-results"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    createModal('مدیریت نمرات', content);
 }
 
 function editGradesModal() {
@@ -4446,9 +4542,9 @@ function showGradesOverview() {
 }
 
 function calculateOverallGradeAverage() {
-    if (grades.length === 0) return 0;
+    if (!grades || grades.length === 0) return '0';
     const totalGrades = grades.reduce((sum, grade) => sum + (grade.grade || 0), 0);
-    return Math.round(totalGrades / grades.length);
+    return Math.round(totalGrades / grades.length).toString();
 }
 
 function getHighestGrade() {
