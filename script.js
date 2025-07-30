@@ -18,15 +18,24 @@ let isSupabaseConnected = false;
 async function checkDatabaseConnection() {
     try {
         if (typeof supabaseClient !== 'undefined') {
-            const { data, error } = await supabaseClient.from('users').select('count').limit(1);
+            const { data, error } = await supabaseClient
+                .from('users')
+                .select('count')
+                .limit(1)
+                .timeout(5000); // 5 second timeout
+            
             if (!error) {
                 isSupabaseConnected = true;
                 console.log('اتصال به Supabase برقرار شد');
                 return true;
+            } else {
+                console.log('خطا در اتصال به Supabase:', error.message);
+                isSupabaseConnected = false;
             }
         }
     } catch (error) {
-        console.log('Supabase در دسترس نیست، استفاده از LocalStorage');
+        console.log('Supabase در دسترس نیست، استفاده از LocalStorage:', error.message);
+        isSupabaseConnected = false;
     }
     return false;
 }
@@ -245,38 +254,52 @@ async function handleLogin(event) {
     const nationalId = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    if (isSupabaseConnected) {
-        const result = await supabaseHelper.loginUser(nationalId, password);
-        if (result.success) {
-            currentUser = {
-                id: result.user.id,
-                nationalId: result.user.national_id,
-                fullName: result.user.full_name,
-                email: result.user.email,
-                type: result.user.role,
-                phone: result.user.phone
-            };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            showAlert('ورود موفقیت‌آمیز بود!', 'success');
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
+    // نمایش loading
+    const loginBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = loginBtn.textContent;
+    loginBtn.textContent = 'در حال ورود...';
+    loginBtn.disabled = true;
+
+    try {
+        if (isSupabaseConnected) {
+            const result = await supabaseHelper.loginUser(nationalId, password);
+            if (result.success) {
+                currentUser = {
+                    id: result.user.id,
+                    nationalId: result.user.national_id,
+                    fullName: result.user.full_name,
+                    email: result.user.email,
+                    type: result.user.role,
+                    phone: result.user.phone
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showAlert('ورود موفقیت‌آمیز بود!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showAlert('خطا در ورود: ' + result.error, 'danger');
+            }
         } else {
-            showAlert('خطا در ورود: ' + result.error, 'danger');
+            // حالت لوکال
+            const user = users.find(u => u.nationalId === nationalId && u.password === password);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showAlert('ورود موفقیت‌آمیز بود!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showAlert('کد ملی یا رمز عبور اشتباه است!', 'danger');
+            }
         }
-    } else {
-        // حالت لوکال
-        const user = users.find(u => u.nationalId === nationalId && u.password === password);
-        if (user) {
-            currentUser = user;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            showAlert('ورود موفقیت‌آمیز بود!', 'success');
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-        } else {
-            showAlert('کد ملی یا رمز عبور اشتباه است!', 'danger');
-        }
+    } catch (error) {
+        showAlert('خطا در اتصال به سرور. لطفاً دوباره تلاش کنید.', 'danger');
+    } finally {
+        // بازگرداندن دکمه به حالت اولیه
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
     }
 }
 
@@ -471,6 +494,9 @@ function createDashboard() {
         case 'supervisor':
             dashboardContent += createSupervisorDashboard();
             break;
+        default:
+            dashboardContent += createDefaultDashboard();
+            break;
     }
 
     dashboardContainer.innerHTML = dashboardContent;
@@ -490,14 +516,6 @@ function getUserTypeTitle(type) {
 // تابع بهبود یافته برای ایجاد داشبورد ادمین
 function createAdminDashboard() {
     return `
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">داشبورد مدیر مرکز</h1>
-            <div class="user-info">
-                <span>خوش آمدید، ${currentUser.fullName}</span>
-                <button onclick="logout()" class="btn btn-danger">خروج</button>
-            </div>
-        </div>
-        
         <div class="dashboard-stats">
             <div class="dashboard-stat">
                 <div class="number">${registrations.length}</div>
@@ -734,14 +752,6 @@ function createSupervisorDashboard() {
 // تابع بهبود یافته برای ایجاد داشبورد رابط
 function createCoordinatorDashboard() {
     return `
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">داشبورد رابط</h1>
-            <div class="user-info">
-                <span>خوش آمدید، ${currentUser.fullName}</span>
-                <button onclick="logout()" class="btn btn-danger">خروج</button>
-            </div>
-        </div>
-        
         <div class="dashboard-stats">
             <div class="dashboard-stat">
                 <div class="number">${getCoordinatorStudentsCount()}</div>
@@ -752,7 +762,7 @@ function createCoordinatorDashboard() {
                 <div class="label">گروه</div>
             </div>
             <div class="dashboard-stat">
-                <div class="number">${getCoordinatorAttendance()}</div>
+                <div class="number">${getCoordinatorAttendance()}%</div>
                 <div class="label">درصد حضور کلی</div>
             </div>
             <div class="dashboard-stat">
@@ -762,6 +772,17 @@ function createCoordinatorDashboard() {
         </div>
         
         <div class="coordinator-sections">
+            <!-- مدیریت گروه‌ها و بچه‌گروهی -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-layer-group"></i> مدیریت گروه‌ها و بچه‌گروهی</h3>
+                <div class="section-actions">
+                    <button onclick="showMyGroups()" class="btn btn-primary">گروه‌های من</button>
+                    <button onclick="showSubGroups()" class="btn btn-success">بچه‌گروهی</button>
+                    <button onclick="createNewGroup()" class="btn btn-info">ایجاد گروه جدید</button>
+                    <button onclick="showGroupAnalytics()" class="btn btn-warning">تحلیل گروه‌ها</button>
+                </div>
+            </div>
+            
             <!-- مدیریت حضور و غیاب -->
             <div class="coordinator-section">
                 <h3><i class="fas fa-clipboard-check"></i> مدیریت حضور و غیاب</h3>
@@ -795,6 +816,17 @@ function createCoordinatorDashboard() {
                 </div>
             </div>
             
+            <!-- مدیریت دانش‌آموزان -->
+            <div class="coordinator-section">
+                <h3><i class="fas fa-user-graduate"></i> مدیریت دانش‌آموزان</h3>
+                <div class="section-actions">
+                    <button onclick="showMyStudents()" class="btn btn-primary">دانش‌آموزان من</button>
+                    <button onclick="showStudentProgress()" class="btn btn-success">پیشرفت دانش‌آموزان</button>
+                    <button onclick="showStudentAnalytics()" class="btn btn-info">تحلیل دانش‌آموزان</button>
+                    <button onclick="exportStudentsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+                </div>
+            </div>
+            
             <!-- گزارش‌گیری -->
             <div class="coordinator-section">
                 <h3><i class="fas fa-chart-bar"></i> گزارش‌گیری</h3>
@@ -814,28 +846,6 @@ function createCoordinatorDashboard() {
                     <button onclick="createGroupSurvey()" class="btn btn-success">ایجاد نظرسنجی گروهی</button>
                     <button onclick="showSurveyAnalytics()" class="btn btn-info">تحلیل نظرسنجی</button>
                     <button onclick="exportSurveyResults()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- مدیریت دانش‌آموزان -->
-            <div class="coordinator-section">
-                <h3><i class="fas fa-user-graduate"></i> مدیریت دانش‌آموزان</h3>
-                <div class="section-actions">
-                    <button onclick="showMyStudents()" class="btn btn-primary">دانش‌آموزان من</button>
-                    <button onclick="showStudentProgress()" class="btn btn-success">پیشرفت دانش‌آموزان</button>
-                    <button onclick="showStudentAnalytics()" class="btn btn-info">تحلیل دانش‌آموزان</button>
-                    <button onclick="exportStudentsToExcel()" class="btn btn-warning">خروجی اکسل</button>
-                </div>
-            </div>
-            
-            <!-- مدیریت گروه‌ها -->
-            <div class="coordinator-section">
-                <h3><i class="fas fa-layer-group"></i> مدیریت گروه‌ها</h3>
-                <div class="section-actions">
-                    <button onclick="showMyGroups()" class="btn btn-primary">گروه‌های من</button>
-                    <button onclick="createNewGroup()" class="btn btn-success">ایجاد گروه جدید</button>
-                    <button onclick="showGroupAnalytics()" class="btn btn-info">تحلیل گروه‌ها</button>
-                    <button onclick="exportGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
                 </div>
             </div>
             
@@ -1081,15 +1091,27 @@ function getTeacherProgramsCount() {
 }
 
 function getCoordinatorStudentsCount() {
-    return Math.floor(Math.random() * 50) + 20; // 20-70
+    // نمایش تعداد دانش‌آموزان تحت نظر رابط فعلی
+    if (currentUser && currentUser.type === 'coordinator') {
+        return 45; // تعداد ثابت برای نمایش
+    }
+    return 0;
 }
 
 function getCoordinatorGroupsCount() {
-    return Math.floor(Math.random() * 8) + 3; // 3-11
+    // نمایش تعداد گروه‌های تحت نظر رابط فعلی
+    if (currentUser && currentUser.type === 'coordinator') {
+        return 3; // تعداد ثابت برای نمایش
+    }
+    return 0;
 }
 
 function getCoordinatorAttendance() {
-    return Math.floor(Math.random() * 15) + 85; // 85-100%
+    // نمایش درصد حضور کلی دانش‌آموزان تحت نظر رابط فعلی
+    if (currentUser && currentUser.type === 'coordinator') {
+        return 92; // درصد ثابت برای نمایش
+    }
+    return 0;
 }
 
 function getSupervisorCentersCount() {
@@ -1125,7 +1147,11 @@ function getTeacherProgramsHistory() {
 }
 
 function getCoordinatorProgramsCount() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    // نمایش تعداد برنامه‌های فعال تحت نظر رابط فعلی
+    if (currentUser && currentUser.type === 'coordinator') {
+        return 8; // تعداد ثابت برای نمایش
+    }
+    return 0;
 }
 
 function getCoordinatorProgramsHistory() {
@@ -2306,7 +2332,115 @@ function participateInSurvey() {
 }
 
 function showMyGroups() {
-    showAlert('گروه‌های من در حال توسعه است...', 'info');
+    // نمایش گروه‌های کاربر
+    const groups = [
+        { id: 1, name: 'گروه ریاضی پیشرفته', students: 15, coordinator: currentUser.fullName, subGroups: 3 },
+        { id: 2, name: 'گروه علوم تجربی', students: 12, coordinator: currentUser.fullName, subGroups: 2 },
+        { id: 3, name: 'گروه ادبیات فارسی', students: 18, coordinator: currentUser.fullName, subGroups: 4 }
+    ];
+    
+    const content = `
+        <div class="management-header">
+            <h3>گروه‌های من</h3>
+            <div class="search-box">
+                <input type="text" placeholder="جستجو در گروه‌ها..." onkeyup="filterGroups(this.value)">
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام گروه</th>
+                        <th>تعداد دانش‌آموز</th>
+                        <th>تعداد بچه‌گروهی</th>
+                        <th>رابط</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${groups.map(group => `
+                        <tr>
+                            <td>${group.name}</td>
+                            <td>${group.students}</td>
+                            <td>${group.subGroups}</td>
+                            <td>${group.coordinator}</td>
+                            <td>
+                                <button onclick="viewGroupDetails(${group.id})" class="btn btn-sm btn-primary">مشاهده</button>
+                                <button onclick="showSubGroups(${group.id})" class="btn btn-sm btn-success">بچه‌گروهی</button>
+                                <button onclick="editGroup(${group.id})" class="btn btn-sm btn-info">ویرایش</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="management-footer">
+            <button onclick="createNewGroup()" class="btn btn-success">ایجاد گروه جدید</button>
+            <button onclick="exportGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+        </div>
+    `;
+    
+    createModal('گروه‌های من', content);
+}
+
+function showSubGroups(groupId = null) {
+    // نمایش بچه‌گروهی‌ها
+    const subGroups = [
+        { id: 1, name: 'بچه‌گروهی A', parentGroup: 'گروه ریاضی پیشرفته', students: 5, coordinator: currentUser.fullName },
+        { id: 2, name: 'بچه‌گروهی B', parentGroup: 'گروه ریاضی پیشرفته', students: 5, coordinator: currentUser.fullName },
+        { id: 3, name: 'بچه‌گروهی C', parentGroup: 'گروه ریاضی پیشرفته', students: 5, coordinator: currentUser.fullName },
+        { id: 4, name: 'بچه‌گروهی علوم 1', parentGroup: 'گروه علوم تجربی', students: 6, coordinator: currentUser.fullName },
+        { id: 5, name: 'بچه‌گروهی علوم 2', parentGroup: 'گروه علوم تجربی', students: 6, coordinator: currentUser.fullName }
+    ];
+    
+    const filteredSubGroups = groupId ? subGroups.filter(sg => sg.parentGroup === 'گروه ریاضی پیشرفته') : subGroups;
+    
+    const content = `
+        <div class="management-header">
+            <h3>بچه‌گروهی‌ها</h3>
+            <div class="search-box">
+                <input type="text" placeholder="جستجو در بچه‌گروهی‌ها..." onkeyup="filterSubGroups(this.value)">
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام بچه‌گروهی</th>
+                        <th>گروه والد</th>
+                        <th>تعداد دانش‌آموز</th>
+                        <th>رابط</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filteredSubGroups.map(subGroup => `
+                        <tr>
+                            <td>${subGroup.name}</td>
+                            <td>${subGroup.parentGroup}</td>
+                            <td>${subGroup.students}</td>
+                            <td>${subGroup.coordinator}</td>
+                            <td>
+                                <button onclick="viewSubGroupDetails(${subGroup.id})" class="btn btn-sm btn-primary">مشاهده</button>
+                                <button onclick="editSubGroup(${subGroup.id})" class="btn btn-sm btn-info">ویرایش</button>
+                                <button onclick="manageSubGroupStudents(${subGroup.id})" class="btn btn-sm btn-success">دانش‌آموزان</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="management-footer">
+            <button onclick="createNewSubGroup()" class="btn btn-success">ایجاد بچه‌گروهی جدید</button>
+            <button onclick="exportSubGroupsToExcel()" class="btn btn-warning">خروجی اکسل</button>
+        </div>
+    `;
+    
+    createModal('بچه‌گروهی‌ها', content);
 }
 
 function showGroupAnalytics() {
@@ -3402,4 +3536,144 @@ function showActivityReports() {
 
 function exportMyReports() {
     showAlert('خروجی اکسل گزارش‌های من در حال توسعه است...', 'info');
+}
+
+// توابع جدید برای مدیریت بچه‌گروهی
+function filterGroups(searchTerm) {
+    const rows = document.querySelectorAll('.table tbody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm.toLowerCase())) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function filterSubGroups(searchTerm) {
+    const rows = document.querySelectorAll('.table tbody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm.toLowerCase())) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function viewGroupDetails(groupId) {
+    showAlert(`جزئیات گروه ${groupId} در حال نمایش...`, 'info');
+}
+
+function editGroup(groupId) {
+    showAlert(`ویرایش گروه ${groupId} در حال توسعه...`, 'info');
+}
+
+function viewSubGroupDetails(subGroupId) {
+    showAlert(`جزئیات بچه‌گروهی ${subGroupId} در حال نمایش...`, 'info');
+}
+
+function editSubGroup(subGroupId) {
+    showAlert(`ویرایش بچه‌گروهی ${subGroupId} در حال توسعه...`, 'info');
+}
+
+function manageSubGroupStudents(subGroupId) {
+    showAlert(`مدیریت دانش‌آموزان بچه‌گروهی ${subGroupId} در حال توسعه...`, 'info');
+}
+
+function createNewSubGroup() {
+    showAlert('ایجاد بچه‌گروهی جدید در حال توسعه...', 'info');
+}
+
+function exportSubGroupsToExcel() {
+    showAlert('خروجی اکسل بچه‌گروهی‌ها در حال توسعه...', 'info');
+}
+
+function createDefaultDashboard() {
+    return `
+        <div class="dashboard-stats">
+            <div class="dashboard-stat">
+                <div class="number">0</div>
+                <div class="label">اطلاعات موجود نیست</div>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            <p>نوع کاربر شما مشخص نشده است. لطفاً با مدیر سیستم تماس بگیرید.</p>
+        </div>
+    `;
+}
+
+// بهبود عملکرد دکمه‌ها
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// بهبود عملکرد جستجو
+const debouncedFilterGroups = debounce(filterGroups, 300);
+const debouncedFilterSubGroups = debounce(filterSubGroups, 300);
+
+// بهبود اتصال به دیتابیس
+async function improveDatabaseConnection() {
+    try {
+        if (typeof supabaseClient !== 'undefined') {
+            const { data, error } = await supabaseClient
+                .from('users')
+                .select('count')
+                .limit(1)
+                .timeout(5000); // 5 second timeout
+            
+            if (!error) {
+                isSupabaseConnected = true;
+                console.log('اتصال به Supabase برقرار شد');
+                return true;
+            }
+        }
+    } catch (error) {
+        console.log('Supabase در دسترس نیست، استفاده از LocalStorage');
+        isSupabaseConnected = false;
+    }
+    return false;
+}
+
+// بهبود عملکرد کلی
+function optimizePerformance() {
+    // کاهش تعداد درخواست‌های DOM
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    });
+
+    // مشاهده عناصر برای انیمیشن
+    document.querySelectorAll('.dashboard-stat, .coordinator-section, .admin-section').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// بهبود نمایش پیام‌ها
+function showImprovedAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} notification show`;
+    alertDiv.textContent = message;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(alertDiv);
+        }, 300);
+    }, 3000);
 }
