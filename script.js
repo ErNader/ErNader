@@ -120,7 +120,7 @@ async function initializeApp() {
                     coordinatorId: 2,
                     coordinatorName: 'احمد رضایی',
                     maxStudents: 30,
-                    currentStudents: 15,
+                    currentStudents: 3, // تعداد واقعی دانش‌آموزان
                     isActive: true,
                     createdAt: new Date().toISOString()
                 },
@@ -130,7 +130,7 @@ async function initializeApp() {
                     coordinatorId: 3,
                     coordinatorName: 'فاطمه محمدی',
                     maxStudents: 25,
-                    currentStudents: 12,
+                    currentStudents: 2, // تعداد واقعی دانش‌آموزان
                     isActive: true,
                     createdAt: new Date().toISOString()
                 }
@@ -167,6 +167,28 @@ async function initializeApp() {
                     id: 3,
                     nationalId: '5555555555',
                     fullName: 'حسین نوری',
+                    groupId: 2,
+                    groupName: 'گروه علوم تجربی',
+                    coordinatorId: 3,
+                    coordinatorName: 'فاطمه محمدی',
+                    isActive: true,
+                    joinedAt: new Date().toISOString()
+                },
+                {
+                    id: 4,
+                    nationalId: '6666666666',
+                    fullName: 'سارا احمدی',
+                    groupId: 1,
+                    groupName: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    isActive: true,
+                    joinedAt: new Date().toISOString()
+                },
+                {
+                    id: 5,
+                    nationalId: '7777777777',
+                    fullName: 'محمد کریمی',
                     groupId: 2,
                     groupName: 'گروه علوم تجربی',
                     coordinatorId: 3,
@@ -222,10 +244,10 @@ async function initializeApp() {
                     coordinatorName: 'احمد رضایی',
                     sessionNumber: 1,
                     date: '2024-01-15',
-                    presentStudents: 14,
-                    absentStudents: 1,
-                    totalStudents: 15,
-                    attendanceRate: 93.3
+                    presentStudents: 3,
+                    absentStudents: 0,
+                    totalStudents: 3,
+                    attendanceRate: 100.0
                 },
                 {
                     id: 2,
@@ -237,10 +259,40 @@ async function initializeApp() {
                     coordinatorName: 'فاطمه محمدی',
                     sessionNumber: 1,
                     date: '2024-01-15',
-                    presentStudents: 11,
+                    presentStudents: 2,
+                    absentStudents: 0,
+                    totalStudents: 2,
+                    attendanceRate: 100.0
+                },
+                {
+                    id: 3,
+                    programId: 1,
+                    programName: 'برنامه ریاضی پیشرفته',
+                    groupId: 1,
+                    groupName: 'گروه ریاضی پیشرفته',
+                    coordinatorId: 2,
+                    coordinatorName: 'احمد رضایی',
+                    sessionNumber: 2,
+                    date: '2024-01-16',
+                    presentStudents: 2,
                     absentStudents: 1,
-                    totalStudents: 12,
-                    attendanceRate: 91.7
+                    totalStudents: 3,
+                    attendanceRate: 66.7
+                },
+                {
+                    id: 4,
+                    programId: 2,
+                    programName: 'برنامه علوم تجربی',
+                    groupId: 2,
+                    groupName: 'گروه علوم تجربی',
+                    coordinatorId: 3,
+                    coordinatorName: 'فاطمه محمدی',
+                    sessionNumber: 2,
+                    date: '2024-01-16',
+                    presentStudents: 1,
+                    absentStudents: 1,
+                    totalStudents: 2,
+                    attendanceRate: 50.0
                 }
             ];
             localStorage.setItem('attendance', JSON.stringify(attendance));
@@ -1036,15 +1088,46 @@ function createStudentDashboard() {
 
 // تابع کمکی برای آمار
 function getStudentProgramsCount() {
-    return registrations.filter(r => r.nationalId === currentUser.nationalId).length;
+    if (currentUser && currentUser.type === 'student') {
+        return programs.filter(p => {
+            const student = students.find(s => s.nationalId === currentUser.nationalId);
+            return student && p.groupId === student.groupId;
+        }).length;
+    }
+    return 0;
 }
 
 function getStudentAttendance() {
-    return Math.floor(Math.random() * 20) + 80; // 80-100%
+    if (currentUser && currentUser.type === 'student') {
+        const student = students.find(s => s.nationalId === currentUser.nationalId);
+        if (student) {
+            const studentAttendance = attendance.filter(a => a.groupId === student.groupId);
+            if (studentAttendance.length === 0) return 0;
+            
+            const totalRate = studentAttendance.reduce((sum, a) => sum + a.attendanceRate, 0);
+            return Math.round(totalRate / studentAttendance.length);
+        }
+    }
+    return 0;
 }
 
 function getStudentGrades() {
-    return (Math.random() * 5 + 15).toFixed(1); // 15-20
+    if (currentUser && currentUser.type === 'student') {
+        // میانگین نمرات دانش‌آموز بر اساس برنامه‌های گروه
+        const student = students.find(s => s.nationalId === currentUser.nationalId);
+        if (student) {
+            const groupPrograms = programs.filter(p => p.groupId === student.groupId);
+            if (groupPrograms.length === 0) return 0;
+            
+            // محاسبه میانگین بر اساس درصد تکمیل برنامه‌ها
+            const totalCompletion = groupPrograms.reduce((sum, p) => {
+                return sum + (p.completedSessions / p.totalSessions * 100);
+            }, 0);
+            
+            return (totalCompletion / groupPrograms.length).toFixed(1);
+        }
+    }
+    return 0;
 }
 
 
@@ -1080,23 +1163,27 @@ function getCoordinatorAttendance() {
 
 
 function getTotalStudents() {
-    return users.filter(u => u.type === 'student').length;
+    return students.filter(s => s.isActive).length;
 }
 
 function getStudentActivitiesCount() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'student') {
+        const student = students.find(s => s.nationalId === currentUser.nationalId);
+        if (student) {
+            return programs.filter(p => p.groupId === student.groupId && p.isActive).length;
+        }
+    }
+    return 0;
 }
 
 function getStudentGradesHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
-}
-
-function getTeacherClassesHistory() {
-    return Math.floor(Math.random() * 5) + 2; // 2-7
-}
-
-function getTeacherProgramsHistory() {
-    return Math.floor(Math.random() * 3) + 1; // 1-4
+    if (currentUser && currentUser.type === 'student') {
+        const student = students.find(s => s.nationalId === currentUser.nationalId);
+        if (student) {
+            return programs.filter(p => p.groupId === student.groupId).length;
+        }
+    }
+    return 0;
 }
 
 function getCoordinatorProgramsCount() {
@@ -1108,88 +1195,103 @@ function getCoordinatorProgramsCount() {
 }
 
 function getCoordinatorProgramsHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return programs.filter(p => p.coordinatorId === currentUser.id).length;
+    }
+    return 0;
 }
 
 function getCoordinatorAttendanceHistory() {
-    return Math.floor(Math.random() * 15) + 85; // 85-100%
+    if (currentUser && currentUser.type === 'coordinator') {
+        const coordinatorAttendance = attendance.filter(a => a.coordinatorId === currentUser.id);
+        if (coordinatorAttendance.length === 0) return 0;
+        
+        const totalRate = coordinatorAttendance.reduce((sum, a) => sum + a.attendanceRate, 0);
+        return Math.round(totalRate / coordinatorAttendance.length);
+    }
+    return 0;
 }
 
 function getCoordinatorGroupsHistory() {
-    return Math.floor(Math.random() * 8) + 3; // 3-11
+    if (currentUser && currentUser.type === 'coordinator') {
+        return groups.filter(g => g.coordinatorId === currentUser.id).length;
+    }
+    return 0;
 }
 
 function getCoordinatorActivitiesCount() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return programs.filter(p => p.coordinatorId === currentUser.id && p.isActive).length;
+    }
+    return 0;
 }
 
 function getCoordinatorActivityHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return programs.filter(p => p.coordinatorId === currentUser.id).length;
+    }
+    return 0;
 }
 
 function getCoordinatorSurveyResponses() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        // تعداد دانش‌آموزان تحت نظر رابط
+        return students.filter(s => s.coordinatorId === currentUser.id && s.isActive).length;
+    }
+    return 0;
 }
 
 function getCoordinatorSurveyResponsesHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return students.filter(s => s.coordinatorId === currentUser.id).length;
+    }
+    return 0;
 }
 
 function getCoordinatorStudentsHistory() {
-    return Math.floor(Math.random() * 50) + 20; // 20-70
-}
-
-function getCoordinatorGroupsHistory() {
-    return Math.floor(Math.random() * 8) + 3; // 3-11
-}
-
-function getCoordinatorAttendanceHistory() {
-    return Math.floor(Math.random() * 15) + 85; // 85-100%
-}
-
-function getCoordinatorProgramsHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return students.filter(s => s.coordinatorId === currentUser.id).length;
+    }
+    return 0;
 }
 
 function getCoordinatorStandards() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return groups.filter(g => g.coordinatorId === currentUser.id && g.isActive).length;
+    }
+    return 0;
 }
 
 function getCoordinatorStandardsHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
+    if (currentUser && currentUser.type === 'coordinator') {
+        return groups.filter(g => g.coordinatorId === currentUser.id).length;
+    }
+    return 0;
 }
 
 function getCoordinatorPerformanceHistory() {
-    return Math.floor(Math.random() * 10) + 90; // 90-100%
+    if (currentUser && currentUser.type === 'coordinator') {
+        const coordinatorAttendance = attendance.filter(a => a.coordinatorId === currentUser.id);
+        if (coordinatorAttendance.length === 0) return 0;
+        
+        const totalRate = coordinatorAttendance.reduce((sum, a) => sum + a.attendanceRate, 0);
+        return Math.round(totalRate / coordinatorAttendance.length);
+    }
+    return 0;
 }
 
 function getCoordinatorPerformance() {
-    return Math.floor(Math.random() * 10) + 90; // 90-100%
+    if (currentUser && currentUser.type === 'coordinator') {
+        const coordinatorAttendance = attendance.filter(a => a.coordinatorId === currentUser.id);
+        if (coordinatorAttendance.length === 0) return 0;
+        
+        const totalRate = coordinatorAttendance.reduce((sum, a) => sum + a.attendanceRate, 0);
+        return Math.round(totalRate / coordinatorAttendance.length);
+    }
+    return 0;
 }
 
-function getSupervisorProgramsCount() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
-}
 
-function getSupervisorProgramsHistory() {
-    return Math.floor(Math.random() * 10) + 5; // 5-15
-}
-
-function getSupervisorAttendanceHistory() {
-    return Math.floor(Math.random() * 15) + 85; // 85-100%
-}
-
-function getSupervisorStudentsHistory() {
-    return Math.floor(Math.random() * 500) + 200; // 200-700
-}
-
-function getSupervisorPerformanceHistory() {
-    return Math.floor(Math.random() * 10) + 90; // 90-100%
-}
-
-function getSupervisorPerformance() {
-    return Math.floor(Math.random() * 10) + 90; // 90-100%
-}
 
 // توابع عملیات پیشرفته با اتصال به دیتابیس
 
